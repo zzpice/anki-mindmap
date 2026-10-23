@@ -1,62 +1,67 @@
-# Anki Mindmap
+# Anki Mindmap · React rewrite
 
-A standalone, offline mindmap template for Anki. Extracted from
-[zzpice/anki-cards](https://github.com/zzpice/anki-cards/tree/aaea69d147f2fb39723b827b40086e4bcb2fa056)
-without changing its card runtime. This is a migration, not an architecture rewrite.
+A usable offline React/TypeScript mindmap card runtime, developed on `feat/react-rewrite`.
+Main is unchanged. Anki remains responsible for native Cloze card generation, flipping,
+grading and scheduling; the runtime preserves existing three-field note compatibility.
 
-| Compatibility contract | Value |
-| --- | --- |
-| Note type | 思维导图 |
-| Model ID | `1303378414` |
-| Anki type | Native Cloze |
-| Fields, in order | `填写笔记` / `导图` / `Text` |
+## Try it safely / 安全体验
 
-Existing knowledge-tree HTML, nested nodes, custom Cloze elements, images, MathML,
-Anki math notation, personal notes, themes, folding, search, positioning, popups,
-keyboard shortcuts and gamepad mappings are retained. Anki generates the cards.
-There is no React, TypeScript, Vite, CDN or remote card service.
+Download [anki-mindmap-react-test.apkg](test-packages/anki-mindmap-react-test.apkg).
+Use a new Anki profile with sync disabled, then import the file. The package includes a
+Chinese experience card and anonymous compatibility examples. There is no website or
+Vite server to run. On a work computer, downloading and importing the APKG is sufficient.
 
-## Build and test
+The test model is **思维导图 · React 测试版**, ID **1792748414**, separate from production
+**1303378414**. Test GUIDs, deck and hashed media are separate. An automated import test
+asserts an existing production model, note and scheduling rows remain unchanged. Do not
+convert your real notes to the test model; evaluate with the included examples first.
 
-Python 3.12 and Node.js 22+ are required. Commands below use a new virtual environment;
-no personal Anki profile or running Anki instance is needed.
+Try folding the current branch then locating it; click current answers individually;
+use ordered reveal/reverse hide; reveal other groups; search prose without exposing hidden
+answers; open the diagram, annotation and image; switch the paper/bamboo theme. Use Anki's
+own Show Answer and rating buttons. The personal-note popup is gone; all original fields
+and content are retained. A Cloze present only in the personal-note field appears inline
+when needed, without restoring that popup.
+
+## Build and verify
+
+Node 24 and Python 3.12 are the tested development defaults. Dependencies are locked.
 
 ```sh
+npm ci
+npm run check
+npm run build
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r scripts/requirements-build.txt
-.venv/bin/python -m pip install --no-deps -r scripts/requirements-test.txt
-npm ci
+.venv/bin/python scripts/build_react_package.py
 npx playwright install chromium webkit
-npm run check
-.venv/bin/python scripts/build_package.py
-ANKI_RENDER_OUTPUT=build/cards.json .venv/bin/python -m unittest discover -s tests -v
 npm test
-.venv/bin/python scripts/build_preview.py
-npm run test:preview
-.venv/bin/python scripts/release_assets.py
 ```
 
-Outputs: `dist/anki-mindmap.apkg`, `dist/anki-mindmap-templates.zip`,
-`dist/build-info.json` and `dist/SHA256SUMS`. The ZIP contains fully expanded templates
-and all local media and licenses. Raw HTML files in `cards/` contain build-time includes;
-do not paste them directly into Anki.
+For actual isolated Desktop verification, install `aqt==26.9.3` with its Qt dependencies
+into that environment and run `.venv/bin/python tests/react/desktop.py` in a graphical
+session. It creates a unique disposable profile, disables sync, and never accesses a
+personal collection. CI tests official Anki backends 25.9.2 and 26.9.3 and uploads APKGs.
 
-For a local preview, serve `build/preview-site/` with a local HTTP server. Preview build
-may download the matching official Anki source once for AGPL compliance; the generated
-preview and installed cards have no external runtime dependency. No website deployment
-or official GitHub Release is enabled by this migration. CI uploads tested artifacts.
+`dist/` contains the importable test package, manifest and SHA256SUMS. The tracked package
+under `test-packages/` is a tested branch snapshot for direct public downloading; no formal
+Release is published. `build/react-site/` is only an optional local developer aid.
 
-## Learn the source
+## How the code fits together
 
-- `cards/note-types.json` defines the stable model identity and fields.
-- `cards/templates/mindmap/front.html` and `back.html` are the original card sides.
-- `style.css` beside them is the independent mindmap stylesheet.
-- `storage.html`, `cloze.js`, `annotations.js` and `links.js` are shared build-time fragments.
-- `cards/media/` contains the local font, mark.js and example image.
-- `scripts/` builds the package, expanded template ZIP and anonymous preview.
-- `tests/` verifies native import, identity, scheduling, browser behavior and extraction hashes.
-- `preview/` contains the local debugging UI; `docs/` explains usage and validation.
+- `src/core.ts`: one pure state/command implementation for tree, answers, search, overlays
+  and preferences; no React or DOM dependencies.
+- `src/content.ts`: indexes native HTML and projects state inside its owned content root.
+  It preserves rich fragments, native Cloze payloads, MathML, tables, images and unknown HTML.
+- `src/ui.tsx`: React toolbar, search and accessible dialogs subscribe to the same store.
+- `src/runtime.tsx`: assembles one card render, dispatches commands, coordinates navigation,
+  input and disposal. Front and back share this entry.
+- `src/resources.ts`, `math.ts`, `platform.ts`: cancellable resource ownership and narrow
+  client capability boundaries. No pile of window-global patches.
+- `scripts/build_react_package.py`: native backend packaging and collision-safety checks.
+- `tests/react/`: business invariants, browser behavior, 100-cycle lifecycle stress and
+  actual Desktop preview/reviewer checks. `tests/legacy/` is historical evidence only.
 
-See [usage](docs/usage.md), [development](docs/development.md),
-[migration scope](docs/migration.md), [validation](docs/validation.md) and
-[licensing](NOTICE). Browser tests and Qt previews do not certify AnkiMobile or AnkiDroid.
+See [development](docs/development.md), [usage](docs/usage.md) and
+[validation and limits](docs/validation.md). The old migration documents describe the
+original extraction; its byte-level baseline is intentionally unchanged.

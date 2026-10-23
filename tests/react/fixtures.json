@@ -1,0 +1,92 @@
+{
+  "overview": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "<div class=\"title\">Overview</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Root</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"answer\"></cloze2_w><cloze2 class=\"cz-1 czi-answer\">Answer</cloze2>}}</div></li></ul></div></li><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Sibling</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Other</div></li></ul></div></li></ul>"
+  },
+  "mixed": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "<div class=\"title\">Mixed</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Root</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"mixed-a\"></cloze2_w><cloze2 class=\"cz-1 czi-mixed-a\"><b>答案</b></cloze2>}} / {{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"mixed-b\"></cloze2_w><cloze2 class=\"cz-1 czi-mixed-b\">第二</cloze2>}}</div></li><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c2::<cloze2_w class=\"cz-2\" data-cloze-id=\"mixed-c\"></cloze2_w><cloze2 class=\"cz-2 czi-mixed-c\">另一个编号</cloze2>}}</div></li></ul></div></li></ul>"
+  },
+  "image": {
+    "填写笔记": "<p>Local personal note</p>",
+    "导图": "<img src=\"_rule-build.svg\" alt=\"anonymous image\">",
+    "Text": "<div class=\"title\">Image</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">图片题</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"image-a\"></cloze2_w><cloze2 class=\"cz-1 czi-image-a\"><img src=\"_rule-build.svg\" alt=\"anonymous image\"></cloze2>}}</div></li></ul></div></li><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">普通图片</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\"><img src=\"_rule-build.svg\" alt=\"anonymous image\"></div></li></ul></div></li></ul>"
+  },
+  "flat": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "{{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"flat\"></cloze2_w><cloze2 class=\"cz-1 czi-flat\"><b>Flat answer</b></cloze2>}}"
+  },
+  "deep": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "<div class=\"title\">Deep</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Level 11</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Level 10</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Level 9</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Level 8</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Level 7</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Level 6</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Level 5</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Level 4</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Level 3</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Level 2</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Level 1</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Level 0</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"deep\"></cloze2_w><cloze2 class=\"cz-1 czi-deep\">Deep answer</cloze2>}}</div></li></ul></div></li></ul></div></li></ul></div></li></ul></div></li></ul></div></li></ul></div></li></ul></div></li></ul></div></li></ul></div></li></ul></div></li></ul></div></li></ul></div></li></ul>"
+  },
+  "reading": {
+    "填写笔记": "{{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"reading\"></cloze2_w><cloze2 class=\"cz-1 czi-reading\">Whole-note card</cloze2>}}",
+    "导图": "",
+    "Text": "<div class=\"title\">Reading</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Complete context</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c2::<cloze2_w class=\"cz-2\" data-cloze-id=\"reading-body\"></cloze2_w><cloze2 class=\"cz-2 czi-reading-body\">Other body card</cloze2>}}</div></li></ul></div></li></ul>"
+  },
+  "table": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "<div class=\"title\">Table</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Table</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\"><table><tr><td>中文</td><td>{{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"cell\"></cloze2_w><cloze2 class=\"cz-1 czi-cell\">Cell answer</cloze2>}}</td></tr></table></div></li></ul></div></li></ul>"
+  },
+  "math": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "<div class=\"title\">Math</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"mathml\"></cloze2_w><cloze2 class=\"cz-1 czi-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mfrac><mi>a</mi><mi>b</mi></mfrac></math></cloze2>}}</div></li><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c30::\\(x^2\\)}}</div></li></ul>"
+  },
+  "nested": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "<div class=\"title\">Nested</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c1::Outer {{c2::Inner}}}}</div></li></ul>"
+  },
+  "plain": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "<div class=\"title\">Native cloze</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Root</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c1::Plain answer::提示}}</div></li></ul></div></li></ul>"
+  },
+  "bookmark": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "<div class=\"title\">Bookmark</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">保留正文<a name=\"bookmark\"></a> 后续正文</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"bookmark\"></cloze2_w><cloze2 class=\"cz-1 czi-bookmark\">Answer</cloze2>}}</div></li></ul></div></li></ul>"
+  },
+  "annotations": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "<div class=\"title\">Annotations</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">Root</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"annotation\"></cloze2_w><cloze2 class=\"cz-1 czi-annotation\">Answer</cloze2>}}</div></li></ul></div></li><li><a href=\"#_msocom_42\">Note 42</a> / <a href=\"#_msocom_7\">Note 7</a> / <a href=\"#_msocom_99\">Missing</a> / <a href=\"#_msocom_8\">Inline</a></li></ul><p><a name=\"_msocom_7\"></a>Second annotation</p><p><a name=\"_msocom_42\"></a>First annotation<img src=\"_rule-build.svg\"><a href=\"#_msoanchor_42\">Return</a></p><p><a name=\"_msocom_88\"></a>Unreferenced annotation</p><p>Preceding prose<a name=\"_msocom_8\"></a>Inline text</p>"
+  },
+  "links": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "<div class=\"title\">Links</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">[Local|nid1234567890123]</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"link\"></cloze2_w><cloze2 class=\"cz-1 czi-link\"><b>Rich</b> [Answer link|nid1234567890124]</cloze2>}}</div></li></ul></div></li></ul>"
+  },
+  "three-level": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "<div class=\"title\">三层知识树</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">第一层</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">第二层</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"level3\"></cloze2_w><cloze2 class=\"cz-1 czi-level3\"><b>第三层答案</b></cloze2>}}</div></li></ul></div></li></ul></div></li><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">旁支</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">旁支正文</div></li></ul></div></li></ul>"
+  },
+  "nested-custom": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "<div class=\"title\">嵌套包装保真</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c1::<cloze2 class=\"cz-1\">PREFIX <cloze2 class=\"cz-2\">INNER</cloze2> SUFFIX</cloze2>}}</div></li></ul>"
+  },
+  "rich": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "<div class=\"title\">复杂正文</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">第一层</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">第二层</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"rich\"></cloze2_w><cloze2 class=\"cz-1 czi-rich\"><b>富文本答案</b><img src=\"_rule-build.svg\" alt=\"答案图片\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><msqrt><mi>x</mi></msqrt></math> \\(z^2\\)</cloze2>}}<table><caption>表格标题</caption><tbody><tr><th colspan=\"2\">合并表头</th></tr><tr><td rowspan=\"2\">甲</td><td>乙</td></tr><tr><td>丙</td></tr></tbody></table><span aria-label=\"合法属性\" data-legacy=\"keep\">正常后续文字</span><x-legacy data-example=\"opaque\">未知内容保留</x-legacy><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mfrac><mi>a</mi><mi>b</mi></mfrac></math> \\(x^2 + y^2\\)</div></li></ul></div></li></ul></div></li></ul>"
+  },
+  "ambiguous": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "<div class=\"title\">异常结构保持可读</div><ul class=\"node-list\"><div class=\"node\"><p>缺圆点</p><div class=\"children\">可读孩子</div><div class=\"children\">第二孩子</div></div><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c1::保留答案}}</div></li><p>data-ordinal=\"1\" 是合法教学文字</p></ul>"
+  },
+  "empty": {
+    "填写笔记": "{{c1::字段中答案}}",
+    "导图": "",
+    "Text": ""
+  }
+}

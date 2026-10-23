@@ -1,6 +1,6 @@
 .venv*/
 __pycache__/
 build/
-node_modules/
+node_modules
 dist/
 .DS_Store

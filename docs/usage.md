@@ -1,40 +1,31 @@
 # Usage
 
-Build `dist/anki-mindmap.apkg` or download the tested CI artifact. Import into a separate
-Anki test profile first. The package contains one public mindmap note and its three native
-Cloze cards. It contains no course material or personal learning records.
+Import the downloadable test APKG into a fresh, unsynced test profile. Open the welcome
+lesson in preview or study the test deck. The runtime also works directly on the back.
 
-Keep the existing note type **思维导图**, ID **1303378414**, as native **Cloze**.
-Do not create a Basic type with the same name. Fields must remain in this order:
-
-| Field | Content |
+| Action | Input |
 | --- | --- |
-| 填写笔记 | Personal-note HTML, shown in the retained note popup |
-| 导图 | Diagram HTML/images, shown in the diagram popup |
-| Text | Knowledge-tree HTML and native Cloze markup |
+| Fold one branch | Click/tap its triangle; focused triangle supports Enter/Space |
+| Current answer | Click/tap each native Cloze occurrence |
+| Reveal next / hide reverse-text last | ] / [ or toolbar |
+| Expand/collapse branches | K or toolbar |
+| Other custom groups | Click their prompt/answer; L toggles all other groups |
+| Locate current | H or toolbar; reopens required ancestors |
+| Search public prose | Ctrl/Cmd+F; Enter/Shift+Enter navigate; Escape closes |
+| Theme | C or theme button |
+| Diagram | J or Diagram button |
+| Annotation / image | Click a recognized reference or visible image |
+| Native flip / grade | Use Anki's own controls |
 
-The template ZIP provides `mindmap/front.html`, `mindmap/back.html` and
-`mindmap/style.css` with all includes already expanded, plus `media/`, the specification
-and licenses. Copy the expanded templates into the existing matching model and place
-local media in that test profile's media directory. Preserve the original fields and notes.
-Do not paste include-bearing source files directly into Anki.
+Gamepad mappings retain LB/RB step, LT tree, RT other groups, L3 locate, R3 theme, left-stick
+scroll and right-stick zoom. Front B requests flip on recognized Desktop; back buttons
+0/1/2/3 request Again/Hard/Good/Easy. Held buttons are seeded per device on each mount.
+Hardware and phone behavior remain unverified; native Anki controls remain available.
 
-Ordinary `{{c1::answer::hint}}` and existing custom `cloze2_w` / `cloze2` content remain
-supported by the original runtime. Anki decides which Cloze ordinals become cards;
-multiple occurrences of c1 remain one card, and c2 is separate. Existing `.node`, `.bullet`,
-`.content.mm-editor`, `.children` and `.node-list` knowledge-tree nesting is unchanged.
-See `cards/samples.json` for the unchanged source example, and
-`scripts/mindmap_examples.py` for anonymous test-content helpers, not a card parser.
+There is no personal-note popup or G action. The original field/data stays intact. If the
+current native Cloze exists only in that field, the current material is shown inline so
+an existing card does not become unusable.
 
-The original controls are retained: notes, current-point positioning, diagram popup,
-answer visibility, branch expansion, search navigation, annotation popups, local note
-links and the 象牙笺/竹露 themes. Keyboard: G (keyup) notes, H locate, J diagram,
-K branches, L other answers, C theme, Ctrl/Cmd+F search, Escape close search,
-`[`/`]` hide/reveal active blanks. Inputs suppress single-letter shortcuts.
-Gamepad mappings remain in the comments near the end of each card side, including
-front flip and back ratings. Browser bridge stubs do not certify actual device support.
-
-All supplied media is local. Additional images/audio in your own notes must also be
-available locally and synced through Anki. Math continues to use client-native facilities;
-the migration adds no remote math library. AnkiMobile and AnkiDroid require independent
-device checks (see validation.md).
+Unrecognized HTML stays readable with diagnostics instead of destructive cleanup. Basic
+MathML and loaded TeX are supported; formulas requiring asynchronous host extensions may
+retain source text. Follow validation.md for exact tested clients and limitations.

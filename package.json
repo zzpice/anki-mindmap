@@ -1,22 +1,30 @@
 {
   "name": "anki-mindmap",
+  "version": "0.2.0-alpha.1",
   "private": true,
-  "version": "1.0.0",
-  "description": "Standalone offline Anki mindmap template and development checks",
+  "type": "module",
   "scripts": {
-    "check": "python3 scripts/check_templates.py",
-    "test": "node tests/test_browser.cjs",
-    "test:preview": "node tests/preview_browser.cjs",
-    "build": "python3 scripts/build_package.py",
-    "test:native": "ANKI_RENDER_OUTPUT=build/cards.json python3 -m unittest discover -s tests -v",
-    "build:preview": "python3 scripts/build_preview.py",
-    "package": "python3 scripts/release_assets.py",
-    "test:desktop": "python3 tests/desktop_smoke.py"
+    "build": "tsc --noEmit && vite build",
+    "check": "tsc --noEmit && python3 scripts/check_react.py",
+    "test": "tsx --test tests/react/core.test.ts && node tests/react/browser.cjs",
+    "test:core": "tsx --test tests/react/core.test.ts",
+    "test:browser": "node tests/react/browser.cjs",
+    "package": "python3 scripts/build_react_package.py",
+    "test:desktop": "python3 tests/react/desktop.py"
   },
-  "devDependencies": {
-    "playwright": "1.62.1"
+  "dependencies": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.12"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "playwright": "1.62.1",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vite": "8.3.5"
   }
 }

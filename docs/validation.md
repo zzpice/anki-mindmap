@@ -1,53 +1,61 @@
-# Validation record
+# Validation and remaining limits
 
-Date: 2026-10-23. Source baseline: `aaea69d147f2fb39723b827b40086e4bcb2fa056`
-of zzpice/anki-cards. This is an extraction, with no card runtime edits.
+This branch is a usable rewrite, not a replacement installed in a personal collection.
+The production contract file, original sample field content and historical extraction
+baseline are unchanged. The old runtime's duplicated scripts are replaced by shared React
+UI, pure business rules and a bounded native-content module. Legacy tests are retained as
+historical evidence, not silently changed to bless old defects.
 
-| Evidence | Result |
-| --- | --- |
-| Clean dependency installation | New Python 3.12 environment, official Anki/aqt 26.9.3; `npm ci` with locked Playwright 1.62.1 passed |
-| Static scope/offline/reference checks | `npm run check` passed; only mindmap is configured |
-| Source parity | Seven template/fragment files, three media files and three license texts match source bytes; expanded front/back/CSS hashes match |
-| Native automated suite | 13 tests passed on macOS with Anki 26.9.3 |
-| APKG inspection | `collection.anki21` contains exactly one model: 1303378414, native Cloze, fields 填写笔记 / 导图 / Text; one example note, three cards |
-| Media manifest | Exactly `_jquery.mark.es6.js`, `_guoqijihua_lxgwgbr.ttf`, `_rule-build.svg`; imported bytes match the sources |
-| Native grouping | Same-group blanks, nonconsecutive c1/c30, nested Cloze, images, MathML and native math notation checked using official Anki renders |
-| Repeat import / model update | Sample GUID, existing fields/tags, card IDs and test scheduling preserved in temporary collections |
-| Chromium and WebKit | Both passed interaction, storage failure, touch, annotation, local-link, search, popup, keyboard and mocked controller checks |
-| Layout | Both engines checked 16 complex front/back layouts across four viewport sizes and light/dark; additional deep-answer checks passed |
-| Offline | File-based cards with all HTTP(S) blocked passed; no HTTP(S) requests attempted; browser/preview runs also reported no external requests or failed resource responses |
-| Local preview | Standalone preview built; both browser engines passed same-data comparison, pane isolation, scene/card/side controls, viewport changes and deep-link reload |
-| Anki Desktop | Anki/aqt 26.9.3, QtWebEngine on macOS: 36 normal front/back previews passed in a new safe-mode profile, light/dark; includes source-shaped complex, nested and formula notes |
-| Template distribution | Fully expanded `anki-mindmap-templates.zip`, APKG, build-info and SHA256SUMS generated; no official Release created |
-| GitHub CI | The workflow checks Anki/aqt 25.9.2 and 26.9.3 on Linux, with native tests and Chromium/WebKit/preview tests; consult the Actions run for the exact pushed revision |
+## Current automated checks
 
-## Actual old-package to new-package check
+- Eight core tests, including 1000 invariant sequences: folding never changes answers,
+  reveal never changes layout, native occurrences stay independent, other groups exclude
+  current, ordered reveal/reverse hide and search/manual-layout precedence.
+- Official Anki backend: 19 anonymous notes, 24 cards, same-number occurrences, c1/c30,
+  nested/native/custom Cloze, field-only questions, empty Text, HTML/image/table/MathML.
+- Collision-safe test import into a collection already containing model 1303378414 and a
+  synthetic scheduled note: original model JSON, complete note/card rows unchanged.
+  Repeated import does not duplicate test notes; fields, ordinals and media round-trip.
+- Chromium and WebKit each load 48 native sides and run 100 front/back/next lifecycle
+  sequences, including duplicate bundle execution, same-root remount, externally removed
+  hosts, rejected stale commands and zero owned resources after disposal.
+- Search excludes hidden answers, navigates folded prose, does not change reveal and does
+  not undo later manual folding. Diagram, annotations and image dialogs work. Mouse,
+  browser touch and keyboard use shared commands; editable fields protect shortcuts.
+- Twenty React updates preserve rich-content DOM identities. Detached local file assets
+  run in Chromium offline emulation; WebKit uses HTTP(S) blocking because its local-file
+  offline emulator fails on this host. Neither browser is a mobile-device certification.
 
-Separately built the complete original package from the pinned source, imported it into a
-new temporary collection, and added 13 anonymous source-shaped mindmap cases. After
-importing the new APKG, all 23 notes and 32 cards retained their IDs, fields, tags and
-scheduling. The mindmap model (including field/template IDs, CSS and both card sides)
-was identical. All 20 mindmap cards had identical front/back HTML before and after.
-The original and extracted public-sample render JSON were also identical. No old package
-or source checkout is required by the new repository's tests/build.
+## Actual Desktop evidence
 
-## Evidence limits and retained risks
+Official Anki/aqt 26.9.3 on macOS 27.0.1 arm64, PyQt/Qt compiled 6.11.0, WebEngine UA
+6.11.2/Chromium 140. A uniquely keyed safe-mode process uses a fresh profile with auto-sync
+disabled. It loads 48 preview sides and a fresh direct-back view, then runs the actual
+reviewer: reveal, native Show Answer, native Again rating, next different anonymous card.
+Only the temporary profile receives a review-log entry. Removing the reviewer host
+cleans every owned resource. The driver explicitly closes its collection and Qt services.
 
-- Desktop result is the actual aqt normal previewer, not a completed review/grading session.
-  No personal profile, AnkiConnect or synchronization was used.
-- AnkiMobile and AnkiDroid physical devices were not available. Their media sync, native
-  links, touch/rotation/safe areas, storage restrictions and client-specific native math
-  rendering remain pending. WebKit/Chromium and mobile API stubs do not establish this.
-- Gamepad tests use `navigator.getGamepads` and client-bridge doubles. Physical controllers,
-  native flip/rating dispatch and repeated real review transitions remain pending.
-- MathML rendering was exercised in browsers and formula-containing cards in Desktop;
-  comprehensive native TeX/MathJax rendering across all clients remains pending.
-- The source's deep/narrow table overflow and existing interaction behavior are retained.
-  Migration does not claim to fix inherited defects or certify every historical note.
-- Source MIT declaration and owner-supplied template provenance are retained. mark.js MIT,
-  unmodified font OFL and separate preview reviewer AGPL notices/source are preserved;
-  earlier template authorship is not independently re-established by this extraction.
+Basic dynamically revealed TeX is typeset locally; ten hide/reveal cycles keep one active
+formula and two total MathJax items. Content source is restored if a synchronous math call
+requires an asynchronous extension. Qt input/GPU/media/MathJax warnings are retained in
+logs; passing assertions do not mean warning-free operation.
 
-Generated screenshots, fixtures and isolated profile results stay in ignored `build/`.
-CI artifacts include the tested package/ZIP/checksums and a self-contained local preview;
-there is no Pages deployment or automatic formal-release publishing.
+## Limits to understand before testing
+
+- No AnkiMobile, AnkiDroid physical device or real gamepad has been certified. Browser
+  touch and controller API substitutes only exercise input logic. Mobile grading bridges
+  are not guessed; use native app controls. Local-note navigation is capability gated.
+- Tree layout resets on each new side/render because there is no proven universal card
+  identity. This prevents cross-note contamination; theme persists locally. Search,
+  temporary answers and dialogs reset on native flip.
+- Basic MathML/loaded TeX work in the tested Desktop. Async-only formula extensions,
+  older WebViews, mobile math interfaces and arbitrary historical HTML need user testing.
+  Unknown structures stay readable rather than being destructively normalized.
+- No long-running heap/battery or very-large-tree performance certification is claimed.
+  Controller polling sleeps when no controller is present; every resource is disposed.
+- The test APKG never upgrades the production note type. Testing a real-note upgrade or
+  publishing/merging a formal version remains a separate authorized operation.
+
+GitHub Actions independently builds/tests both official backend versions and uploads an
+artifact. The directly downloadable committed APKG is a verified local build; its manifest
+and SHA256SUMS identify exact bytes. No formal Release, main merge or deployment is used.

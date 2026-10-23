@@ -1,14 +1,14 @@
-name: Check Anki Mindmap
+name: Check React Mindmap
 on:
   push:
-    branches: [main]
+    branches: [main, feat/react-rewrite]
   pull_request:
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: anki-mindmap-${{ github.ref }}
-  cancel-in-progress: false
+  group: react-mindmap-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -19,50 +19,33 @@ jobs:
         anki-version: ['25.9.2', '26.9.3']
     steps:
       - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '24'
           cache: npm
-      - name: Install development tools
+      - name: Install tools
         run: |
           python -m pip install "anki==${{ matrix.anki-version }}"
-          python -m pip install --no-deps "aqt==${{ matrix.anki-version }}"
           npm ci
           npx playwright install --with-deps chromium webkit
       - run: npm run check
-      - run: python scripts/build_package.py
-      - name: Verify native import, model identity, Cloze and scheduling
-        env:
-          ANKI_RENDER_OUTPUT: build/cards.json
-        run: python -m unittest discover -s tests -v
+      - run: npm run build
+      - run: python scripts/build_react_package.py
       - run: npm test
-      - name: Build and verify local preview
-        run: |
-          python scripts/build_preview.py
-          npm run test:preview
-      - name: Assemble tested artifacts
-        if: matrix.anki-version == '26.9.3'
-        run: python scripts/release_assets.py
       - uses: actions/upload-artifact@v6
         if: matrix.anki-version == '26.9.3'
         with:
-          name: anki-mindmap-packages
+          name: anki-mindmap-react-test
           path: dist/
           if-no-files-found: error
       - uses: actions/upload-artifact@v6
-        if: matrix.anki-version == '26.9.3'
+        if: always()
         with:
-          name: anki-mindmap-local-preview
-          path: build/preview-site/
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v6
-        if: failure()
-        with:
-          name: diagnostics-${{ matrix.anki-version }}
-          path: build/
-          retention-days: 7
+          name: evidence-${{ matrix.anki-version }}
+          path: |
+            build/*-results.json
+            build/*.log
+          retention-days: 14

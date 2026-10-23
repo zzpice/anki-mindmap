@@ -1,12 +1,11 @@
 # Maintenance instructions
 
-- Maintain only the mindmap template. Start from the latest remote `main`; report the starting SHA. Work directly on `main` unless explicitly requested otherwise. Preserve uncommitted work.
-- This repository was extracted without a runtime rewrite. Keep native HTML/CSS/JavaScript; React/TypeScript/Vite evaluation belongs to a separate, explicitly authorized stage.
-- `cards/note-types.json` is the identity contract: model `1303378414`, native Cloze, fields `填写笔记`, `导图`, `Text` in that order. Preserve field IDs, template ID, native card ordinals and existing HTML/custom Cloze formats. Do not remove the personal-note popup or field incidentally.
-- Runtime assets must be local. Anki supplies jQuery and native math support. Do not add CDN, remote services, a custom card-generation parser or a dependency on the source repository.
-- `scripts/sources.py` expands build-time includes. Ship fully expanded HTML/CSS in APKG and template ZIP, with local media and all required copyright/license files.
-- After template, media, build or fixture changes, run the commands in README and docs/development.md. Always use temporary collections/profiles; never access personal Anki data, AnkiConnect, sync or learning records.
-- Record backend, browser, Qt Desktop preview, actual review and physical mobile device evidence separately. API stubs are not device tests. Preserve known original limitations during migration.
-- `tests/migration-baseline.json` records the extraction source and byte-level runtime baseline. Do not silently update it to hide migration differences. Future intentional runtime changes require explicit scope and updated compatibility evidence.
-- GitHub Actions only checks and uploads artifacts. Do not create a formal Release, deploy a website, modify the source repository or delete it without explicit authorization.
-- Keep documentation primarily English. Keep generated packages, renders, screenshots, dependencies and profiles out of Git.
+- The authorized React rewrite is developed on `feat/react-rewrite`, starting from latest remote main f67c932. Do not change/merge main or publish a formal Release. Preserve unrelated work.
+- `src/core.ts` is the only business-state authority. React owns its UI root; content.ts owns only the sibling native-content region. Inputs dispatch commands. Never duplicate answer/tree/search state inside components or DOM handlers.
+- Production compatibility contract remains native Cloze model 1303378414, fields 填写笔记 / 导图 / Text in that order, stable field/template IDs. Keep every field and its content. The independent personal-note popup is intentionally removed. A field-only current Cloze remains usable inline.
+- Public test APKGs MUST use the independent test model 1792748414, distinct name, GUID namespace, deck and content-addressed media. Never ship a test APKG that updates production identity 1303378414. Committing a downloadable test package on this branch is explicitly authorized.
+- Runtime assets are completely local. Anki generates native Cloze cards, flips and grades. No CDN, online service, custom card-generation parser, personal collection, AnkiConnect or sync.
+- Run `npm run check`, `npm run build`, official-backend `scripts/build_react_package.py`, `npm test`; use `tests/react/desktop.py` for a fresh isolated graphical profile. Record backend, browser, Qt preview, actual reviewer, physical phones and controller evidence separately.
+- Every mount owns its listeners, timers, observers, animation frames, subscriptions and React root. Disposal is idempotent; stale closures cannot touch the next card. Unknown content stays readable and diagnosed.
+- `tests/migration-baseline.json` remains the historical extraction record, unchanged. tests/legacy documents the old runtime behavior; it is not the acceptance suite for intentional new product rules.
+- Keep code/module names straightforward. Document reasons for ownership, identity and lifecycle decisions. Keep generated profiles, node_modules, logs and screenshots out of Git. A named test APKG and concise verification records are allowed under test-packages/.
