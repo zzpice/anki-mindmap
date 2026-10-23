@@ -12,6 +12,7 @@ import { bindTap } from "./tap";
 import { reviewContinuity } from "./continuity";
 import { readingPosition } from "./reading";
 import { navigationCue } from "./motion";
+import { edgePosition } from "./edges";
 
 const SLOT = Symbol.for("anki-mindmap.react.runtime.v1");
 const PREF = "anki_mindmap.preferences.v1";
@@ -113,8 +114,9 @@ export function mount(host: HTMLElement): Runtime {
   const scope = resources(valid);
   const reading = readingPosition(content, scope);
   const cue = navigationCue(scope);
+  const edges = edgePosition(ui, scope, bridge.ios, () => store.getSnapshot().zoom);
   const remember = () => {
-    if (side === "front") continuity.save(store.getSnapshot(), reading.capture());
+    if (side === "front") continuity.save(store.getSnapshot(), reading.capture(), edges.capture());
   };
   let rememberQueued = false;
   const queueRemember = () => {
@@ -132,6 +134,7 @@ export function mount(host: HTMLElement): Runtime {
     // whole card so controller zoom still includes its floating controls.
     const zoom = String(store.getSnapshot().zoom);
     if (host.style.zoom !== zoom) host.style.zoom = zoom;
+    edges.project();
   };
   const unsubscribe = store.subscribe(project);
   let cancelAuto: (() => void) | undefined;
@@ -160,6 +163,7 @@ export function mount(host: HTMLElement): Runtime {
     const before = store.getSnapshot();
     if (!store.dispatch(command)) return;
     commands++;
+    if (command.type === "zoom") edges.reset();
     if (command.type === "search") updateSearch(true);
     else if (
       [
@@ -458,6 +462,7 @@ export function mount(host: HTMLElement): Runtime {
     </StrictMode>,
   ));
   project();
+  edges.restore(continuity.restored?.edges);
   // Position before the next paint rather than showing the top of the tree
   // for 100 ms on every flip. Manual input still cancels this card-owned frame.
   cancelAuto = presentCard(host, scope, () => {
@@ -498,11 +503,13 @@ export function mount(host: HTMLElement): Runtime {
       ),
       side,
       math: math.inspect(),
+      edgeLayout: edges.inspect(),
     }),
     dispose() {
       if (!alive) return;
       remember();
       reading.cancel();
+      edges.reset();
       alive = false;
       scope.dispose();
       unsubscribe();

@@ -1,10 +1,10 @@
 {
-  "startingDevelopmentCommit": "3758fd6992df2a480a25b6526e68c86910e98706",
-  "version": "0.2.0-alpha.11",
+  "startingDevelopmentCommit": "cbbe701fe7fe8059408126ed6f8cee52564010ac",
+  "version": "0.2.0-alpha.12",
   "coreTests": 9,
   "native": {
     "status": "passed",
-    "version": "0.2.0-alpha.11",
+    "version": "0.2.0-alpha.12",
     "testModel": {
       "id": 1792748414,
       "kind": 1,
@@ -44,14 +44,14 @@
     ],
     "assets": {
       "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
-      "_mm_react_75999817b002.js": "75999817b0021d668600dc79863fae8858b76a8af898d816b07230ccefb0f215",
+      "_mm_react_18a7e3e93325.js": "18a7e3e93325ef8f5c99b776574e46d88505d4e90ad9c62e70888f72d65301a6",
       "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
     },
-    "apkgSha256": "a52a8aed3b15defaec9604914b457f706eb1da7a7e7a342061439b59ac0b4044"
+    "apkgSha256": "42cb9efc9360ef563fa7eef371eb8e3485905990a025f98dad401022f9158f69"
   },
   "nativeBackend25": {
     "status": "passed",
-    "version": "0.2.0-alpha.11",
+    "version": "0.2.0-alpha.12",
     "testModel": {
       "id": 1792748414,
       "kind": 1,
@@ -91,10 +91,10 @@
     ],
     "assets": {
       "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
-      "_mm_react_75999817b002.js": "75999817b0021d668600dc79863fae8858b76a8af898d816b07230ccefb0f215",
+      "_mm_react_18a7e3e93325.js": "18a7e3e93325ef8f5c99b776574e46d88505d4e90ad9c62e70888f72d65301a6",
       "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
     },
-    "apkgSha256": "80a58870294c9459d77863639fdba0c244526b96862eb736e2c6e31c85391dd1"
+    "apkgSha256": "161cd3e24b5557aeb994f5adf8be0fbed9fee9e4517d16327f58c9f54465cc7e"
   },
   "nativeBackends": [
     "25.9.2",
@@ -125,6 +125,15 @@
           "offline emulation + detached file assets"
         ],
         "errors": [],
+        "edges": {
+          "changedNativeViewport": "780 -> 844px, iOS seam/labels unchanged; lower surfaces fill the new bottom",
+          "scrolling": "passed",
+          "newFrontAndOrdinal": "passed",
+          "orientationAndZoom": "passed",
+          "malformedOrBlockedStorage": "passed (readable CSS fallback)",
+          "AndroidUnchanged": "passed",
+          "limitations": "No physical iOS certification; labels retain front anchors rather than recentering in newly exposed bottom space."
+        },
         "motion": {
           "labelCentres": "passed: front/back, scroll, zoom, landscape",
           "edgeFrameScrollFlipResize": "passed",
@@ -195,25 +204,25 @@
                 "selector": ".floating-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.3999999910593033
+                "releaseHandlerMs": 0.699999988079071
               },
               {
                 "selector": ".custom2-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0
+                "releaseHandlerMs": 0.20000000298023224
               },
               {
                 "selector": ".custom-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.7000000029802322
+                "releaseHandlerMs": 0.6000000089406967
               },
               {
                 "selector": "#left-floating-widget",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0
+                "releaseHandlerMs": 0.09999999403953552
               }
             ],
             "dragCommands": 0,
@@ -247,7 +256,7 @@
             },
             {
               "navigation": 5,
-              "paintedFrames": 3,
+              "paintedFrames": 2,
               "scrolls": 0
             },
             {
@@ -262,7 +271,7 @@
             },
             {
               "navigation": 8,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 1
             },
             {
@@ -296,6 +305,15 @@
           "detached file assets with all HTTP(S) blocked; WebKit offline emulator limitation retained"
         ],
         "errors": [],
+        "edges": {
+          "changedNativeViewport": "780 -> 844px, iOS seam/labels unchanged; lower surfaces fill the new bottom",
+          "scrolling": "passed",
+          "newFrontAndOrdinal": "passed",
+          "orientationAndZoom": "passed",
+          "malformedOrBlockedStorage": "passed (readable CSS fallback)",
+          "AndroidUnchanged": "passed",
+          "limitations": "No physical iOS certification; labels retain front anchors rather than recentering in newly exposed bottom space."
+        },
         "motion": {
           "labelCentres": "passed: front/back, scroll, zoom, landscape",
           "edgeFrameScrollFlipResize": "passed",
@@ -366,7 +384,7 @@
                 "selector": ".floating-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 1
+                "releaseHandlerMs": 2
               },
               {
                 "selector": ".custom2-button",
@@ -378,7 +396,7 @@
                 "selector": ".custom-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 2
+                "releaseHandlerMs": 1
               },
               {
                 "selector": "#left-floating-widget",
@@ -413,7 +431,7 @@
             },
             {
               "navigation": 4,
-              "paintedFrames": 4,
+              "paintedFrames": 5,
               "scrolls": 1
             },
             {
@@ -423,7 +441,7 @@
             },
             {
               "navigation": 6,
-              "paintedFrames": 3,
+              "paintedFrames": 2,
               "scrolls": 1
             },
             {
@@ -433,7 +451,7 @@
             },
             {
               "navigation": 8,
-              "paintedFrames": 4,
+              "paintedFrames": 2,
               "scrolls": 1
             },
             {
@@ -484,11 +502,17 @@
         ],
         "height": 804
       },
+      "edgeLayout": {
+        "enabled": false,
+        "height": 804,
+        "pinned": false,
+        "width": 1000
+      },
       "font": {
         "family": "lxgw, \"霞鹜文楷 GB 屏幕阅读版\"",
         "ready": true
       },
-      "frame": "1792770434993:answer",
+      "frame": "1792771832386:answer",
       "hooks": {
         "shown": 1,
         "update": 1
@@ -561,6 +585,12 @@
       "alive": false,
       "commands": 0,
       "diagnostics": [],
+      "edgeLayout": {
+        "enabled": false,
+        "height": 479,
+        "pinned": false,
+        "width": 667
+      },
       "math": {
         "calls": 0,
         "warnings": []
@@ -600,13 +630,12 @@
     "reviewSteps": 5
   },
   "physicalMobile": {
-    "evidence": "User supplied iOS and Android screenshots show alpha.10 edge regression; screenshots remain private.",
-    "current": "Alpha.11 needs native retest; old iOS scroll/flip jump not claimed fixed."
+    "evidence": "User reports iOS native flip moves both edge seam and labels. Native viewport dimensions have not been measured.",
+    "current": "Alpha.12 holds same-card front seam/label anchors if native height changes. Still requires iOS device retest."
   },
   "visual": {
     "status": "passed",
     "pairs": 108,
     "interactionScenes": 60
-  },
-  "ciTestRepair": "Mock controller tests wait for actual held-state sampling frames, not a fixed 40ms sleep; no card runtime change."
+  }
 }

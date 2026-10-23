@@ -51,9 +51,11 @@ module.exports = async function motion(browser, base, renders) {
   assert.deepEqual(await geometry(), zoomed, 'native back shares front edge geometry and restored zoom');
   assert.ok(await checkLabels(), 'labels centred on native back');
   await page.setViewportSize({ width: 780, height: 390 });
+  await page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
   assert.ok((await geometry()).every(r => Math.abs(r[3] - 195) < 1), 'frame adapts to genuine resize');
   assert.ok(await checkLabels(), 'landscape labels remain centred');
   await page.setViewportSize({ width: 390, height: 780 });
+  await page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
   assert.deepEqual(await geometry(), zoomed);
 
   await page.goto(`${base}/welcome-0-front.html`);
@@ -73,7 +75,7 @@ module.exports = async function motion(browser, base, renders) {
   assert.equal(cue.content, 'none');
   assert.equal(cue.frame, 'none');
   assert.deepEqual(await geometry(), controls);
-  await page.waitForTimeout(600);
+  await page.waitForFunction(() => AnkiMindmap.current().inspect().resources.animations === 0);
   assert.equal(await page.evaluate(() => AnkiMindmap.current().inspect().resources.animations), 0);
   await page.getByRole('button', { name: '导图', exact: true }).tap();
   await page.getByRole('dialog').waitFor();

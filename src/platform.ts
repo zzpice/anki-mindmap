@@ -7,8 +7,11 @@ type HostWindow = Window & {
 };
 export function platform() {
   const host = window as HostWindow;
+  const ios = /iPhone|iPad/.test(navigator.userAgent) ||
+    document.documentElement.matches(".iphone,.ipad");
   let droid: Droid | undefined;
   return {
+    ios,
     native(action: "flip" | "again" | "hard" | "good" | "easy") {
       if (
         typeof host.pycmd !== "function" ||
@@ -35,10 +38,7 @@ export function platform() {
     },
     note(nid: string) {
       if (!/^\d{13}$/.test(nid)) return false;
-      if (
-        /iPhone|iPad/.test(navigator.userAgent) ||
-        document.documentElement.matches(".iphone,.ipad")
-      ) {
+      if (ios) {
         location.href = `anki://x-callback-url/search?query=nid%3A${nid}`;
         return true;
       }

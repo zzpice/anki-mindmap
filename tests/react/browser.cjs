@@ -147,6 +147,7 @@ async function run() {
     record.checks.push(
       "native reviewer body-class reset preserves skin and host night mode without changing business state",
     );
+    record.edges = await require("./edges.cjs")(browser, base, renders);
     record.motion = await require("./motion.cjs")(browser, base, renders);
     record.viewport = await require("./viewport.cjs")(browser, base, renders);
     record.reading = await require("./reading.cjs")(browser, base, renders);
@@ -430,6 +431,7 @@ async function run() {
           return AnkiMindmap.current();
         }
         const rows = [];
+        document.documentElement.classList.add("iphone");
         for (let i = 0; i < 100; i++) {
           let r = await show(front);
           const old = r;
@@ -477,6 +479,7 @@ async function run() {
           rows.push(r.inspect().resources);
         }
         await new Promise((r) => setTimeout(r, 120));
+        document.documentElement.classList.remove("iphone");
         return rows;
       },
       {

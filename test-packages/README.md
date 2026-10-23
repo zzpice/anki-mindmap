@@ -56,3 +56,7 @@ Alpha.11 removes the shared edge frame and keeps the same visible-width tabs ful
 on screen. Labels use explicit horizontal lines with text autosizing disabled.
 This targets clipping visible in iOS screenshots; native scroll/flip stability still
 needs physical retesting. Motion and native image gestures remain.
+
+Alpha.12 adds card-scoped iOS front-to-back edge geometry continuity, including
+native viewport height changes. Lower surfaces extend without moving labels.
+[Tests and remaining real-device limits](../docs/ios-edge-continuity.md).
