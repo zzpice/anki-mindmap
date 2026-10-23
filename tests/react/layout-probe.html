@@ -1,0 +1,100 @@
+<!-- Diagnostic package only. Never included in the application templates. -->
+<aside data-mm-layout-probe data-kind="__KIND__" data-side="__SIDE__" data-case="{{Tags}}"
+  style="position:fixed;left:40px;right:40px;top:22px;z-index:10000;font:12px/1.4 monospace;writing-mode:horizontal-tb">
+  <button style="font:12px sans-serif;margin:0;padding:4px;background:#eee;color:#222;border:1px solid #999">布局数据</button>
+  <div hidden style="padding:6px;max-height:65vh;overflow:auto;background:#fff;color:#111;border:1px solid #999;text-align:left">
+    <output style="white-space:pre-wrap"></output>
+    <details><summary>完整记录</summary><pre style="margin:0;white-space:pre-wrap;overflow-wrap:anywhere"></pre></details>
+  </div>
+</aside>
+<script>
+(function () {
+  var slot = Symbol.for('anki-mindmap.layout-probe');
+  if (document[slot]) document[slot]();
+  var root = document.querySelector('[data-mm-layout-probe]');
+  var key = 'mm-layout-probe.' + root.dataset.kind + '.' + root.dataset.case;
+  var rows = [], previous, storage = 'available', alive = true, frame, removals = [];
+  try { previous = JSON.parse(sessionStorage.getItem(key) || 'null'); }
+  catch (_) { storage = 'unavailable'; }
+  if (root.dataset.side === 'front') previous = null;
+  function round(n) { return Math.round(n * 10) / 10; }
+  function rect(selector) {
+    var element = document.querySelector(selector);
+    if (!element) return null;
+    var r = element.getBoundingClientRect();
+    return [round(r.top), round(r.height)];
+  }
+  function containers() {
+    var chain = [], element = document.querySelector('.floating-button');
+    for (element = element && element.parentElement; element; element = element.parentElement) {
+      var s = getComputedStyle(element), r = element.getBoundingClientRect();
+      chain.push({ tag: element.tagName, id: element.id, bounds: [round(r.top), round(r.height)],
+        position: s.position, transform: s.transform, zoom: s.zoom,
+        contain: s.contain, filter: s.filter, overflow: s.overflow });
+    }
+    return chain;
+  }
+  function capture(reason) {
+    if (!alive || !root.isConnected) return;
+    var v = window.visualViewport;
+    rows.push({ event: reason, vh: innerHeight, dh: document.documentElement.clientHeight,
+      document: document.documentElement.scrollHeight, y: round(scrollY),
+      visual: v ? [round(v.height), round(v.offsetTop), round(v.scale)] : null,
+      locate: rect('.floating-button'), diagram: rect('#left-floating-widget'),
+      expand: rect('.custom2-button'), answers: rect('.custom-button'), containers: containers() });
+    if (rows.length > 12) rows.shift();
+    var value = { kind: root.dataset.kind, side: root.dataset.side, userAgent: navigator.userAgent, rows: rows };
+    if (root.dataset.side === 'front') {
+      try { sessionStorage.setItem(key, JSON.stringify(value)); } catch (_) { storage = 'unavailable'; }
+    }
+    root.querySelector('pre').textContent = JSON.stringify({ storage: storage,
+      front: previous ? previous.rows : null, current: value }, null, 1);
+    function summary(row) {
+      if (!row) return '未取得';
+      return '窗口 ' + row.vh + ' / 根 ' + row.dh + '\n可见 ' + JSON.stringify(row.visual) +
+        '\n定位 ' + JSON.stringify(row.locate) + ' / 导图 ' + JSON.stringify(row.diagram) +
+        '\n展开 ' + JSON.stringify(row.expand) + ' / 答案 ' + JSON.stringify(row.answers);
+    }
+    var frontRow = root.dataset.side === 'front' ? rows[rows.length-1] : previous && previous.rows[previous.rows.length-1];
+    root.querySelector('output').textContent = root.dataset.kind + ' / ' + root.dataset.side + '\n存储 ' + storage +
+      '\n正面：' + summary(frontRow) +
+      '\n当前：' + summary(rows[rows.length-1]) + '\n坐标为 [顶部, 高度]，单位 CSS px。';
+  }
+  function listen(target, name) {
+    function update() {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(function () { capture(name); });
+    }
+    target.addEventListener(name, update, { passive: true });
+    removals.push(function () { target.removeEventListener(name, update); });
+  }
+  root.querySelector('button').onclick = function () {
+    var panel = root.querySelector('div'); panel.hidden = !panel.hidden;
+    if (!panel.hidden) capture('inspect');
+  };
+  listen(window, 'load'); listen(window, 'resize'); listen(window, 'scroll');
+  if (window.visualViewport) { listen(visualViewport, 'resize'); listen(visualViewport, 'scroll'); }
+  var observer = new MutationObserver(function (records) {
+    if (!root.isConnected) { dispose(); return; }
+    // Capture a late React mount/math layout without polling or observing our
+    // own readout updates. This observer never modifies application elements.
+    if (records.some(function (r) { return !(r.target instanceof Element && r.target.closest('[data-mm-layout-probe]')); })) {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(function () { capture('content'); });
+    }
+  });
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+  function dispose() {
+    alive = false; cancelAnimationFrame(frame); observer.disconnect();
+    removals.forEach(function (remove) { remove(); });
+    window.removeEventListener('pagehide', dispose);
+    root.querySelector('button').onclick = null;
+    if (document[slot] === dispose) delete document[slot];
+  }
+  document[slot] = dispose;
+  window.addEventListener('pagehide', dispose);
+  capture('insert');
+  frame = requestAnimationFrame(function () { capture('paint'); });
+  document.fonts.ready.then(function () { capture('fonts'); });
+})();
+</script>

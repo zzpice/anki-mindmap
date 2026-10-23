@@ -34,10 +34,12 @@ module.exports = async function edgeTouch(page) {
     const content = document.querySelector("[data-mm-content]");
     const observer = new MutationObserver(() => {});
     observer.observe(content, { attributes: true, childList: true, subtree: true });
+    const state = runtime.inspect().state;
     for (let i = 0; i < 50; i++) runtime.dispatch({ type: "interrupt" });
+    const sameState = runtime.inspect().state === state;
     const redundantMutations = observer.takeRecords().length;
     observer.disconnect();
-    return { rows, dragCommands, redundantMutations };
+    return { rows, dragCommands, redundantMutations, sameState };
   });
   for (const row of result.rows) {
     assert.equal(row.onRelease, 1, `${row.selector} must act before a compatibility click`);
@@ -45,5 +47,6 @@ module.exports = async function edgeTouch(page) {
   }
   assert.equal(result.dragCommands, 0);
   assert.equal(result.redundantMutations, 0);
+  assert.equal(result.sameState, true, 'navigation interruption must not refresh React business-state subscribers');
   return result;
 };

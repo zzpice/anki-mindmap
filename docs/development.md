@@ -23,9 +23,13 @@ are capability gated; unsupported mobile grading bridges are not guessed.
 Each render has a private store and resource scope. Replacement, same-root remount and
 pagehide dispose listeners, timers, observers, RAF, subscriptions and React root. Native
 content snapshots restore on owned-root remount; an externally replaced subtree is never
-restored over the host's new content. No state is restored by deck name or node index.
-Without a trustworthy cross-side identity, layout resets on a new side; this intentionally
-prioritizes no cross-card contamination. Theme alone is a long-lived local preference.
+restored over the host's new content. No cross-note preference is keyed by deck
+name or node index alone.
+An optional single-use source/ordinal/topology match carries only expanded paths,
+zoom and reading position from front to back. Missing/mismatched metadata starts
+fresh; every new front invalidates the prior handoff. Answers/search/dialogs never
+carry across a flip. See reading-layout.md for identity limits. Theme alone is a
+long-lived local preference. Edge-control coordinates are not stored or restored.
 
 Production identity is unchanged in cards/note-types.json. Packaging defaults ONLY to the
 separate test model. Future production installation/export is a separate explicit step.
@@ -33,8 +37,9 @@ Do not change field IDs/order, native ordinals, GUIDs or data as part of a UI re
 
 The visual skin lives separately in src/visual/original.css and src/style.css.
 Historical HTML classes retain their original visual meaning. The first file
-preserves original appearance values; the second handles the React/semantic-button
-adapters. Page decorations are owned by the mounted runtime and removed on dispose.
+preserves rich-content/theme values and approved heading sizing; the second owns
+the actual React controls. Historical edge-control rules are removed from the skin
+instead of being overridden repeatedly. Page decorations are owned by the mounted runtime and removed on dispose.
 New note types cannot inherit our page margins, themes or tree selectors. The pure
 business core is unchanged by the visual restoration.
 
@@ -43,3 +48,12 @@ therefore observes the two owned page class decorations and restores them after 
 host reset, preserving host classes such as nightMode. Those observers share the
 same resource scope as other card work and are removed on disposal. Tests cover
 this order explicitly; merely checking a standalone browser page would miss it.
+
+Navigation interruption is a lifecycle action: it cancels pending location and
+queues at most one reading snapshot per frame. It does not mutate the business
+store or notify React. Do not introduce an unused scroll/intent counter into state.
+
+tests/react/layout-probe.html is diagnostic-package code only, never an application
+import. It records numeric layout/viewport measurements without answer text, does
+not apply styles to the application or dispatch commands, and cleans its own
+listeners/observer/frame on replacement. The pinned main runtime is a test fixture.

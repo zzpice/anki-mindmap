@@ -68,9 +68,10 @@ Alpha.11 removes the shared frame and keeps narrow edge buttons wholly on screen
 with explicit two-line horizontal labels. This addresses clipping visible in supplied
 iOS screenshots; original scroll/flip stability still needs physical retesting.
 
-Alpha.12 keeps an iOS card's front-side edge seam and label anchors on its back
-when the host changes viewport height. New cards, width changes and manual zoom
-release the anchors; Android/Desktop keep existing CSS. [Evidence and limits](docs/ios-edge-continuity.md).
+Alpha.13 withdraws alpha.12's ineffective edge-coordinate cache and consolidates
+edge layout into one CSS definition. Manual scrolling no longer changes business
+state or forces React updates. The iOS native flip issue is **still open**.
+[Confirmed findings and independent main/React diagnostic APKG](docs/ios-edge-continuity.md).
 
 ## How the code fits together
 

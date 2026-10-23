@@ -1,6 +1,7 @@
 # Validation and remaining limits
 
-This branch is a usable rewrite, not a replacement installed in a personal collection.
+The publicly downloadable APKG uses an independent test model. Any separately
+authorized local template maintenance is not part of these isolated tests.
 The production contract file, original sample field content and historical extraction
 baseline are unchanged. The old runtime's duplicated scripts are replaced by shared React
 UI, pure business rules and a bounded native-content module. Legacy tests are retained as
@@ -8,15 +9,15 @@ historical evidence, not silently changed to bless old defects.
 
 ## Current automated checks
 
-- Eight core tests, including 1000 invariant sequences: folding never changes answers,
+- Ten core tests, including 1000 invariant sequences: folding never changes answers,
   reveal never changes layout, native occurrences stay independent, other groups exclude
   current, ordered reveal/reverse hide and search/manual-layout precedence.
-- Official Anki backend: 20 anonymous notes, 26 cards, same-number occurrences, c1/c30,
+- Official Anki backend: 21 anonymous notes, 27 cards, same-number occurrences, c1/c30,
   nested/native/custom Cloze, field-only questions, empty Text, HTML/image/table/MathML.
 - Collision-safe test import into a collection already containing model 1303378414 and a
   synthetic scheduled note: original model JSON, complete note/card rows unchanged.
   Repeated import does not duplicate test notes; fields, ordinals and media round-trip.
-- Chromium and WebKit each load 52 native sides and run 100 front/back/next lifecycle
+- Chromium and WebKit each load 54 native sides and run 100 front/back/next lifecycle
   sequences, including duplicate bundle execution, same-root remount, externally removed
   hosts, rejected stale commands and zero owned resources after disposal.
 - Search excludes hidden answers, navigates folded prose, does not change reveal and does
@@ -30,7 +31,7 @@ historical evidence, not silently changed to bless old defects.
 
 Official Anki/aqt 26.9.3 on macOS 27.0.1 arm64, PyQt/Qt compiled 6.11.0, WebEngine UA
 6.11.2/Chromium 140. A uniquely keyed safe-mode process uses a fresh profile with auto-sync
-disabled. It loads 52 preview sides and a fresh direct-back view, then runs the actual
+disabled. It loads 54 preview sides and a fresh direct-back view, then runs the actual
 reviewer: reveal, native Show Answer, native Again rating, next different anonymous card.
 Only the temporary profile receives a review-log entry. Removing the reviewer host
 cleans every owned resource. The driver explicitly closes its collection and Qt services.
@@ -45,9 +46,14 @@ logs; passing assertions do not mean warning-free operation.
 - No AnkiMobile, AnkiDroid physical device or real gamepad has been certified. Browser
   touch and controller API substitutes only exercise input logic. Mobile grading bridges
   are not guessed; use native app controls. Local-note navigation is capability gated.
-- Tree layout resets on each new side/render because there is no proven universal card
-  identity. This prevents cross-note contamination; theme persists locally. Search,
-  temporary answers and dialogs reset on native flip.
+- A matched front/back can retain expanded branches, zoom and reading position;
+  every new front resets. The source/ordinal/topology match has documented limits
+  in reading-layout.md. Search, temporary answers and dialogs reset on native flip.
+- The iOS edge seam movement remains unresolved on hardware. Alpha.12's coordinate
+  cache was withdrawn after a teardown-order counterexample and repeated user reports.
+  Browser reference-height changes move the main baseline too; this does not prove
+  that the same event occurs on a particular iPhone. The separate layout comparison
+  APKG is for measurement, not a mobile reliability certification.
 - Basic MathML/loaded TeX work in the tested Desktop. Async-only formula extensions,
   older WebViews, mobile math interfaces and arbitrary historical HTML need user testing.
   Unknown structures stay readable rather than being destructively normalized.
@@ -77,11 +83,12 @@ approved non-revealing behavior; its added step controls remain inside the searc
 panel. Host button margins are reset to prevent narrow-screen crowding. Diagram
 closing is explicit/outside-click and night dialogs remain readable.
 
-The original visual rule values are retained in src/visual/original.css with scoped
-ownership selectors; src/style.css adapts semantic buttons, state projection and
-dialogs. No legacy JavaScript is imported. The bundled WenKai font is unchanged and
-its OFL is included. Font preload is required for Anki to discover and export the
-font referenced by an external CSS file. CSS minification stays off because it
+Original rich-content/theme values and approved compact heading rules are in
+src/visual/original.css. src/style.css owns React controls, state projection and
+dialogs; historical unused edge/personal-popup rules are removed. No legacy
+JavaScript is imported by the application. The bundled WenKai font is unchanged and
+its OFL is included. Inline CSS and font preload advertise the packaged font
+before runtime startup. CSS minification stays off because it
 otherwise discards Chromium's standard backdrop-filter in this toolchain.
 
 Reproduce comparisons after building the test package:

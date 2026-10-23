@@ -68,10 +68,7 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
 }
 /* Semantic buttons retain the dimensions and typography of the original div controls. */
 #mm-react button.floating,
-#mm-react button.floating-button,
-#mm-react button.custom-button,
-#mm-react button.custom2-button,
-#mm-react button#left-floating-widget {
+#mm-react .mm-edge {
   border: 0;
   padding: 0;
   margin: 0;
@@ -85,10 +82,6 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
 #mm-react button.floating {
   font-size: 0.75em;
 }
-#mm-react button.custom-button,
-#mm-react button.custom2-button {
-  color: inherit;
-}
 #mm-react button:focus-visible,
 #mm-react .bullet:focus-visible {
   outline: 2px solid var(--marker-color);
@@ -97,9 +90,48 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
 #mm-react button:disabled {
   cursor: default;
 }
-/* Preserve the old visible width, but keep the whole tab on screen. Offscreen
-   halves + vertical glyph metrics caused text clipping in the supplied iOS
-   screenshot. Labels are explicit horizontal lines, not vertical writing. */
+/* One authority for edge-control geometry. Original colours/shadows and the
+   approved two-part layout remain; old offscreen/vertical rules are not loaded
+   and there is no JS coordinate cache. Host viewport changes remain responsive. */
+#mm-react .mm-edge {
+  position: fixed;
+  z-index: 1000;
+  width: 1em;
+  background-color: rgba(245, 245, 245, 0.2);
+  color: inherit;
+  cursor: pointer;
+  writing-mode: horizontal-tb;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+#mm-react .mm-edge-left {
+  left: 0;
+  border-radius: 0 10px 10px 0;
+}
+#mm-react .mm-edge-right {
+  right: 0;
+  border-radius: 10px 0 0 10px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+#mm-react .mm-edge-top {
+  top: 0;
+  bottom: 50%;
+}
+#mm-react .mm-edge-bottom {
+  top: 50%;
+  bottom: 0;
+}
+#mm-react .mm-edge-left.mm-edge-top {
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.5);
+}
+#mm-react .mm-edge-left.mm-edge-bottom {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+.nightMode #mm-react .mm-edge {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+/* Explicit horizontal lines avoid narrow-column wrapping and vertical font
+   metrics; the label and the complete touch target stay inside the screen. */
 #mm-react .mm-edge-label {
   position: absolute;
   inset: 0;
@@ -116,40 +148,6 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
 #mm-react .mm-edge-label > span {
   white-space: pre;
   writing-mode: horizontal-tb;
-}
-#mm-react button.floating-button,
-#mm-react button#left-floating-widget {
-  color: inherit;
-}
-/* Compact context heading; keep the field and title text intact. */
-#mm-react [data-mm-content] > .title {
-  min-height: 0;
-  padding-bottom: 6px;
-  margin-bottom: 10px;
-  line-height: 28px;
-  font-size: 20px;
-}
-/* Navigation on the left, content display controls on the right. */
-#mm-react #left-floating-widget {
-  left: -1em;
-  right: auto;
-  height: 50%;
-}
-#mm-react .custom2-button {
-  top: 0;
-  height: 50%;
-}
-#mm-react .custom-button {
-  top: 50%;
-  height: 50%;
-}
-#mm-react .search-box:not([hidden]) {
-  visibility: visible;
-  height: auto;
-  overflow: visible;
-}
-#mm-react .search-box input {
-  font-family: inherit;
 }
 #mm-react .search-box .mm-step {
   background: transparent;
@@ -252,11 +250,6 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
   }
 }
 
-/* Anki Desktop supplies button {margin: 1em .5em}. Keep the original compact
-   search layout usable at 320px rather than inheriting those host margins. */
-#mm-react .search-box button {
-  margin: 0;
-}
 .nightMode #mm-react .mm-dialog-annotation {
   background: #333;
   border: 1px solid #555;
@@ -272,41 +265,6 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
   width: 18px;
   height: 18px;
   line-height: 18px;
-}
-
-/* Independent fixed controls, without a new containing frame. Opposing insets
-   use the host's fixed viewport. No vh/svh, zoom compensation or offscreen edge. */
-#mm-react button.floating-button,
-#mm-react button#left-floating-widget,
-#mm-react button.custom-button,
-#mm-react button.custom2-button {
-  width: 1em;
-  height: auto;
-  writing-mode: horizontal-tb;
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-}
-#mm-react button.floating-button,
-#mm-react button#left-floating-widget {
-  left: 0;
-  right: auto;
-  border-radius: 0 10px 10px 0;
-}
-#mm-react button.custom-button,
-#mm-react button.custom2-button {
-  right: 0;
-  left: auto;
-  border-radius: 10px 0 0 10px;
-}
-#mm-react button#left-floating-widget,
-#mm-react button.custom2-button {
-  top: 0;
-  bottom: 50%;
-}
-#mm-react button.floating-button,
-#mm-react button.custom-button {
-  top: 50%;
-  bottom: 0;
 }
 
 /* Feedback never delays a command or animates answer/tree geometry. Keep entry

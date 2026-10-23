@@ -40,6 +40,11 @@ module.exports = async function touchWithoutClick(page) {
     bullet.focus();
     bullet.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, code: "Enter", key: "Enter" }));
     const afterKeyboard = bullet.getAttribute("aria-expanded");
+    const keyboardFallbacks = [];
+    for (const payload of [{ code: "Enter" }, { key: " " }]) {
+      bullet.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, ...payload }));
+      keyboardFallbacks.push(bullet.getAttribute("aria-expanded"));
+    }
     const active = document.querySelector(".cloze"), placeholder = active.querySelector(".cloze-placeholder");
     send("touchstart", 5, 5, 1, placeholder);
     send("touchend", 5, 5, 1, placeholder);
@@ -47,12 +52,13 @@ module.exports = async function touchWithoutClick(page) {
     active.dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 1 }));
     const afterRevealClick = runtime.inspect().state.revealed.a0;
     return { initial: initial.revealed, answers, prevented, expanded,
-      afterCompatibilityClick, afterScroll, afterPinch, afterCancel, afterKeyboard, afterReveal, afterRevealClick };
+      afterCompatibilityClick, afterScroll, afterPinch, afterCancel, afterKeyboard, keyboardFallbacks, afterReveal, afterRevealClick };
   });
   assert.equal(result.prevented, true);
   for (const key of ["expanded", "afterCompatibilityClick", "afterScroll", "afterPinch", "afterCancel"])
     assert.equal(result[key], "true", key);
   assert.equal(result.afterKeyboard, "false");
+  assert.deepEqual(result.keyboardFallbacks, ["true", "false"], 'key/code fallbacks activate a focused branch exactly once');
   assert.equal(result.afterReveal, true);
   assert.equal(result.afterRevealClick, true);
   assert.deepEqual(result.answers, result.initial);

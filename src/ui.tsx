@@ -9,7 +9,6 @@ import {
   type Command,
   type ContentModel,
   type Overlay,
-  type Side,
   type Store,
 } from "./core";
 
@@ -25,7 +24,6 @@ export function Interface({
 }: {
   store: Store;
   model: ContentModel;
-  side: Side;
   deck: string;
   diagram: string;
   annotation: (id: string) => string | undefined;
@@ -63,7 +61,7 @@ export function Interface({
       </button>
       <nav aria-label="复习工具">
         <button
-          className="floating-button"
+          className="mm-edge mm-edge-left mm-edge-bottom floating-button"
           aria-label="定位"
           title="定位 · H"
           disabled={!model.active.length}
@@ -74,6 +72,7 @@ export function Interface({
         {diagram.trim() && (
           <button
             id="left-floating-widget"
+            className="mm-edge mm-edge-left mm-edge-top"
             aria-label="导图"
             title="导图 · J"
             onClick={() =>
@@ -90,7 +89,7 @@ export function Interface({
           </button>
         )}
         <button
-          className="custom2-button"
+          className="mm-edge mm-edge-right mm-edge-top custom2-button"
           aria-label={expanded ? "收起分支" : "展开分支"}
           title={expanded ? "收起全部分支 · K" : "展开全部分支 · K"}
           onClick={() => dispatch({ type: "toggleTree" })}
@@ -98,7 +97,7 @@ export function Interface({
           <EdgeLabel text={expanded ? "收起" : "展开"} />
         </button>
         <button
-          className="custom-button"
+          className="mm-edge mm-edge-right mm-edge-bottom custom-button"
           aria-label={othersVisible ? "隐藏其他" : "揭示其他"}
           title={othersVisible ? "隐藏其他答案 · L" : "显示其他答案 · L"}
           disabled={!model.groups.length}

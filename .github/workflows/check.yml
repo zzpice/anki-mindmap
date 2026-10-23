@@ -41,6 +41,8 @@ jobs:
           python -m pip install --no-deps aqt==26.9.3
           git fetch --no-tags --depth=1 origin f67c932a02bef79f0feab1121c6783a9a3ff9e17
           python scripts/prepare_visual_comparison.py
+          python scripts/build_layout_comparison.py
+          node tests/react/layout-comparison.cjs
           node tests/react/visual.cjs
       - uses: actions/upload-artifact@v6
         if: matrix.anki-version == '26.9.3'

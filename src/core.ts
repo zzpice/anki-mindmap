@@ -22,7 +22,6 @@ export interface State {
   revealed: Readonly<Record<string, boolean>>;
   groups: Readonly<Record<string, boolean>>;
   theme: Theme;
-  intent: number;
   searchOpen: boolean;
   query: string;
   matches: readonly Match[];
@@ -69,7 +68,6 @@ export function initialState(
     ),
     groups: Object.fromEntries(model.groups.map((id) => [id, false])),
     theme,
-    intent: 0,
     searchOpen: false,
     query: "",
     matches: [],
@@ -106,10 +104,7 @@ export function reduce(
   command: Command,
   model: ContentModel,
 ): State {
-  const next = {
-    ...state,
-    intent: state.intent + (command.type === "setMatches" ? 0 : 1),
-  };
+  const next = { ...state };
   switch (command.type) {
     case "restoreLayout":
       return {
@@ -179,7 +174,9 @@ export function reduce(
     case "locate":
       return openPath(next, model.active[0]?.ancestors ?? []);
     case "interrupt":
-      return next;
+      // Cancelling navigation belongs to the render lifecycle. Scrolling is
+      // not a business-state transition and must not notify React subscribers.
+      return state;
     case "theme":
       return { ...next, theme: command.value };
     case "overlay":

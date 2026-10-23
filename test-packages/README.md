@@ -1,62 +1,16 @@
-# React test package
+# Anki 测试包 · alpha.13
 
-Download `anki-mindmap-react-test.apkg` from this branch. This is a standalone offline
-Anki import, not a browser preview. Use a new profile with sync disabled.
+| 下载 | 用途 | 独立身份 |
+| --- | --- | --- |
+| [React 测试版](anki-mindmap-react-test.apkg) | 清理坐标补偿后的完整 React 体验；21 条匿名笔记、27 张原生 Cloze 卡 | 模型 1792748414 |
+| [main / React 边栏对照](anki-mindmap-layout-comparison.apkg) | 两版使用相同的短树、深树、宽表格和图片；8 条匿名笔记、8 张卡；显示实际布局数据 | 模型 1792748514 / 1792748524 |
 
-It uses model **1792748414** named **思维导图 · React 测试版**, its own sample GUID namespace
-and deck, plus hashed local assets. It does not update production model **1303378414**.
-The native import test verifies existing production model, note and scheduling rows remain
-unchanged. The original three fields and native Cloze semantics are retained.
+可直接导入 Anki，无网页、开发服务器或在线依赖。不要把真实笔记转换成这些测试模型。模型、GUID 和牌组与正式版本分开；官方 Anki 临时集合验证现有正式模型、笔记和排程不受影响，重复导入不增加重复笔记。正常测试建议使用新建资料并关闭同步；手机端只操作新增的测试牌组。
 
-Open the welcome lesson to try folding, locating, per-occurrence reveal, other-group
-reveal, search, diagram, annotations and images. Show Answer and ratings remain native.
-Desktop 26.9.3 is exercised in an isolated profile. Physical phones/gamepad are unverified.
-Consult `react-test-manifest.json` and `SHA256SUMS` for the exact build. No formal release.
+**iOS 翻面时边栏下移仍未完成实机定位。** alpha.13 删除 alpha.12 无效的坐标冻结，让边栏只有一份 CSS 几何规则。滚动不再修改业务 store 或触发 React 刷新。它不是一个已证实修好 iOS 的版本，日常模板也没有因此自动更新。
 
-Alpha.5 adds short readable edge labels without widening the tabs or reducing
-content width. Android edge buttons act on stationary touch release and ignore
-the later compatibility click; unchanged tree/answer projections no longer
-rewrite DOM on navigation interruption. Knowledge titles, theme palette and
-animations are unchanged. See [edge control details](../docs/edge-controls.md).
+对照包的 main 使用 pinned f67c932 原版业务代码，仅调整独立测试身份和等价字体文件路径。先测试 main 子组，完全退出并重开 Anki，再测试 react 子组，排除原版全局处理器遗留的干扰。点「布局数据」可截图简要坐标或展开完整记录。数据只保存在本地，不含笔记答案。详见 [诊断依据及操作说明](../docs/ios-edge-continuity.md)。
 
-Alpha.4 restores touch-only node expansion on mobile, deduplicates compatibility
-clicks, and waits for AnkiDroid's full-page load/font/layout before presenting
-and locating the tree. The iOS presentation path stays as in alpha.3. These new
-paths have automated browser/isolated Desktop coverage; physical-device retest
-is pending.
+正常 React 版保留折叠、定位、当前挖空逐处显隐、其他组显隐、搜索、导图、批注、互链、主题和输入适配。Anki 仍负责正式翻面与评分。已删除填写笔记弹窗，原字段与内容保留；正文图片交给客户端原生手势。
 
-Alpha.3 addresses transient image/layout flashes during flips. CSS is inline
-before native content; the exact loaded runtime is reused as code only, every
-card still gets fresh state. Diagram source images stay inert until opened.
-Mobile-size Chromium/WebKit checks pass; Android/iOS device confirmation is
-pending. See [flip rendering evidence](../docs/flip-rendering.md).
-
-Alpha.2 restores the original main visual design. The original WenKai font is
-bundled locally with its OFL, so the package is about 19 MB. The new visual-design
-sample covers heading levels, highlights and notes; there are 20 notes / 26 native
-Cloze cards. See [old/new screenshots](visual-comparison/README.md).
-
-Top deck strip opens search; left upper/lower tabs open the diagram and locate;
-right upper/lower tabs expand/collapse the tree and show/hide other groups. Current
-Cloze can still be tapped independently. The removed personal-note popup stays
-removed, with its field and content preserved.
-
-Alpha.9 adds immediate press feedback, local panel fade-in and a short navigation
-outline, respecting reduced motion. Inline images use the client's own gestures;
-there is no second template image viewer. Four edge controls now share a stable
-viewport frame, including review zoom. Both engines pass scroll/flip/resize tests;
-AnkiMobile rubber-band scrolling and native image zoom need physical retest.
-[Changes and limits](../docs/motion-and-images.md).
-
-Alpha.10 corrects edge proportions and label centring using fixed insets and a
-centred text container, rather than viewport-unit/transform estimates. Mobile
-regressions check actual text centres during scroll, flip, review zoom and rotation.
-
-Alpha.11 removes the shared edge frame and keeps the same visible-width tabs fully
-on screen. Labels use explicit horizontal lines with text autosizing disabled.
-This targets clipping visible in iOS screenshots; native scroll/flip stability still
-needs physical retesting. Motion and native image gestures remain.
-
-Alpha.12 adds card-scoped iOS front-to-back edge geometry continuity, including
-native viewport height changes. Lower surfaces extend without moving labels.
-[Tests and remaining real-device limits](../docs/ios-edge-continuity.md).
+验证结果与限制见 [verification.json](verification.json)，包身份和摘要见两份 manifest 与 [SHA256SUMS](SHA256SUMS)。[原版视觉对照](visual-comparison/README.md)包含历史基线；当前浏览器/隔离 Desktop 结果不能代替 AnkiMobile、AnkiDroid 实机认证。没有合并 main 或发布正式 Release。

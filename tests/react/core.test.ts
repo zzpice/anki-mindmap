@@ -16,6 +16,16 @@ const model: ContentModel = {
   ],
 };
 
+test("navigation interruption never changes business state or notifies subscribers", () => {
+  const store = createStore(model, "front", "paper");
+  const before = store.getSnapshot();
+  let notifications = 0;
+  store.subscribe(() => notifications++);
+  for (let i = 0; i < 100; i++) assert.equal(store.dispatch({ type: "interrupt" }), false);
+  assert.strictEqual(store.getSnapshot(), before);
+  assert.equal(notifications, 0);
+});
+
 test("restoring layout validates branches and never restores answers or temporary UI", () => {
   const state = initialState(model, "back", "paper");
   const next = reduce(state, { type: "restoreLayout", expanded: { n0: false, unknown: true }, zoom: 8 }, model);

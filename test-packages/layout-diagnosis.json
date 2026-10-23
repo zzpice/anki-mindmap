@@ -1,0 +1,159 @@
+{
+  "startCommit": "b47c3639e1a855e1803c2e46f4877bc3c73a64ed",
+  "mainCommit": "f67c932a02bef79f0feab1121c6783a9a3ff9e17",
+  "scenario": "Anonymous welcome card; mobile browser; native viewport changes before retiring front",
+  "beforeCleanup": [
+    {
+      "engine": "chromium",
+      "kind": "original",
+      "before": {
+        "height": 780,
+        "seam": 390,
+        "button": {
+          "top": 390,
+          "height": 390
+        },
+        "pinned": null,
+        "source": false
+      },
+      "resizedFront": {
+        "height": 844,
+        "seam": 422,
+        "button": {
+          "top": 422,
+          "height": 422
+        },
+        "pinned": null,
+        "source": false
+      },
+      "after": {
+        "height": 844,
+        "seam": 422,
+        "button": {
+          "top": 422,
+          "height": 422
+        },
+        "pinned": null,
+        "source": false
+      },
+      "shift": 32,
+      "handoffRetainsOriginalSeam": false
+    },
+    {
+      "engine": "chromium",
+      "kind": "react",
+      "before": {
+        "height": 780,
+        "seam": 390,
+        "button": {
+          "top": 390,
+          "height": 390
+        },
+        "pinned": false,
+        "source": true
+      },
+      "resizedFront": {
+        "height": 844,
+        "seam": 422,
+        "button": {
+          "top": 422,
+          "height": 422
+        },
+        "pinned": false,
+        "source": true
+      },
+      "after": {
+        "height": 844,
+        "seam": 422,
+        "button": {
+          "top": 422,
+          "height": 422
+        },
+        "pinned": true,
+        "source": true
+      },
+      "shift": 32,
+      "handoffRetainsOriginalSeam": false
+    },
+    {
+      "engine": "webkit",
+      "kind": "original",
+      "before": {
+        "height": 780,
+        "seam": 390,
+        "button": {
+          "top": 390,
+          "height": 390
+        },
+        "pinned": null,
+        "source": false
+      },
+      "resizedFront": {
+        "height": 844,
+        "seam": 422,
+        "button": {
+          "top": 422,
+          "height": 422
+        },
+        "pinned": null,
+        "source": false
+      },
+      "after": {
+        "height": 844,
+        "seam": 422,
+        "button": {
+          "top": 422,
+          "height": 422
+        },
+        "pinned": null,
+        "source": false
+      },
+      "shift": 32,
+      "handoffRetainsOriginalSeam": false
+    },
+    {
+      "engine": "webkit",
+      "kind": "react",
+      "before": {
+        "height": 780,
+        "seam": 390,
+        "button": {
+          "top": 390,
+          "height": 390
+        },
+        "pinned": false,
+        "source": true
+      },
+      "resizedFront": {
+        "height": 844,
+        "seam": 422,
+        "button": {
+          "top": 422,
+          "height": 422
+        },
+        "pinned": false,
+        "source": true
+      },
+      "after": {
+        "height": 844,
+        "seam": 422,
+        "button": {
+          "top": 422,
+          "height": 422
+        },
+        "pinned": true,
+        "source": true
+      },
+      "shift": 32,
+      "handoffRetainsOriginalSeam": false
+    }
+  ],
+  "readOnlyLiveCheck": {
+    "previousTemplateAndAssetMatched": true,
+    "sampledNotes": 40,
+    "sampledCards": 40,
+    "nativeFrontBackSourceOrdinalTopologyMatchedInBothEngines": true,
+    "personalTextUploaded": false
+  },
+  "meaning": "Counterexample to alpha.12 handoff. Not evidence that an iPhone changes its viewport this way. Real device cause is still open."
+}

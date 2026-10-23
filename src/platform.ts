@@ -11,7 +11,6 @@ export function platform() {
     document.documentElement.matches(".iphone,.ipad");
   let droid: Droid | undefined;
   return {
-    ios,
     native(action: "flip" | "again" | "hard" | "good" | "easy") {
       if (
         typeof host.pycmd !== "function" ||

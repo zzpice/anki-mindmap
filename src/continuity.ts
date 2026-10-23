@@ -1,6 +1,5 @@
 import type { ContentModel, Side, State } from "./core";
 import type { ReadingPoint } from "./reading";
-import type { EdgeGeometry } from "./edges";
 
 const KEY = "anki_mindmap.front-layout.v1";
 interface Handoff {
@@ -12,7 +11,6 @@ interface Handoff {
   expanded: State["expanded"];
   zoom: number;
   point?: ReadingPoint;
-  edges?: EdgeGeometry;
 }
 function signature(text: string) {
   let a = 2166136261, b = 5381;
@@ -55,10 +53,10 @@ export function reviewContinuity(host: HTMLElement, side: Side, model: ContentMo
   write({ version: 1, owner, phase: side, key, time: Date.now(), expanded: {}, zoom: 1 });
   return {
     restored,
-    save(state: State, point?: ReadingPoint, edges?: EdgeGeometry) {
+    save(state: State, point?: ReadingPoint) {
       if (side !== "front" || !key || read()?.owner !== owner) return;
       write({ version: 1, owner, phase: side, key, time: Date.now(),
-        expanded: state.expanded, zoom: state.zoom, point, edges });
+        expanded: state.expanded, zoom: state.zoom, point });
     },
   };
 }

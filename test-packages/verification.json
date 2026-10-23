@@ -1,10 +1,10 @@
 {
-  "startingDevelopmentCommit": "cbbe701fe7fe8059408126ed6f8cee52564010ac",
-  "version": "0.2.0-alpha.12",
-  "coreTests": 9,
+  "startingDevelopmentCommit": "b47c3639e1a855e1803c2e46f4877bc3c73a64ed",
+  "version": "0.2.0-alpha.13",
+  "coreTests": 10,
   "native": {
     "status": "passed",
-    "version": "0.2.0-alpha.12",
+    "version": "0.2.0-alpha.13",
     "testModel": {
       "id": 1792748414,
       "kind": 1,
@@ -44,57 +44,15 @@
     ],
     "assets": {
       "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
-      "_mm_react_18a7e3e93325.js": "18a7e3e93325ef8f5c99b776574e46d88505d4e90ad9c62e70888f72d65301a6",
+      "_mm_react_85688674ad11.js": "85688674ad11e7f0f4b683dab77fdd19ad2c44870e2a3d313b6a19860611c72a",
       "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
     },
-    "apkgSha256": "42cb9efc9360ef563fa7eef371eb8e3485905990a025f98dad401022f9158f69"
+    "apkgSha256": "639def83946ddcf609beda162ac84e197d76ca2ab352f82dd7d63ee6d75f25fa"
   },
   "nativeBackend25": {
     "status": "passed",
-    "version": "0.2.0-alpha.12",
-    "testModel": {
-      "id": 1792748414,
-      "kind": 1,
-      "fields": [
-        [
-          179274841401,
-          "填写笔记",
-          0
-        ],
-        [
-          179274841402,
-          "导图",
-          1
-        ],
-        [
-          179274841403,
-          "Text",
-          2
-        ]
-      ],
-      "templates": [
-        [
-          179274841400,
-          0
-        ]
-      ]
-    },
-    "productionModelId": 1303378414,
     "notes": 21,
-    "cards": 27,
-    "checks": [
-      "native same/multiple/gapped/nested Cloze ordinals",
-      "full fields/media/identity round trip",
-      "existing production model/note/scheduling untouched by test import",
-      "repeat import does not duplicate test notes",
-      "template update preserves original note/card rows"
-    ],
-    "assets": {
-      "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
-      "_mm_react_18a7e3e93325.js": "18a7e3e93325ef8f5c99b776574e46d88505d4e90ad9c62e70888f72d65301a6",
-      "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
-    },
-    "apkgSha256": "161cd3e24b5557aeb994f5adf8be0fbed9fee9e4517d16327f58c9f54465cc7e"
+    "cards": 27
   },
   "nativeBackends": [
     "25.9.2",
@@ -126,13 +84,37 @@
         ],
         "errors": [],
         "edges": {
-          "changedNativeViewport": "780 -> 844px, iOS seam/labels unchanged; lower surfaces fill the new bottom",
-          "scrolling": "passed",
-          "newFrontAndOrdinal": "passed",
-          "orientationAndZoom": "passed",
-          "malformedOrBlockedStorage": "passed (readable CSS fallback)",
-          "AndroidUnchanged": "passed",
-          "limitations": "No physical iOS certification; labels retain front anchors rather than recentering in newly exposed bottom space."
+          "viewportAndTeardownOrder": [
+            {
+              "platform": "iphone",
+              "order": "resize-before-dispose",
+              "seam": 422,
+              "centred": true
+            },
+            {
+              "platform": "iphone",
+              "order": "resize-after-dispose",
+              "seam": 422,
+              "centred": true
+            },
+            {
+              "platform": "android",
+              "order": "resize-before-dispose",
+              "seam": 422,
+              "centred": true
+            },
+            {
+              "platform": "android",
+              "order": "resize-after-dispose",
+              "seam": 422,
+              "centred": true
+            }
+          ],
+          "constantViewportRevealFlipAndScroll": "passed",
+          "zoomAndOrientation": "passed",
+          "inlineCompensation": "absent",
+          "disposal": "passed",
+          "limitation": "A changing real iOS visible inset/viewport still requires device measurements; this test does not claim it is fixed."
         },
         "motion": {
           "labelCentres": "passed: front/back, scroll, zoom, landscape",
@@ -204,44 +186,45 @@
                 "selector": ".floating-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.699999988079071
+                "releaseHandlerMs": 0.5
               },
               {
                 "selector": ".custom2-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.20000000298023224
+                "releaseHandlerMs": 0.09999999403953552
               },
               {
                 "selector": ".custom-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.6000000089406967
+                "releaseHandlerMs": 1
               },
               {
                 "selector": "#left-floating-widget",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.09999999403953552
+                "releaseHandlerMs": 0
               }
             ],
             "dragCommands": 0,
-            "redundantMutations": 0
+            "redundantMutations": 0,
+            "sameState": true
           },
           "rows": [
             {
               "navigation": 0,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 1
             },
             {
               "navigation": 1,
-              "paintedFrames": 3,
+              "paintedFrames": 4,
               "scrolls": 0
             },
             {
               "navigation": 2,
-              "paintedFrames": 3,
+              "paintedFrames": 2,
               "scrolls": 1
             },
             {
@@ -251,17 +234,17 @@
             },
             {
               "navigation": 4,
-              "paintedFrames": 3,
+              "paintedFrames": 4,
               "scrolls": 1
             },
             {
               "navigation": 5,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 0
             },
             {
               "navigation": 6,
-              "paintedFrames": 3,
+              "paintedFrames": 2,
               "scrolls": 1
             },
             {
@@ -276,12 +259,13 @@
             },
             {
               "navigation": 9,
-              "paintedFrames": 3,
+              "paintedFrames": 2,
               "scrolls": 0
             }
           ]
         },
-        "lifecycleCycles": 100
+        "lifecycleCycles": 100,
+        "disposedResourcesAllZero": true
       },
       {
         "name": "webkit",
@@ -306,13 +290,37 @@
         ],
         "errors": [],
         "edges": {
-          "changedNativeViewport": "780 -> 844px, iOS seam/labels unchanged; lower surfaces fill the new bottom",
-          "scrolling": "passed",
-          "newFrontAndOrdinal": "passed",
-          "orientationAndZoom": "passed",
-          "malformedOrBlockedStorage": "passed (readable CSS fallback)",
-          "AndroidUnchanged": "passed",
-          "limitations": "No physical iOS certification; labels retain front anchors rather than recentering in newly exposed bottom space."
+          "viewportAndTeardownOrder": [
+            {
+              "platform": "iphone",
+              "order": "resize-before-dispose",
+              "seam": 422,
+              "centred": true
+            },
+            {
+              "platform": "iphone",
+              "order": "resize-after-dispose",
+              "seam": 422,
+              "centred": true
+            },
+            {
+              "platform": "android",
+              "order": "resize-before-dispose",
+              "seam": 422,
+              "centred": true
+            },
+            {
+              "platform": "android",
+              "order": "resize-after-dispose",
+              "seam": 422,
+              "centred": true
+            }
+          ],
+          "constantViewportRevealFlipAndScroll": "passed",
+          "zoomAndOrientation": "passed",
+          "inlineCompensation": "absent",
+          "disposal": "passed",
+          "limitation": "A changing real iOS visible inset/viewport still requires device measurements; this test does not claim it is fixed."
         },
         "motion": {
           "labelCentres": "passed: front/back, scroll, zoom, landscape",
@@ -384,7 +392,7 @@
                 "selector": ".floating-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 2
+                "releaseHandlerMs": 1
               },
               {
                 "selector": ".custom2-button",
@@ -402,11 +410,12 @@
                 "selector": "#left-floating-widget",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0
+                "releaseHandlerMs": 1
               }
             ],
             "dragCommands": 0,
-            "redundantMutations": 0
+            "redundantMutations": 0,
+            "sameState": true
           },
           "rows": [
             {
@@ -441,7 +450,7 @@
             },
             {
               "navigation": 6,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 1
             },
             {
@@ -451,7 +460,7 @@
             },
             {
               "navigation": 8,
-              "paintedFrames": 2,
+              "paintedFrames": 4,
               "scrolls": 1
             },
             {
@@ -461,7 +470,8 @@
             }
           ]
         },
-        "lifecycleCycles": 100
+        "lifecycleCycles": 100,
+        "disposedResourcesAllZero": true
       }
     ],
     "externalRequests": []
@@ -502,17 +512,11 @@
         ],
         "height": 804
       },
-      "edgeLayout": {
-        "enabled": false,
-        "height": 804,
-        "pinned": false,
-        "width": 1000
-      },
       "font": {
         "family": "lxgw, \"霞鹜文楷 GB 屏幕阅读版\"",
         "ready": true
       },
-      "frame": "1792771832386:answer",
+      "frame": "1792774258575:answer",
       "hooks": {
         "shown": 1,
         "update": 1
@@ -547,7 +551,6 @@
           "n1": true
         },
         "groups": {},
-        "intent": 0,
         "matches": [],
         "overlay": null,
         "query": "",
@@ -585,12 +588,6 @@
       "alive": false,
       "commands": 0,
       "diagnostics": [],
-      "edgeLayout": {
-        "enabled": false,
-        "height": 479,
-        "pinned": false,
-        "width": 667
-      },
       "math": {
         "calls": 0,
         "warnings": []
@@ -610,7 +607,6 @@
       "state": {
         "expanded": {},
         "groups": {},
-        "intent": 0,
         "matches": [],
         "overlay": null,
         "query": "",
@@ -630,12 +626,529 @@
     "reviewSteps": 5
   },
   "physicalMobile": {
-    "evidence": "User reports iOS native flip moves both edge seam and labels. Native viewport dimensions have not been measured.",
-    "current": "Alpha.12 holds same-card front seam/label anchors if native height changes. Still requires iOS device retest."
+    "status": "unresolved on iOS",
+    "evidence": "Repeated user failure on alpha.12. No physical measurements have been collected. The simulated resize-before-dispose counterexample invalidates the former handoff test.",
+    "current": "Alpha.13 removes coordinate freezing. Independent main/React diagnostic APKG prepared; no hardware fix claim. Daily live template left unchanged this turn."
   },
   "visual": {
     "status": "passed",
     "pairs": 108,
     "interactionScenes": 60
+  },
+  "layoutComparison": {
+    "package": {
+      "status": "passed",
+      "baseline": "f67c932a02bef79f0feab1121c6783a9a3ff9e17",
+      "reactVersion": "0.2.0-alpha.13",
+      "notes": 8,
+      "cards": 8,
+      "modelIds": [
+        1792748514,
+        1792748524
+      ],
+      "productionUnchanged": true,
+      "repeatImportNoDuplicates": true,
+      "sha256": "fcc39d7c64976e978454d85f5deb73bb096f1d8cee861bdec93373519cc97579",
+      "physicalIOS": "not yet measured; diagnosis only, not a claimed fix"
+    },
+    "browser": {
+      "status": "passed",
+      "engines": [
+        {
+          "engine": "chromium",
+          "kind": "main",
+          "front": {
+            "height": 780,
+            "seam": 390,
+            "length": 390
+          },
+          "back": {
+            "height": 780,
+            "seam": 390,
+            "length": 390
+          },
+          "orders": [
+            {
+              "order": "before-removal",
+              "height": 844,
+              "seam": 422,
+              "length": 422
+            },
+            {
+              "order": "after-removal",
+              "height": 844,
+              "seam": 422,
+              "length": 422
+            }
+          ],
+          "cases": [
+            {
+              "key": "overview",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                }
+              }
+            },
+            {
+              "key": "deep",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                }
+              }
+            },
+            {
+              "key": "wide-review",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 1560,
+                  "height": 3120,
+                  "bars": {
+                    "height": 3120,
+                    "seam": 1560,
+                    "length": 1560
+                  }
+                }
+              }
+            },
+            {
+              "key": "image",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                }
+              }
+            }
+          ],
+          "probeFrontBack": "passed"
+        },
+        {
+          "engine": "chromium",
+          "kind": "react",
+          "front": {
+            "height": 780,
+            "seam": 390,
+            "length": 390
+          },
+          "back": {
+            "height": 780,
+            "seam": 390,
+            "length": 390
+          },
+          "orders": [
+            {
+              "order": "before-removal",
+              "height": 844,
+              "seam": 422,
+              "length": 422
+            },
+            {
+              "order": "after-removal",
+              "height": 844,
+              "seam": 422,
+              "length": 422
+            }
+          ],
+          "cases": [
+            {
+              "key": "overview",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                }
+              }
+            },
+            {
+              "key": "deep",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                }
+              }
+            },
+            {
+              "key": "wide-review",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                }
+              }
+            },
+            {
+              "key": "image",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                }
+              }
+            }
+          ],
+          "probeFrontBack": "passed"
+        },
+        {
+          "engine": "webkit",
+          "kind": "main",
+          "front": {
+            "height": 780,
+            "seam": 390,
+            "length": 390
+          },
+          "back": {
+            "height": 780,
+            "seam": 390,
+            "length": 390
+          },
+          "orders": [
+            {
+              "order": "before-removal",
+              "height": 844,
+              "seam": 422,
+              "length": 422
+            },
+            {
+              "order": "after-removal",
+              "height": 844,
+              "seam": 422,
+              "length": 422
+            }
+          ],
+          "cases": [
+            {
+              "key": "overview",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                }
+              }
+            },
+            {
+              "key": "deep",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                }
+              }
+            },
+            {
+              "key": "wide-review",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                }
+              }
+            },
+            {
+              "key": "image",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                }
+              }
+            }
+          ],
+          "probeFrontBack": "passed"
+        },
+        {
+          "engine": "webkit",
+          "kind": "react",
+          "front": {
+            "height": 780,
+            "seam": 390,
+            "length": 390
+          },
+          "back": {
+            "height": 780,
+            "seam": 390,
+            "length": 390
+          },
+          "orders": [
+            {
+              "order": "before-removal",
+              "height": 844,
+              "seam": 422,
+              "length": 422
+            },
+            {
+              "order": "after-removal",
+              "height": 844,
+              "seam": 422,
+              "length": 422
+            }
+          ],
+          "cases": [
+            {
+              "key": "overview",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                }
+              }
+            },
+            {
+              "key": "deep",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                }
+              }
+            },
+            {
+              "key": "wide-review",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                }
+              }
+            },
+            {
+              "key": "image",
+              "faces": {
+                "front": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                },
+                "back": {
+                  "width": 390,
+                  "height": 780,
+                  "bars": {
+                    "height": 780,
+                    "seam": 390,
+                    "length": 390
+                  }
+                }
+              }
+            }
+          ],
+          "probeFrontBack": "passed"
+        }
+      ],
+      "externalRequests": [],
+      "limitation": "Browser host only. Native iOS measurements are pending; no fix certification."
+    }
   }
 }

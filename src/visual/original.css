@@ -1,5 +1,6 @@
 /* Visual rules from main f67c932, cards/templates/mindmap/style.css.
- * Values and rich-content rules retained; only ownership selectors and font URL adapted.
+ * Rich-content and theme values retained; ownership selectors/font URL adapted.
+ * Edge controls are defined once in style.css, not overridden over this skin.
  * No legacy JavaScript or business state is imported. */
 
 
@@ -703,9 +704,6 @@
     搜索面板（点击顶部触发条弹出）
     ===================================== */
   :where(#mm-react) .search-box {
-    visibility: hidden;
-    height: 0;
-    overflow: hidden;
     position: fixed;
     top: 20px;          /* 紧接触发条下方 */
     left: 1.5em;        /* 与 body 侧边距一致，随字体同步缩放 */
@@ -773,6 +771,8 @@
 
   /* ── 所有按钮基础样式 ── */
   :where(#mm-react) .search-box button {
+    /* Do not inherit Anki Desktop's large default button margins. */
+    margin: 0;
     height: 34px;
     padding: 0 11px;
     border-radius: 7px;
@@ -866,122 +866,6 @@
     cursor: pointer;
     z-index: 102;
     border-radius: 0.5em;
-  }
-
-  :where(#mm-react) .scroll-to-top {
-    position: fixed;
-    bottom: 15%;
-    left: 20px;
-    transform: translate(-10%, -50%);
-    background-color: rgba(255, 255, 255, 0.2);
-    padding: 10px;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    z-index: 1000;
-    border-radius: 10px;
-    color: blue;
-  }
-
-  :where(#mm-react) .floating-button {
-    position: fixed;
-    top: 50%;
-    left: -1em;
-    height: 50%;
-    width: 2em;
-    background-color: rgba(245, 245, 245, 0.2);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    cursor: pointer;
-    z-index: 1000;
-    border-radius: 10px;
-    color: transparent;
-    display: flex;
-    justify-content: center;
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-    text-align: right;
-  }
-
-  :where(#mm-react) #floating-widget {
-    position: fixed;
-    top: 0;
-    left: -1em;
-    height: 50%;
-    width: 2em;
-    background-color: rgba(245, 245, 245, 0.2);
-    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.5);
-    cursor: pointer;
-    z-index: 1000;
-    border-radius: 10px;
-    color: blue;
-  }
-
-  :where(#mm-react) #left-floating-widget {
-    position: fixed;
-    top: 0;
-    right: -1em;
-    height: 33.3%;
-    width: 2em;
-    background-color: rgba(245, 245, 245, 0.2);
-    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.5);
-    cursor: pointer;
-    z-index: 1000;
-    border-radius: 10px;
-    color: blue;
-  }
-
-  :where(#mm-react) .custom-button {
-    position: fixed;
-    top: 66.6%;
-    right: -1em;
-    height: 33.4%;
-    width: 2em;
-    background-color: rgba(245, 245, 245, 0.2);
-    box-shadow: 0 0px 8px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    z-index: 1000;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    writing-mode: vertical-lr;
-    text-orientation: upleft;
-    text-align: left;
-  }
-
-  :where(#mm-react) .custom2-button {
-    position: fixed;
-    top: 33.3%;
-    right: -1em;
-    height: 33.3%;
-    width: 2em;
-    background-color: rgba(245, 245, 245, 0.2);
-    box-shadow: 0 0px 8px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    z-index: 1000;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    writing-mode: vertical-lr;
-    text-orientation: upleft;
-    text-align: left;
-  }
-
-  :where(#mm-react) #popup {
-    z-index: 1999;
-    display: none;
-    position: fixed;
-    top: 5%;
-    left: 50%;
-    transform: translate(-50%, 0);
-    background-color: rgba(255, 255, 255, 1);
-    padding: 1%;
-    box-shadow: 0 0 1% rgba(0, 0, 0, 0.3);
-    min-width: 90%;
-    width: auto;
-    min-height: 70%;
-    height: auto;
-    max-height: 70%;
-    border-radius: 10px;
-    overflow-y: scroll;
   }
 
   /* =====================================
@@ -1092,6 +976,15 @@
     font-weight: 500;
     color: var(--title-color);
     border-bottom: 1px solid var(--title-border);
+  }
+
+  /* Approved compact context heading; nested legacy titles keep their design. */
+  :where(#mm-react) [data-mm-content] > .title {
+    min-height: 0;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    line-height: 28px;
+    font-size: 20px;
   }
 
   :where(#mm-react) .node-list {
@@ -1608,31 +1501,6 @@
   /* 夜间模式 - 浮动元素 */
   :where(.nightMode) :where(#mm-react) .floating {
     background-color: #2C2C2C;
-    color: white;
-  }
-
-  :where(.nightMode) :where(#mm-react) .floating-button {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-
-  :where(.nightMode) :where(#mm-react) #left-floating-widget {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-
-  :where(.nightMode) :where(#mm-react) #floating-widget {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-
-  :where(.nightMode) :where(#mm-react) .custom-button {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-
-  :where(.nightMode) :where(#mm-react) .custom2-button {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-
-  :where(.nightMode) :where(#mm-react) #popup {
-    background-color: rgba(0, 0, 0, 1);
     color: white;
   }
 

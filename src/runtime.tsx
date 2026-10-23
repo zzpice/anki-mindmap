@@ -12,7 +12,6 @@ import { bindTap } from "./tap";
 import { reviewContinuity } from "./continuity";
 import { readingPosition } from "./reading";
 import { navigationCue } from "./motion";
-import { edgePosition } from "./edges";
 
 const SLOT = Symbol.for("anki-mindmap.react.runtime.v1");
 const PREF = "anki_mindmap.preferences.v1";
@@ -114,9 +113,8 @@ export function mount(host: HTMLElement): Runtime {
   const scope = resources(valid);
   const reading = readingPosition(content, scope);
   const cue = navigationCue(scope);
-  const edges = edgePosition(ui, scope, bridge.ios, () => store.getSnapshot().zoom);
   const remember = () => {
-    if (side === "front") continuity.save(store.getSnapshot(), reading.capture(), edges.capture());
+    if (side === "front") continuity.save(store.getSnapshot(), reading.capture());
   };
   let rememberQueued = false;
   const queueRemember = () => {
@@ -134,7 +132,6 @@ export function mount(host: HTMLElement): Runtime {
     // whole card so controller zoom still includes its floating controls.
     const zoom = String(store.getSnapshot().zoom);
     if (host.style.zoom !== zoom) host.style.zoom = zoom;
-    edges.project();
   };
   const unsubscribe = store.subscribe(project);
   let cancelAuto: (() => void) | undefined;
@@ -155,15 +152,21 @@ export function mount(host: HTMLElement): Runtime {
     if (!valid()) return;
     cancelAuto?.();
     cancelAuto = undefined;
-    if (command.type !== "interrupt") cue.cancel();
-    if (command.type !== "interrupt") reading.cancel();
+    if (command.type === "interrupt") {
+      // Manual navigation cancels pending location and saves the reading point;
+      // it does not change answers, tree state or force a React render.
+      commands++;
+      queueRemember();
+      return;
+    }
+    cue.cancel();
+    reading.cancel();
     const keepReading = ["toggleAnswer", "toggleGroup", "toggleOther", "revealNext", "hideLast"].includes(command.type);
     const point = keepReading ? reading.capture(command.type === "toggleAnswer"
       ? renderer.activeElement(command.id) : undefined) : undefined;
     const before = store.getSnapshot();
     if (!store.dispatch(command)) return;
     commands++;
-    if (command.type === "zoom") edges.reset();
     if (command.type === "search") updateSearch(true);
     else if (
       [
@@ -206,9 +209,7 @@ export function mount(host: HTMLElement): Runtime {
         /* state still updates */
       }
     }
-    // Scroll/pointer bursts need at most one geometry snapshot per frame.
-    if (command.type === "interrupt") queueRemember();
-    else remember();
+    remember();
   };
   const activateContent = (target: Element, event: Event): boolean => {
     const annotation = target.closest<HTMLAnchorElement>(
@@ -291,7 +292,7 @@ export function mount(host: HTMLElement): Runtime {
     }
     const target = e.target instanceof Element ? e.target : null;
     const node = target && renderer.targetNode(target);
-    if (node && (e.code === "Enter" || e.code === "Space") &&
+    if (node && (e.key === "Enter" || e.key === " " || e.code === "Enter" || e.code === "Space") &&
         !e.ctrlKey && !e.metaKey && !e.altKey) {
       e.preventDefault();
       dispatch({ type: "toggleNode", id: node });
@@ -306,14 +307,6 @@ export function mount(host: HTMLElement): Runtime {
       e.altKey
     )
       return;
-    if ((e.key === "Enter" || e.key === " ") && target) {
-      const node = renderer.targetNode(target);
-      if (node) {
-        e.preventDefault();
-        dispatch({ type: "toggleNode", id: node });
-        return;
-      }
-    }
     const mapping: Record<string, Command> = {
       KeyH: { type: "locate" },
       KeyK: { type: "toggleTree" },
@@ -451,7 +444,6 @@ export function mount(host: HTMLElement): Runtime {
       <Interface
         store={store}
         model={renderer.model}
-        side={side}
         deck={host.querySelector("[data-mm-deck]")?.textContent?.trim() ?? ""}
         diagram={host.querySelector("[data-mm-diagram]")?.innerHTML ?? ""}
         annotation={renderer.annotation}
@@ -462,7 +454,6 @@ export function mount(host: HTMLElement): Runtime {
     </StrictMode>,
   ));
   project();
-  edges.restore(continuity.restored?.edges);
   // Position before the next paint rather than showing the top of the tree
   // for 100 ms on every flip. Manual input still cancels this card-owned frame.
   cancelAuto = presentCard(host, scope, () => {
@@ -503,13 +494,11 @@ export function mount(host: HTMLElement): Runtime {
       ),
       side,
       math: math.inspect(),
-      edgeLayout: edges.inspect(),
     }),
     dispose() {
       if (!alive) return;
       remember();
       reading.cancel();
-      edges.reset();
       alive = false;
       scope.dispose();
       unsubscribe();

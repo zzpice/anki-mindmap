@@ -1,104 +1,79 @@
 const assert = require('node:assert/strict');
 
-// Reproduce the missed condition: native side replacement changes the fixed
-// viewport height even though this is still the same card/orientation.
+// Layout contract, not a simulation/certification of AnkiMobile's native insets.
+// A real viewport change must remain responsive regardless of teardown order.
 module.exports = async function edges(browser, base, renders) {
   const context = await browser.newContext({ viewport: { width: 390, height: 780 },
     isMobile: true, hasTouch: true });
   const page = await context.newPage();
   await context.route('**/edge-card?*', route => {
     const p = new URL(route.request().url()).searchParams;
-    const html = renders.welcome[Number(p.get('index') || 0)][p.get('side') || 'front'];
+    const html = renders[p.get('key') || 'welcome'][0][p.get('side') || 'front'];
     return route.fulfill({ contentType: 'text/html; charset=utf-8', body:
       `<!doctype html><html class="mobile ${p.get('platform') || 'iphone'}"><head>` +
       '<meta name="viewport" content="width=device-width,initial-scale=1">' +
       `<base href="${base}/"></head><body class="card">` + html + '</body></html>' });
   });
   const tick = () => page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
-  const show = async (side, index = 0, platform = 'iphone') => {
-    await page.goto(`${base}/edge-card?side=${side}&index=${index}&platform=${platform}`);
+  const show = async (side, platform = 'iphone', key = 'welcome') => {
+    await page.goto(`${base}/edge-card?side=${side}&platform=${platform}&key=${key}`);
     await page.waitForSelector('#mm-react[data-ready]');
-    await tick();
+    await page.evaluate(() => document.fonts.ready); await tick();
   };
   const measure = () => page.evaluate(() => [...document.querySelectorAll('nav button')].map(b => {
     const r = b.getBoundingClientRect(), t = b.querySelector('.mm-edge-label > span').getBoundingClientRect();
-    return { top: r.top, height: r.height, text: t.top + t.height / 2 };
+    return { top: r.top, height: r.height, text: t.top + t.height / 2,
+      left: r.left, right: r.right, inlineGeometry: ['top', 'bottom', 'height'].some(k => b.style[k]) };
   }));
-  const anchored = (actual, expected, message) => {
-    actual.forEach((r, i) => {
-      assert.ok(Math.abs(r.top - expected[i].top) < .5, message + ' seam');
-      assert.ok(Math.abs(r.text - expected[i].text) < .5, message + ' label');
-    });
+  const check = async height => {
+    const bars = await measure();
+    for (const b of bars) {
+      assert.ok(Math.abs(b.height - height / 2) < .5, 'two equal viewport halves');
+      assert.ok(Math.abs(b.top - (b.top < 1 ? 0 : height / 2)) < .5, 'single middle seam');
+      assert.ok(Math.abs(b.text - b.top - b.height / 2) < .6, 'label centred in its current half');
+      assert.ok(b.left >= -.5 && b.right <= 390.5, 'complete hit area inside viewport');
+      assert.equal(b.inlineGeometry, false, 'geometry has one CSS authority, no inline coordinate compensation');
+    }
+    return bars;
   };
-  const retire = () => page.evaluate(() => AnkiMindmap.current().dispose());
-  await show('front');
-  const front = await measure();
-  await retire();
-  await page.setViewportSize({ width: 390, height: 844 });
-  await show('back');
-  const back = await measure();
-  anchored(back, front, 'same iOS card keeps seam and labels when native back grows viewport');
-  assert.ok(back.filter(b => b.top > 0).every(b => Math.abs(b.top + b.height - 844) < .5), 'lower hit areas extend to the new bottom without a gap');
-  assert.ok(await page.evaluate(() => AnkiMindmap.current().inspect().edgeLayout.pinned));
+  const rows = [];
+  for (const platform of ['iphone', 'android']) {
+    for (const order of ['resize-before-dispose', 'resize-after-dispose']) {
+      await page.setViewportSize({ width: 390, height: 780 });
+      await show('front', platform); await check(780);
+      if (order === 'resize-before-dispose') {
+        await page.setViewportSize({ width: 390, height: 844 }); await tick();
+      }
+      await page.evaluate(() => AnkiMindmap.current().dispose());
+      if (order === 'resize-after-dispose') await page.setViewportSize({ width: 390, height: 844 });
+      await show('back', platform); await check(844);
+      rows.push({ platform, order, seam: 422, centred: true });
+    }
+  }
+  await page.setViewportSize({ width: 390, height: 780 });
+  await show('front', 'iphone', 'wide-review');
+  const before = await check(780);
   for (const y of [0, 700, 150]) {
     await page.evaluate(y => window.scrollTo(0, y), y); await tick();
-    assert.deepEqual(await measure(), back, 'scroll cannot change the restored side geometry');
+    assert.deepEqual(await measure(), before, 'content scrolling does not resize tabs');
   }
+  await page.evaluate(() => AnkiMindmap.current().dispatch({ type: 'toggleAnswer', id: 'a0' }));
+  assert.deepEqual(await measure(), before, 'answer reveal cannot resize tabs at a constant viewport');
+  await show('back', 'iphone', 'wide-review');
+  assert.deepEqual(await measure(), before, 'native flip stays stable at a constant viewport');
+  await page.evaluate(() => AnkiMindmap.current().dispatch({ type: 'zoom', value: 1.1 }));
+  await check(780);
+  await page.setViewportSize({ width: 780, height: 390 }); await tick();
+  const landscape = await measure();
+  assert.ok(landscape.every(b => Math.abs(b.height - 195) < .5 &&
+    Math.abs(b.text - b.top - b.height / 2) < .6));
   const resource = await page.evaluate(() => {
     const old = AnkiMindmap.current(); old.dispose();
-    window.dispatchEvent(new Event('resize'));
-    return old.inspect().resources;
+    window.dispatchEvent(new Event('resize')); return old.inspect().resources;
   });
   assert.ok(Object.values(resource).every(v => v === 0));
-
-  // New fronts, ordinals, orientation and user zoom must not inherit anchors.
-  await show('front');
-  assert.ok((await measure()).every(b => Math.abs(b.height - 422) < 1));
-  await retire(); await page.setViewportSize({ width: 390, height: 780 });
-  await show('back', 1);
-  assert.equal(await page.evaluate(() => AnkiMindmap.current().inspect().edgeLayout.pinned), false);
-  await show('front'); await retire();
-  await page.setViewportSize({ width: 390, height: 844 }); await show('back');
-  await page.setViewportSize({ width: 780, height: 390 }); await tick();
-  assert.ok((await measure()).every(b => Math.abs(b.height - 195) < 1));
-  assert.equal(await page.evaluate(() => AnkiMindmap.current().inspect().edgeLayout.pinned), false);
-  await page.setViewportSize({ width: 390, height: 780 });
-  await show('front');
-  await page.evaluate(() => AnkiMindmap.current().dispatch({ type: 'zoom', value: 1.1 }));
-  const zoomed = await measure(); await retire();
-  await page.setViewportSize({ width: 390, height: 844 }); await show('back');
-  anchored(await measure(), zoomed, 'handoff uses pixel geometry correctly with CSS zoom');
-  const mutations = await page.evaluate(async () => {
-    let count = 0;
-    const observer = new MutationObserver(records => { count += records.length; });
-    observer.observe(document.querySelector('[data-mm-ui]'), { subtree: true, attributes: true, attributeFilter: ['style'] });
-    for (let i = 0; i < 20; i++) AnkiMindmap.current().dispatch({ type: 'interrupt' });
-    await Promise.resolve(); observer.disconnect(); return count;
-  });
-  assert.equal(mutations, 0, 'stable iOS scroll/interrupts do not rewrite normalised subpixel styles');
-  await page.evaluate(() => AnkiMindmap.current().dispatch({ type: 'zoom', value: 1.2 }));
-  assert.equal(await page.evaluate(() => AnkiMindmap.current().inspect().edgeLayout.pinned), false);
-
-  await page.setViewportSize({ width: 390, height: 780 }); await show('front');
-  await retire();
-  await page.evaluate(() => {
-    const key = 'anki_mindmap.front-layout.v1';
-    const state = JSON.parse(sessionStorage.getItem(key)); state.edges.bounds = [null];
-    sessionStorage.setItem(key, JSON.stringify(state));
-  });
-  await show('back');
-  assert.equal(await page.evaluate(() => AnkiMindmap.current().inspect().edgeLayout.pinned), false);
-  await page.setViewportSize({ width: 390, height: 780 }); await show('front', 0, 'android'); await retire();
-  await page.setViewportSize({ width: 390, height: 844 }); await show('back', 0, 'android');
-  assert.ok((await measure()).every(b => Math.abs(b.height - 422) < 1), 'Android keeps its existing responsive rules');
-  await context.addInitScript(() => Object.defineProperty(window, 'sessionStorage', {
-    get() { throw Error('unavailable'); },
-  }));
-  await show('front'); await show('back');
-  assert.equal(await page.evaluate(() => AnkiMindmap.current().inspect().state.revealed.a0), true);
   await context.close();
-  return { changedNativeViewport: '780 -> 844px, iOS seam/labels unchanged; lower surfaces fill the new bottom',
-    scrolling: 'passed', newFrontAndOrdinal: 'passed', orientationAndZoom: 'passed',
-    malformedOrBlockedStorage: 'passed (readable CSS fallback)', AndroidUnchanged: 'passed',
-    limitations: 'No physical iOS certification; labels retain front anchors rather than recentering in newly exposed bottom space.' };
+  return { viewportAndTeardownOrder: rows, constantViewportRevealFlipAndScroll: 'passed',
+    zoomAndOrientation: 'passed', inlineCompensation: 'absent', disposal: 'passed',
+    limitation: 'A changing real iOS visible inset/viewport still requires device measurements; this test does not claim it is fixed.' };
 };
