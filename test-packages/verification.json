@@ -195,19 +195,19 @@
                 "selector": ".floating-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.5
+                "releaseHandlerMs": 0.3999999910593033
               },
               {
                 "selector": ".custom2-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.10000000894069672
+                "releaseHandlerMs": 0
               },
               {
                 "selector": ".custom-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.699999988079071
+                "releaseHandlerMs": 0.7000000029802322
               },
               {
                 "selector": "#left-floating-widget",
@@ -242,17 +242,17 @@
             },
             {
               "navigation": 4,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 1
             },
             {
               "navigation": 5,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 0
             },
             {
               "navigation": 6,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 1
             },
             {
@@ -378,7 +378,7 @@
                 "selector": ".custom-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 1
+                "releaseHandlerMs": 2
               },
               {
                 "selector": "#left-floating-widget",
@@ -393,7 +393,7 @@
           "rows": [
             {
               "navigation": 0,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 1
             },
             {
@@ -413,7 +413,7 @@
             },
             {
               "navigation": 4,
-              "paintedFrames": 5,
+              "paintedFrames": 4,
               "scrolls": 1
             },
             {
@@ -604,6 +604,9 @@
     "current": "Alpha.11 needs native retest; old iOS scroll/flip jump not claimed fixed."
   },
   "visual": {
-    "status": "pending; full comparison runs separately from required core/browser/Desktop checks"
-  }
+    "status": "passed",
+    "pairs": 108,
+    "interactionScenes": 60
+  },
+  "ciTestRepair": "Mock controller tests wait for actual held-state sampling frames, not a fixed 40ms sleep; no card runtime change."
 }

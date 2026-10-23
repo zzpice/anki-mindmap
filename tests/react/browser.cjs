@@ -288,7 +288,10 @@ async function run() {
       ];
       window.dispatchEvent(new Event("gamepadconnected"));
     });
-    await gp.waitForTimeout(40);
+    // A held-state sample must actually run before changing the mock button.
+    // 40ms is not a frame barrier on a loaded Linux WebKit CI runner.
+    await gp.evaluate(() => new Promise(resolve =>
+      requestAnimationFrame(() => requestAnimationFrame(resolve))));
     await gp.evaluate(() => {
       window.mmTestPads[0].buttons[5].pressed = true;
     });
@@ -307,7 +310,10 @@ async function run() {
     await gp.evaluate(() => {
       window.mmTestPads[0].buttons[5].pressed = false;
     });
-    await gp.waitForTimeout(40);
+    // A held-state sample must actually run before changing the mock button.
+    // 40ms is not a frame barrier on a loaded Linux WebKit CI runner.
+    await gp.evaluate(() => new Promise(resolve =>
+      requestAnimationFrame(() => requestAnimationFrame(resolve))));
     await gp.evaluate(() => {
       window.mmTestPads[0].buttons[5].pressed = true;
     });
@@ -363,7 +369,8 @@ async function run() {
     await hp.evaluate(() => {
       window.mmPads[0].buttons[1].pressed = false;
     });
-    await hp.waitForTimeout(40);
+    await hp.evaluate(() => new Promise(resolve =>
+      requestAnimationFrame(() => requestAnimationFrame(resolve))));
     await hp.evaluate(() => {
       window.mmDisposeOnNative = true;
       window.mmPads[0].buttons[2].pressed = true;
