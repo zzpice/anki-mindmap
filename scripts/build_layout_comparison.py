@@ -13,6 +13,36 @@ import zipfile
 from anki.collection import Collection
 from anki.import_export_pb2 import ExportAnkiPackageOptions, ImportAnkiPackageRequest
 from build_react_package import ROOT, BUILD, OUT, compiled, inputs, make_model, sha
+from mindmap_examples import blank, node, fields
+
+
+def long_cases(images):
+    """Same ordinary field HTML for both runtimes; no layout repair or timers."""
+    def image(label, dimensions=True):
+        size = ' width="720" height="8400"' if dimensions else ''
+        return f'<img src="{images[label]}" alt="匿名长图 {label}，12 段" data-mm-long-image="{label}"{size}>'
+
+    def prose(count, prefix):
+        return ''.join(node(f'{prefix} {i+1:02d}：先确定比较对象，再保留已知条件，按正文顺序检查每一步推导。',
+                            note='用于形成真实可滚动的正文，请观察边栏分界和文字是否移动。') for i in range(count))
+
+    diagram = '<p>本组测试的长图在正文中，请保持此弹窗关闭。</p><img src="_mm_react_sample.svg">'
+    return {
+        'long-image-visible': fields('01 长图始终可见 · 先测这一张', node(
+            '正面和背面都有长图。请滚到图片中部、底部，再翻面观察边栏。',
+            node('当前考查：'+blank(1, '这是文字答案，长图不依赖答案显隐。', 'layout-long-visible'))+
+            node('长图 A：请从 A01 滑到 A12。'+image('A'))+prose(4, '图片后正文')), diagram=diagram),
+        'long-image-answer': fields('02 点击挖空或翻面 · 揭示长图', node(
+            '当前答案是一张长图。先上下滑动，再点击挖空或使用 Anki 显示答案。',
+            prose(24, '前置知识')+node('当前考查：'+blank(1,
+                '长图答案开始'+image('B', dimensions=False)+'长图答案结束', 'layout-long-answer'))+
+            prose(10, '答案后正文')), diagram=diagram),
+        'long-image-pair': fields('03 连续两张长图 · 在中部翻面', node(
+            '两张图之间是当前挖空，后面还有正文。请分别在上部、中部、底部翻面。',
+            node('上半部 · 长图 A'+image('A'))+prose(8, '图间正文')+
+            node('当前考查：'+blank(1, '这是两张长图之间的文字答案。', 'layout-long-pair'))+
+            node('下半部 · 长图 B'+image('B', dimensions=False))+prose(12, '尾部正文')), diagram=diagram),
+    }
 
 
 def build():
@@ -21,6 +51,11 @@ def build():
     original = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(original)
     assets, templates = compiled()
+    images = {}
+    for label in ('A', 'B'):
+        data = (ROOT/f'tests/react/media/long-study-{label.lower()}.png').read_bytes()
+        name = f'_mm_layout_{sha(data)[:12]}.png'
+        assets[name] = data; images[label] = name
     font = next(name for name in assets if name.endswith('.ttf'))
     media_names = {'_guoqijihua_lxgwgbr.ttf': font}
     for file in (original_root / 'cards/media').iterdir():
@@ -32,7 +67,9 @@ def build():
             assets[name] = data
             media_names[file.name] = name
     probe = (ROOT / 'tests/react/layout-probe.html').read_text()
-    cases = {key: inputs()[key] for key in ('overview', 'deep', 'wide-review', 'image')}
+    all_inputs = inputs()
+    cases = {**long_cases(images), **{key: all_inputs[key] for key in ('overview', 'deep', 'wide-review', 'image')}}
+    count = len(cases)*2
     package = OUT / 'anki-mindmap-layout-comparison.apkg'
     site = BUILD / 'layout-comparison'; site.mkdir(exist_ok=True)
     renders = {}
@@ -60,14 +97,17 @@ def build():
                 deck = col.decks.new_deck_legacy(False)
                 deck.update(id=mid+1, name=f'Anki Mindmap · 边栏对照（独立样例）::{kind}')
                 col.decks.update(deck)
+                long_deck = col.decks.new_deck_legacy(False)
+                long_deck.update(id=mid+21, name=deck['name']+'::长图复现')
+                col.decks.update(long_deck)
                 for key, values in cases.items():
                     note = col.new_note(model)
                     note.guid = f'mm-layout-v1-{kind}-{key}'
                     note.fields = list(values.values()); note.tags = ['mm-layout::'+key]
-                    col.add_note(note, deck['id'])
+                    col.add_note(note, long_deck['id'] if key.startswith('long-') else deck['id'])
                     renders[f'{kind}-{key}'] = [{'front': c.question(), 'back': c.answer()} for c in note.cards()]
-            assert col.db.scalar('select count(*) from notes') == 8
-            assert col.db.scalar('select count(*) from cards') == 8
+            assert col.db.scalar('select count(*) from notes') == count
+            assert col.db.scalar('select count(*) from cards') == count
             assert set(col.db.list('select distinct mid from notes')) == {1792748514, 1792748524}
             for name, data in assets.items():
                 col.media.write_data(name, data); (site / name).write_bytes(data)
@@ -91,11 +131,15 @@ def build():
                 assert target.db.all('select * from notes where mid=1303378414') == before[0]
                 assert target.db.all('select * from cards where nid=?', note.id) == before[1]
                 assert json.dumps(target.models.get(1303378414), sort_keys=True) == before[2]
-                assert target.db.scalar('select count(*) from notes') == 9
+                assert target.db.scalar('select count(*) from notes') == count+1
                 assert target.models.get(1792748414) is None
                 assert (Path(target.media.dir())/'_jquery.mark.es6.js').read_bytes() == sentinel
                 for name, data in assets.items():
                     assert (Path(target.media.dir())/name).read_bytes() == data
+                for kind in ('main', 'react'):
+                    for key, values in cases.items():
+                        nid = target.db.scalar('select id from notes where guid=?', f'mm-layout-v1-{kind}-{key}')
+                        assert target.get_note(nid).fields == list(values.values())
         finally:
             target.close()
     with zipfile.ZipFile(package, 'a', zipfile.ZIP_DEFLATED) as z:
@@ -105,7 +149,8 @@ def build():
             z.write(ROOT/'node_modules'/name/'LICENSE', f'licenses/{name}.txt')
     (site/'renders.json').write_text(json.dumps(renders, ensure_ascii=False))
     result = {'status': 'passed', 'baseline': 'f67c932a02bef79f0feab1121c6783a9a3ff9e17',
-              'reactVersion': (ROOT/'VERSION').read_text().strip(), 'notes': 8, 'cards': 8,
+              'reactVersion': (ROOT/'VERSION').read_text().strip(), 'fixtureRevision': 2, 'notes': count, 'cards': count,
+              'longImageCases': list(long_cases(images)), 'longImagePixels': [720, 8400],
               'modelIds': [1792748514, 1792748524], 'productionUnchanged': True,
               'existingLegacyMediaUnchanged': True, 'contentAddressedLegacyMedia': True,
               'repeatImportNoDuplicates': True, 'sha256': sha(package.read_bytes()),

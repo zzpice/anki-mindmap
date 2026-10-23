@@ -2,6 +2,8 @@
 
 Alpha.13 清理后的同一短树：[main 正面](alpha13-main-front.png)、[React 正面](alpha13-react-front.png)、[main 背面](alpha13-main-back.png)、[React 背面](alpha13-react-back.png)。这是 WebKit 中等高页面的对照，没有复现 iOS 原生动态故障，不能作为已修好手机问题的证明。另有 [独立实机对照包与测量说明](../../docs/ios-edge-continuity.md)。
 
+长图样例第二版：[main 长图中段](layout-long-main-middle.png)、[React 长图中段](layout-long-react-middle.png)。同一张 720 × 8400px PNG，截图位于 A06–A08 附近。这是 WebKit 390 × 780 浏览器截图，仅证明样例确实能滚动多屏，不是 iOS 实机认证。
+
 Alpha.7 新增[手机宽表格答案截图](alpha7-wide-phone.png)：启用手机布局模式，超宽表格在正文区内滚动，边栏保持半屏长度。安卓纯短闪仍待实机复测，见 [说明](../../docs/mobile-viewport.md)。
 
 Alpha.6 当前布局：[手机正面](alpha6-phone-front.png)、[手机背面](alpha6-phone-back.png)、[桌面正面](alpha6-desktop-front.png)、[桌面背面](alpha6-desktop-back.png)。本轮按用户确认压缩知识标题、左右各放两个边栏功能，并稳定翻面阅读位置。下面的拼接图与 `metrics.json` 是此前视觉还原基线的历史记录；本轮结果见上级 `verification.json` 和 [行为说明](../../docs/reading-layout.md)。

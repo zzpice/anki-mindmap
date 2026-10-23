@@ -20,7 +20,7 @@ const server = http.createServer((req, res) => {
   const file = path.join(directory, decodeURIComponent(pathname.replace(/^\/(assets|native|_anki)\//, '')));
   if (!file.startsWith(directory + path.sep) || !fs.existsSync(file)) { res.writeHead(404).end(); return; }
   res.setHeader('content-type', { '.js': 'text/javascript', '.css': 'text/css', '.ttf': 'font/ttf',
-    '.svg': 'image/svg+xml' }[path.extname(file)] || 'application/octet-stream');
+    '.svg': 'image/svg+xml', '.png': 'image/png' }[path.extname(file)] || 'application/octet-stream');
   res.end(fs.readFileSync(file));
 });
 const result = { status: 'running', engines: [], externalRequests: [],
@@ -77,23 +77,73 @@ const result = { status: 'running', engines: [], externalRequests: [],
           orders.push({ order, ...resized });
         }
         const cases = [];
-        for (const key of ['overview', 'deep', 'wide-review', 'image']) {
+        for (const key of Object.keys(renders).filter(k => k.startsWith(kind+'-')).map(k => k.slice(kind.length+1))) {
           await page.setViewportSize({ width: 390, height: 780 });
           const faces = {};
           for (const side of ['front', 'back']) {
             await show(side, key);
             const capture = await page.evaluate(() => ({
               width: innerWidth, height: innerHeight,
+              documentHeight: document.documentElement.scrollHeight,
               current: JSON.parse(document.querySelector('[data-mm-layout-probe] pre').textContent).current,
               images: [...document.querySelectorAll('[data-mm-content] img,.linkRender img')]
                 .filter(i => i.getClientRects().length).map(i => i.complete && i.naturalWidth > 0),
+              longImages: [...document.querySelectorAll('[data-mm-long-image]')].map(i => ({
+                loaded: i.complete && i.naturalWidth === 720 && i.naturalHeight === 8400,
+                height: i.getBoundingClientRect().height,
+              })),
             }));
             assert.equal(capture.current.side, side);
             assert.equal(capture.current.kind, kind);
             assert.ok(capture.images.every(Boolean));
-            faces[side] = { width: capture.width, height: capture.height, bars: await measure() };
+            const baseline = await measure();
+            const scrolls = [];
+            if (key.startsWith('long-')) {
+              if (side === 'back' || key !== 'long-image-answer') {
+                assert.ok(capture.longImages.length > 0 && capture.longImages.every(i => i.loaded && i.height > 2300),
+                  `${name} ${kind} ${key} ${side}: actual rendered long PNG exceeds three phone screens: ${JSON.stringify(capture.longImages)}`);
+                assert.ok(capture.documentHeight > capture.height*3, 'fixture really creates a long page');
+              }
+              for (const part of [0, .5, 1]) {
+                const y = await page.evaluate(part => {
+                  window.scrollTo(0, (document.documentElement.scrollHeight-innerHeight)*part);
+                  return scrollY;
+                }, part); await tick();
+                assert.deepEqual(await measure(), baseline, 'long-page scrolling keeps browser edge geometry at a constant viewport');
+                scrolls.push({part, y});
+                if (name==='webkit' && key==='long-image-visible' && side==='front' && part===.5)
+                  await page.screenshot({path:path.join(site, `${kind}-long-middle.png`)});
+              }
+            }
+            faces[side] = { width: capture.width, height: capture.height, documentHeight: capture.documentHeight,
+              longImages: capture.longImages, bars: baseline, scrolls };
           }
-          cases.push({ key, faces });
+          let tapReveal;
+          if (kind === 'react' && key === 'long-image-answer') {
+            await show('front', key);
+            const baseline = await measure();
+            const cloze = page.locator('[data-mm-content] .cloze').first();
+            await cloze.tap();
+            await page.waitForSelector('[data-mm-long-image="B"]');
+            await page.evaluate(async () => {
+              await document.querySelector('[data-mm-long-image="B"]').decode();
+            }); await tick();
+            const revealed = await page.evaluate(() => ({
+              documentHeight: document.documentElement.scrollHeight,
+              imageHeight: document.querySelector('[data-mm-long-image="B"]').getBoundingClientRect().height,
+            }));
+            assert.ok(revealed.imageHeight > 2300, 'tapping the current Cloze reveals a real long image');
+            assert.ok(revealed.documentHeight > faces.front.documentHeight + 2300, 'revealing the image grows the actual page');
+            assert.deepEqual(await measure(), baseline, 'revealing the image keeps browser edge geometry');
+            // Tap the text at the beginning of the revealed answer, not the
+            // image (which belongs to the native Anki image viewer).
+            await cloze.tap({ position: { x: 8, y: 8 } }); await tick();
+            assert.equal(await cloze.getAttribute('data-mm-revealed'), 'false');
+            assert.equal(await page.locator('[data-mm-long-image="B"]').count(), 0);
+            assert.deepEqual(await measure(), baseline, 'hiding the long answer keeps browser edge geometry');
+            tapReveal = { status: 'passed', ...revealed, hiddenAgain: true };
+          }
+          cases.push({ key, faces, ...(tapReveal ? { tapReveal } : {}) });
         }
         await page.evaluate(() => sessionStorage.clear());
         await show('back');
