@@ -55,6 +55,10 @@ Alpha.6 compacts the knowledge heading, places two controls on each edge, and
 keeps reading position and manual expansion across a front-to-back flip.
 New cards still reset; answer state stays native. See [behavior and fallback limits](docs/reading-layout.md).
 
+Alpha.7 contains wide answers inside the knowledge surface so mobile layout
+zoom cannot stretch the edge controls, and matches the theme during startup.
+The package includes a wide-table card. [Mobile regression details and remaining flicker limits](docs/mobile-viewport.md).
+
 ## How the code fits together
 
 - `src/core.ts`: one pure state/command implementation for tree, answers, search, overlays

@@ -8,6 +8,21 @@
 }
 #mm-react [data-mm-content] {
   display: block;
+  /* Contain wide tables/legacy markup inside the knowledge surface. On mobile
+     an overflowing answer can otherwise enlarge the layout viewport itself,
+     which also resizes every fixed edge control. Keep all columns reachable. */
+  overflow-x: auto;
+}
+/* Match the card's background while its local runtime is loading. This paint
+   hint has no business state and cannot affect another note type after removal. */
+body:has(#mm-react:not([data-ready])) {
+  background-color: rgba(254, 251, 240, 0.7);
+}
+body:has(#mm-react[data-mm-paint-theme="bamboo"]:not([data-ready])) {
+  background-color: #f0f4e8;
+}
+body.nightMode:has(#mm-react:not([data-ready])) {
+  background-color: #242424;
 }
 /* Android navigates the whole document on each flip. Show the projected tree
    only after the host's load-time scroll reset and local font/media layout.

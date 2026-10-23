@@ -147,6 +147,7 @@ async function run() {
     record.checks.push(
       "native reviewer body-class reset preserves skin and host night mode without changing business state",
     );
+    record.viewport = await require("./viewport.cjs")(browser, base, renders);
     record.reading = await require("./reading.cjs")(browser, base, renders);
     record.transitions = await require("./transitions.cjs")(browser, base, renders);
     record.androidNavigation = await require("./navigation.cjs")(browser, base, renders);

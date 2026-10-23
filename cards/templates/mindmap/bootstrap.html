@@ -5,6 +5,15 @@
   var key = Symbol.for("anki-mindmap.react.loader.v1");
   var src = "__MM_SCRIPT__";
   var host = document.getElementById("mm-react");
+  // Cosmetic first-paint hint only. The mounted store still owns theme state;
+  // no host/body decorations or stored preferences are changed here.
+  if (host) {
+    try {
+      var preference = JSON.parse(localStorage.getItem("anki_mindmap.preferences.v1") || "null");
+      if (preference && preference.version === 1)
+        host.dataset.mmPaintTheme = preference.theme;
+    } catch (_) { /* unavailable storage must not block native review */ }
+  }
   var loader = document[key];
   function start(api, target) {
     if (!target || !target.isConnected || document.getElementById("mm-react") !== target) return;

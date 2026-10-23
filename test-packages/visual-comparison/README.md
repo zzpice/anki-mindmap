@@ -1,5 +1,7 @@
 # 原版与 React 视觉还原对比
 
+Alpha.7 新增[手机宽表格答案截图](alpha7-wide-phone.png)：启用手机布局模式，超宽表格在正文区内滚动，边栏保持半屏长度。安卓纯短闪仍待实机复测，见 [说明](../../docs/mobile-viewport.md)。
+
 Alpha.6 当前布局：[手机正面](alpha6-phone-front.png)、[手机背面](alpha6-phone-back.png)、[桌面正面](alpha6-desktop-front.png)、[桌面背面](alpha6-desktop-back.png)。本轮按用户确认压缩知识标题、左右各放两个边栏功能，并稳定翻面阅读位置。下面的拼接图与 `metrics.json` 是此前视觉还原基线的历史记录；本轮结果见上级 `verification.json` 和 [行为说明](../../docs/reading-layout.md)。
 
 左侧为原版 `main f67c932`，右侧为本次 `feat/react-rewrite` 还原版。

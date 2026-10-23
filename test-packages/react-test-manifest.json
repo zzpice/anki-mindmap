@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0-alpha.6",
+  "version": "0.2.0-alpha.7",
   "testModel": {
     "id": 1792748414,
     "kind": 1,
@@ -28,8 +28,8 @@
     ]
   },
   "productionModelId": 1303378414,
-  "notes": 20,
-  "cards": 26,
+  "notes": 21,
+  "cards": 27,
   "checks": [
     "native same/multiple/gapped/nested Cloze ordinals",
     "full fields/media/identity round trip",
@@ -42,5 +42,5 @@
     "_mm_react_df31754c9dc8.js": "df31754c9dc8f7f4de3588e409535a592083439b2a1005683018666bdede19b5",
     "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
   },
-  "apkgSha256": "cf5834830e1aa73c1b7cabfa050aac462b800d5cbeaff6ab850e480e3db0d666"
+  "apkgSha256": "63ccfa0a201e128a2a848559177ca170785e2764728bc6bf9a2665ac3c8893ca"
 }
