@@ -8,13 +8,14 @@ lesson in preview or study the test deck. The runtime also works directly on the
 | Fold one branch | Click/tap its round bullet; focused bullet supports Enter/Space |
 | Current answer | Click/tap each native Cloze occurrence |
 | Reveal next / hide reverse-text last | ] / [ or the search panel |
-| Expand/collapse branches | K or the right middle tab |
+| Expand/collapse branches | K or the right upper tab |
 | Other custom groups | Click their prompt/answer; L toggles all other groups |
 | Locate current | H or the left lower tab; reopens required ancestors |
 | Search public prose | Tap the top deck strip or Ctrl/Cmd+F; Enter/Shift+Enter navigate; Escape closes |
 | Theme | C or theme button |
-| Diagram | J or the right upper tab |
-| Annotation / image | Click a recognized reference or visible image |
+| Diagram | J or the left upper tab |
+| Annotation | Click a recognized reference |
+| Images | Use client image gestures; the template does not open a second viewer |
 | Native flip / grade | Use Anki's own controls |
 
 Gamepad mappings retain LB/RB step, LT tree, RT other groups, L3 locate, R3 theme, left-stick

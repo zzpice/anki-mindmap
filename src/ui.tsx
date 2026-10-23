@@ -61,7 +61,7 @@ export function Interface({
       >
         {deck || "知识树"}
       </button>
-      <nav aria-label="复习工具">
+      <nav className="mm-edge-controls" aria-label="复习工具">
         <button
           className="floating-button"
           aria-label="定位"
@@ -242,8 +242,7 @@ function OverlayView({
     const dialog = ref.current!,
       previous = document.activeElement as HTMLElement | null;
     if (!dialog.open) {
-      if (overlay.kind === "image") dialog.showModal();
-      else dialog.show();
+      dialog.show();
     }
     return () => {
       dialog.close();
@@ -268,28 +267,20 @@ function OverlayView({
         e.preventDefault();
         close();
       }}
-      onClick={(e) => {
-        if (overlay.kind === "image" && e.target === e.currentTarget) close();
-      }}
     >
       <div className="mm-dialog-heading">
         <button aria-label="关闭弹窗" title="关闭" onClick={close}>
           ×
         </button>
       </div>
-      {overlay.kind === "image" ? (
-        <img className="mm-full-image" src={overlay.src} alt={overlay.alt} />
-      ) : (
-        <div
-          className="mm-rich-overlay"
-          dangerouslySetInnerHTML={{
-            __html:
-              overlay.kind === "diagram"
-                ? diagram
-                : (annotation(overlay.id) ?? "批注来源暂不可用，原文仍保留。"),
-          }}
-        />
-      )}
+      <div
+        className="mm-rich-overlay"
+        dangerouslySetInnerHTML={{
+          __html: overlay.kind === "diagram"
+            ? diagram
+            : (annotation(overlay.id) ?? "批注来源暂不可用，原文仍保留。"),
+        }}
+      />
     </dialog>
   );
 }

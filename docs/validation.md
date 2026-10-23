@@ -20,7 +20,7 @@ historical evidence, not silently changed to bless old defects.
   sequences, including duplicate bundle execution, same-root remount, externally removed
   hosts, rejected stale commands and zero owned resources after disposal.
 - Search excludes hidden answers, navigates folded prose, does not change reveal and does
-  not undo later manual folding. Diagram, annotations and image dialogs work. Mouse,
+  not undo later manual folding. Diagram and annotation dialogs work; image gestures are left to the client. Mouse,
   browser touch and keyboard use shared commands; editable fields protect shortcuts.
 - Twenty React updates preserve rich-content DOM identities. Detached local file assets
   run in Chromium offline emulation; WebKit uses HTTP(S) blocking because its local-file

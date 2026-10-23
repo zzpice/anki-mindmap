@@ -4,7 +4,8 @@ export function resources(valid: () => boolean) {
   const listeners = new Set<() => void>(),
     timers = new Set<number>(),
     frames = new Set<number>(),
-    observers = new Set<MutationObserver | ResizeObserver>();
+    observers = new Set<MutationObserver | ResizeObserver>(),
+    animations = new Set<Animation>();
   return {
     listen(
       target: EventTarget,
@@ -65,11 +66,24 @@ export function resources(valid: () => boolean) {
       observers.add(observer);
       return () => { observer.disconnect(); observers.delete(observer); };
     },
+    animate(target: HTMLElement, frames: Keyframe[], options: KeyframeAnimationOptions) {
+      if (!alive || !valid() || typeof target.animate !== "function") return () => {};
+      const animation = target.animate(frames, options);
+      animations.add(animation);
+      const cancel = () => {
+        animation.onfinish = animation.oncancel = null;
+        animations.delete(animation);
+        animation.cancel();
+      };
+      animation.onfinish = animation.oncancel = cancel;
+      return cancel;
+    },
     inspect: () => ({
       listeners: listeners.size,
       timers: timers.size,
       frames: frames.size,
       observers: observers.size,
+      animations: animations.size,
     }),
     dispose() {
       if (!alive) return;
@@ -82,6 +96,11 @@ export function resources(valid: () => boolean) {
       frames.clear();
       for (const observer of observers) observer.disconnect();
       observers.clear();
+      for (const animation of animations) {
+        animation.onfinish = animation.oncancel = null;
+        animation.cancel();
+      }
+      animations.clear();
     },
   };
 }

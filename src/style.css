@@ -221,13 +221,6 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
   overflow-wrap: break-word;
 }
 
-#mm-react .mm-dialog-image {
-  min-height: 0;
-}
-#mm-react .mm-full-image {
-  max-height: 76vh;
-  object-fit: contain;
-}
 .nightMode #mm-react .mm-dialog {
   background: #242424;
   color: #e0e0e0;
@@ -284,4 +277,58 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
   width: 18px;
   height: 18px;
   line-height: 18px;
+}
+
+/* One viewport frame owns all four edge hit areas. Independently fixed 50%
+   controls can be recomposited/resized separately during WKWebView scrolling.
+   Small viewport units keep toolbar changes from stretching the rail. Absolute
+   children share one reference; no transform/animation is applied to the frame. */
+#mm-react .mm-edge-controls {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* Viewport lengths also scale under CSS zoom; compensate only the frame
+     height, keeping the familiar zoomed tab width and text. */
+  height: calc(100vh / var(--mm-review-zoom, 1));
+  height: calc(100svh / var(--mm-review-zoom, 1));
+  pointer-events: none;
+  z-index: 1000;
+}
+#mm-react .mm-edge-controls > button {
+  position: absolute;
+  pointer-events: auto;
+}
+
+/* Feedback never delays a command or animates answer/tree geometry. Keep entry
+   opacity local; closing/unmounting is immediate with no exit timer or ghost UI. */
+#mm-react {
+  --mm-feedback-time: 90ms;
+  --mm-panel-time: 140ms;
+  --mm-motion-ease: cubic-bezier(.2, .8, .2, 1);
+}
+#mm-react [data-mm-ui] button,
+#mm-react .bullet-dot {
+  transition: opacity var(--mm-feedback-time) var(--mm-motion-ease);
+}
+#mm-react [data-mm-ui] button:not(:disabled):active,
+#mm-react .bullet:active .bullet-dot {
+  opacity: .65;
+  transition-duration: 0s;
+}
+#mm-react .mm-dialog[open],
+#mm-react .search-box:not([hidden]) {
+  animation: mm-panel-enter var(--mm-panel-time) var(--mm-motion-ease);
+}
+@keyframes mm-panel-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #mm-react [data-mm-ui] *,
+  #mm-react [data-mm-content] * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -147,6 +147,7 @@ async function run() {
     record.checks.push(
       "native reviewer body-class reset preserves skin and host night mode without changing business state",
     );
+    record.motion = await require("./motion.cjs")(browser, base, renders);
     record.viewport = await require("./viewport.cjs")(browser, base, renders);
     record.reading = await require("./reading.cjs")(browser, base, renders);
     record.transitions = await require("./transitions.cjs")(browser, base, renders);
@@ -208,14 +209,13 @@ async function run() {
     await page.getByRole("button", { name: "关闭弹窗" }).click();
     await page.getByRole("button", { name: "展开分支", exact: true }).click();
     await page.locator("[data-mm-content] img").first().click();
-    await page.getByRole("dialog").waitFor();
-    await page.getByRole("button", { name: "关闭弹窗" }).click();
+    assert.equal(await page.getByRole("dialog").count(), 0, "inline image uses client gestures without a second popup");
     assert.equal(
       await page.getByRole("button", { name: "填写笔记", exact: true }).count(),
       0,
     );
     record.checks.push(
-      "diagram, annotation and image overlays; personal-note popup absent",
+      "diagram and annotation retained; native image gestures unclaimed; personal-note popup absent",
     );
 
     await page.goto(`${base}/mixed-0-front.html`);
@@ -427,6 +427,7 @@ async function run() {
           let r = await show(front);
           const old = r;
           r.dispatch({ type: "toggleAnswer", id: "a0" });
+          r.dispatch({ type: "locate" }); // Dispose while the cue is still running.
           r = await show(back);
           if (!Object.values(r.inspect().state.revealed).every(Boolean))
             throw Error("back initial");

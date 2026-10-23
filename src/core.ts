@@ -16,7 +16,6 @@ export interface Match {
 export type Overlay =
   | { kind: "diagram" }
   | { kind: "annotation"; id: string }
-  | { kind: "image"; src: string; alt: string }
   | null;
 export interface State {
   expanded: Readonly<Record<string, boolean>>;

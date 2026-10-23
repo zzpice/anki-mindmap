@@ -1,10 +1,10 @@
 {
-  "startingDevelopmentCommit": "8be41538086a074bc4a0b7818fa040940632fdc4",
-  "version": "0.2.0-alpha.8",
+  "startingDevelopmentCommit": "6da8e89fe16d275962d57a0c393a9bbf8e795c40",
+  "version": "0.2.0-alpha.9",
   "coreTests": 9,
   "native": {
     "status": "passed",
-    "version": "0.2.0-alpha.8",
+    "version": "0.2.0-alpha.9",
     "testModel": {
       "id": 1792748414,
       "kind": 1,
@@ -44,14 +44,60 @@
     ],
     "assets": {
       "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
-      "_mm_react_69c6a8de9268.js": "69c6a8de92687c38180eaae932c08e3d0674b9eab272923b767c61d3f2e8024d",
+      "_mm_react_dabe9aad8b82.js": "dabe9aad8b8205632bd57f4025844e7a287faf7a7133f52c51fd4a15dd2e8bcd",
       "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
     },
-    "apkgSha256": "3702153ca76458439a0ca0f13a9213a71be275afa9734a443b5a632f6845223d"
+    "apkgSha256": "99217ae33f1701be7c96b94d072a98e659f12fd36300d337cf4ef12bd62dc57b"
+  },
+  "nativeBackend25": {
+    "status": "passed",
+    "version": "0.2.0-alpha.9",
+    "testModel": {
+      "id": 1792748414,
+      "kind": 1,
+      "fields": [
+        [
+          179274841401,
+          "填写笔记",
+          0
+        ],
+        [
+          179274841402,
+          "导图",
+          1
+        ],
+        [
+          179274841403,
+          "Text",
+          2
+        ]
+      ],
+      "templates": [
+        [
+          179274841400,
+          0
+        ]
+      ]
+    },
+    "productionModelId": 1303378414,
+    "notes": 21,
+    "cards": 27,
+    "checks": [
+      "native same/multiple/gapped/nested Cloze ordinals",
+      "full fields/media/identity round trip",
+      "existing production model/note/scheduling untouched by test import",
+      "repeat import does not duplicate test notes",
+      "template update preserves original note/card rows"
+    ],
+    "assets": {
+      "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
+      "_mm_react_dabe9aad8b82.js": "dabe9aad8b8205632bd57f4025844e7a287faf7a7133f52c51fd4a15dd2e8bcd",
+      "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
+    },
+    "apkgSha256": "5bb1026265dda3cd3306e746c94110fe3377cd011bc7e169c89eebad7030edae"
   },
   "browser": {
     "status": "passed",
-    "externalRequests": [],
     "engines": [
       {
         "name": "chromium",
@@ -63,7 +109,7 @@
           "mobile-size flip first-paint image guards, inert diagrams, cached runtime and pending-load replacement",
           "fold/reveal independence; same-number occurrences independent; other groups exclude current; locate opens path",
           "search excludes hidden answers, finds folded prose, leaves reveal untouched; closing respects later manual fold",
-          "diagram, annotation and image overlays; personal-note popup absent",
+          "diagram and annotation retained; native image gestures unclaimed; personal-note popup absent",
           "ordered reveal/reverse hide keyboard, native host keys unclaimed, editable search protects single-letter shortcuts",
           "touch tap dispatches once; branch touchend works without click, compatibility click deduplicates, scroll/pinch/cancel are inert, focused keyboard works",
           "Unicode case expansion keeps source text range offsets valid",
@@ -74,14 +120,15 @@
           "manual wheel cancels automatic navigation",
           "offline emulation + detached file assets"
         ],
-        "reading": {
-          "directReveal": "passed",
-          "fullNavigationFlip": "passed",
-          "identicalFrontReset": "passed",
-          "nativeOrdinalIsolation": "passed",
-          "lateLayoutAndManualCancellation": "passed",
-          "disposal": "passed",
-          "expiredAndUnavailableStorage": "passed"
+        "errors": [],
+        "motion": {
+          "edgeFrameScrollFlipResize": "passed",
+          "nativeImageGestures": "passed",
+          "localPanelEntry": "mm-panel-enter",
+          "navigationCue": "560ms; no geometry change",
+          "reducedMotion": "passed including in-flight change",
+          "disposedAnimations": 0,
+          "limitation": "native iOS scrolling compositor and client image zoom require physical retest"
         },
         "viewport": {
           "mobileViewport": "passed",
@@ -107,6 +154,31 @@
             }
           ]
         },
+        "reading": {
+          "directReveal": "passed",
+          "fullNavigationFlip": "passed",
+          "identicalFrontReset": "passed",
+          "nativeOrdinalIsolation": "passed",
+          "lateLayoutAndManualCancellation": "passed",
+          "disposal": "passed",
+          "expiredAndUnavailableStorage": "passed"
+        },
+        "transitions": [
+          {
+            "width": 360,
+            "flips": 40,
+            "bundleLoadsDuringFlips": 0,
+            "hiddenImageFrames": "passed",
+            "pendingLoadHostReplacement": "passed"
+          },
+          {
+            "width": 390,
+            "flips": 40,
+            "bundleLoadsDuringFlips": 0,
+            "hiddenImageFrames": "passed",
+            "pendingLoadHostReplacement": "passed"
+          }
+        ],
         "androidNavigation": {
           "navigations": 10,
           "firstPaintPositionAndFont": "passed",
@@ -118,19 +190,19 @@
                 "selector": ".floating-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.29999999701976776
+                "releaseHandlerMs": 0.5999999940395355
               },
               {
                 "selector": ".custom2-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.19999998807907104
+                "releaseHandlerMs": 0.10000000894069672
               },
               {
                 "selector": ".custom-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.6000000089406967
+                "releaseHandlerMs": 0.7999999970197678
               },
               {
                 "selector": "#left-floating-widget",
@@ -145,7 +217,7 @@
           "rows": [
             {
               "navigation": 0,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 1
             },
             {
@@ -155,17 +227,17 @@
             },
             {
               "navigation": 2,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 1
             },
             {
               "navigation": 3,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 0
             },
             {
               "navigation": 4,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 1
             },
             {
@@ -180,17 +252,17 @@
             },
             {
               "navigation": 7,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 0
             },
             {
               "navigation": 8,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 1
             },
             {
               "navigation": 9,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 0
             }
           ]
@@ -207,7 +279,7 @@
           "mobile-size flip first-paint image guards, inert diagrams, cached runtime and pending-load replacement",
           "fold/reveal independence; same-number occurrences independent; other groups exclude current; locate opens path",
           "search excludes hidden answers, finds folded prose, leaves reveal untouched; closing respects later manual fold",
-          "diagram, annotation and image overlays; personal-note popup absent",
+          "diagram and annotation retained; native image gestures unclaimed; personal-note popup absent",
           "ordered reveal/reverse hide keyboard, native host keys unclaimed, editable search protects single-letter shortcuts",
           "touch tap dispatches once; branch touchend works without click, compatibility click deduplicates, scroll/pinch/cancel are inert, focused keyboard works",
           "Unicode case expansion keeps source text range offsets valid",
@@ -218,14 +290,15 @@
           "manual wheel cancels automatic navigation",
           "detached file assets with all HTTP(S) blocked; WebKit offline emulator limitation retained"
         ],
-        "reading": {
-          "directReveal": "passed",
-          "fullNavigationFlip": "passed",
-          "identicalFrontReset": "passed",
-          "nativeOrdinalIsolation": "passed",
-          "lateLayoutAndManualCancellation": "passed",
-          "disposal": "passed",
-          "expiredAndUnavailableStorage": "passed"
+        "errors": [],
+        "motion": {
+          "edgeFrameScrollFlipResize": "passed",
+          "nativeImageGestures": "passed",
+          "localPanelEntry": "mm-panel-enter",
+          "navigationCue": "560ms; no geometry change",
+          "reducedMotion": "passed including in-flight change",
+          "disposedAnimations": 0,
+          "limitation": "native iOS scrolling compositor and client image zoom require physical retest"
         },
         "viewport": {
           "mobileViewport": "passed",
@@ -251,6 +324,31 @@
             }
           ]
         },
+        "reading": {
+          "directReveal": "passed",
+          "fullNavigationFlip": "passed",
+          "identicalFrontReset": "passed",
+          "nativeOrdinalIsolation": "passed",
+          "lateLayoutAndManualCancellation": "passed",
+          "disposal": "passed",
+          "expiredAndUnavailableStorage": "passed"
+        },
+        "transitions": [
+          {
+            "width": 360,
+            "flips": 40,
+            "bundleLoadsDuringFlips": 0,
+            "hiddenImageFrames": "passed",
+            "pendingLoadHostReplacement": "passed"
+          },
+          {
+            "width": 390,
+            "flips": 40,
+            "bundleLoadsDuringFlips": 0,
+            "hiddenImageFrames": "passed",
+            "pendingLoadHostReplacement": "passed"
+          }
+        ],
         "androidNavigation": {
           "navigations": 10,
           "firstPaintPositionAndFont": "passed",
@@ -268,7 +366,7 @@
                 "selector": ".custom2-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 1
+                "releaseHandlerMs": 0
               },
               {
                 "selector": ".custom-button",
@@ -309,7 +407,7 @@
             },
             {
               "navigation": 4,
-              "paintedFrames": 5,
+              "paintedFrames": 4,
               "scrolls": 1
             },
             {
@@ -341,7 +439,8 @@
         },
         "lifecycleCycles": 100
       }
-    ]
+    ],
+    "externalRequests": []
   },
   "desktop": {
     "status": "passed",
@@ -349,51 +448,147 @@
     "aqt": "26.9.3",
     "qt": "6.11.0",
     "pyqt": "6.11.0",
+    "os": "macOS-27.0.1-arm64-arm-64bit",
     "autoSync": false,
     "limitations": [
       "no physical mobile devices or gamepad",
       "Desktop test is software-driven in isolated profile; no human touchscreen/keyboard usability certification"
     ],
-    "nativePreviews": 54,
-    "reviewerStages": 5
+    "directBack": {
+      "activeTypeset": [
+        1
+      ],
+      "alive": true,
+      "commands": 0,
+      "diagnostics": [],
+      "font": {
+        "family": "lxgw, \"霞鹜文楷 GB 屏幕阅读版\"",
+        "ready": true
+      },
+      "frame": "1792768903012:answer",
+      "hooks": {
+        "shown": 1,
+        "update": 1
+      },
+      "images": [
+        {
+          "loaded": true,
+          "src": "_mm_react_sample.svg"
+        }
+      ],
+      "math": {
+        "calls": 0,
+        "warnings": []
+      },
+      "mathItems": 2,
+      "mathML": 4,
+      "resources": {
+        "animations": 0,
+        "effects": 1,
+        "frames": 0,
+        "listeners": 15,
+        "observers": 3,
+        "reactRoots": 1,
+        "subscribers": 2,
+        "timers": 0
+      },
+      "scrolls": 1,
+      "side": "back",
+      "state": {
+        "expanded": {
+          "n0": true,
+          "n1": true
+        },
+        "groups": {},
+        "intent": 0,
+        "matches": [],
+        "overlay": null,
+        "query": "",
+        "revealed": {
+          "a0": true
+        },
+        "searchExpanded": {},
+        "searchOpen": false,
+        "selected": 0,
+        "theme": "paper",
+        "zoom": 1
+      },
+      "text": "复杂正文第一层第二层富文本答案x z2表格标题合并表头甲乙丙正常后续文字未知内容保留ab x2+y2",
+      "typeset": 2,
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/6.11.2 Chrome/140.0.0.0 Safari/537.36"
+    },
+    "dynamicTexTypeset": [
+      1
+    ],
+    "repeatedDynamicMath": {
+      "cycles": 10,
+      "activeTypeset": [
+        1
+      ],
+      "mathItems": 2,
+      "math": {
+        "calls": 11,
+        "warnings": []
+      }
+    },
+    "nativeBackTexTypeset": [
+      1
+    ],
+    "reviewHostRemoval": {
+      "alive": false,
+      "commands": 0,
+      "diagnostics": [],
+      "math": {
+        "calls": 0,
+        "warnings": []
+      },
+      "resources": {
+        "animations": 0,
+        "effects": 0,
+        "frames": 0,
+        "listeners": 0,
+        "observers": 0,
+        "reactRoots": 0,
+        "subscribers": 0,
+        "timers": 0
+      },
+      "scrolls": 1,
+      "side": "front",
+      "state": {
+        "expanded": {},
+        "groups": {},
+        "intent": 0,
+        "matches": [],
+        "overlay": null,
+        "query": "",
+        "revealed": {
+          "a0": false
+        },
+        "searchExpanded": {},
+        "searchOpen": false,
+        "selected": 0,
+        "theme": "paper",
+        "zoom": 1
+      }
+    },
+    "qtEventLoopExitCode": 0,
+    "processTeardownCompleted": true,
+    "previewFaces": 54,
+    "reviewSteps": 5
   },
+  "physicalMobile": "not tested in this iteration; native image zoom, iOS rubber-band scrolling and Android host flash require retest",
+  "nativeBackends": [
+    "25.9.2",
+    "26.9.3"
+  ],
   "visual": {
     "status": "passed",
-    "nativeDefaultPairs": 108,
-    "interactionPairs": 60,
-    "widths": [
-      1280,
-      390,
-      320
-    ],
+    "baseline": "f67c932",
+    "pairs": 108,
+    "interactionScenes": 60,
     "engines": [
-      "Chromium",
-      "WebKit"
-    ],
-    "intentionalDifferences": [
-      "compact knowledge heading",
-      "two controls on each edge",
-      "keep reading position across front-to-back",
-      "wide knowledge content scrolls inside its own surface"
-    ],
-    "lastVerifiedCommit": "8be41538086a074bc4a0b7818fa040940632fdc4",
-    "unchangedCssInAlpha8": true
-  },
-  "edgeLabels": {
-    "status": "passed",
-    "views": 8,
-    "contentGuttersUnchanged": true
-  },
-  "physicalDevices": {
-    "AnkiDroid": "user reports very light flash still present in alpha.7; alpha.8 same-task presentation requires device retest",
-    "AnkiMobile": "alpha.8 not device tested; non-Android presentation unchanged"
-  },
-  "limitations": [
-    "No universal card ID in standard template: one-use layout handoff matches source digest, deck, native ordinal and topology; a new front always resets it.",
-    "Dual WebViews, missing metadata, expired or unavailable session storage fall back to normal first presentation.",
-    "Long content still expands naturally below the reading anchor; scroll boundaries can limit compensation.",
-    "Matched startup background does not prove native Android document-replacement blank frames are eliminated.",
-    "Alpha.8 removes one template-owned animation-frame wait after readiness; remaining native Android document-replacement flashes are unverified."
-  ],
-  "mainUnchanged": true
+      "chromium",
+      "webkit"
+    ]
+  }
 }

@@ -11,6 +11,7 @@ import { presentCard } from "./presentation";
 import { bindTap } from "./tap";
 import { reviewContinuity } from "./continuity";
 import { readingPosition } from "./reading";
+import { navigationCue } from "./motion";
 
 const SLOT = Symbol.for("anki-mindmap.react.runtime.v1");
 const PREF = "anki_mindmap.preferences.v1";
@@ -111,6 +112,7 @@ export function mount(host: HTMLElement): Runtime {
     renderer.isIntact();
   const scope = resources(valid);
   const reading = readingPosition(content, scope);
+  const cue = navigationCue(scope);
   const remember = () => {
     if (side === "front") continuity.save(store.getSnapshot(), reading.capture());
   };
@@ -129,26 +131,31 @@ export function mount(host: HTMLElement): Runtime {
     // Fixed-pixel node typography is part of the original design. Scale the
     // whole card so controller zoom still includes its floating controls.
     const zoom = String(store.getSnapshot().zoom);
-    if (host.style.zoom !== zoom) host.style.zoom = zoom;
+    if (host.style.zoom !== zoom) {
+      host.style.zoom = zoom;
+      host.style.setProperty("--mm-review-zoom", zoom);
+    }
   };
   const unsubscribe = store.subscribe(project);
   let cancelAuto: (() => void) | undefined;
-  const scroll = (target?: HTMLElement) => {
+  const scroll = (target?: HTMLElement, indicate = false) => {
     if (valid() && target) {
       target.scrollIntoView({ block: "center", behavior: "auto" });
       scrolls++;
+      if (indicate) cue.show(target);
     }
   };
   const updateSearch = (activate: boolean) => {
     const matches = renderer.search(store.getSnapshot().query);
     store.dispatch({ type: "setMatches", matches, activate });
     renderer.highlight(store.getSnapshot().selected);
-    if (activate && matches.length) scroll(renderer.matchElement(0));
+    if (activate && matches.length) scroll(renderer.matchElement(0), true);
   };
   const dispatch = (command: Command) => {
     if (!valid()) return;
     cancelAuto?.();
     cancelAuto = undefined;
+    if (command.type !== "interrupt") cue.cancel();
     if (command.type !== "interrupt") reading.cancel();
     const keepReading = ["toggleAnswer", "toggleGroup", "toggleOther", "revealNext", "hideLast"].includes(command.type);
     const point = keepReading ? reading.capture(command.type === "toggleAnswer"
@@ -169,7 +176,7 @@ export function mount(host: HTMLElement): Runtime {
     )
       updateSearch(false);
     if (keepReading) reading.hold(point);
-    if (command.type === "locate") scroll(renderer.firstActive());
+    if (command.type === "locate") scroll(renderer.firstActive(), true);
     if (command.type === "revealNext" || command.type === "hideLast") {
       const changed = renderer.model.active.find(
         (o) => before.revealed[o.id] !== store.getSnapshot().revealed[o.id],
@@ -185,7 +192,7 @@ export function mount(host: HTMLElement): Runtime {
     }
     if (command.type === "searchMove") {
       renderer.highlight(store.getSnapshot().selected);
-      scroll(renderer.matchElement(store.getSnapshot().selected));
+      scroll(renderer.matchElement(store.getSnapshot().selected), true);
     }
     if (command.type === "closeSearch") renderer.search("");
     if (command.type === "theme") {
@@ -227,17 +234,9 @@ export function mount(host: HTMLElement): Runtime {
     }
     if (target.closest('a,input,textarea,select,[contenteditable="true"]'))
       return false;
-    if (target instanceof HTMLImageElement) {
-      dispatch({
-        type: "overlay",
-        value: {
-          kind: "image",
-          src: target.getAttribute("src") ?? "",
-          alt: target.alt,
-        },
-      });
-      return true;
-    }
+    // Leave native image gestures alone, including images inside revealed Cloze.
+    // Consuming touchend here would suppress the client's own image viewer/zoom.
+    if (target instanceof HTMLImageElement) return false;
     const node = renderer.targetNode(target),
       answer = renderer.targetAnswer(target),
       group = renderer.targetGroup(target);
@@ -516,6 +515,7 @@ export function mount(host: HTMLElement): Runtime {
       renderer.restore();
       if (usedFallback && intact) content.innerHTML = originalContent;
       host.style.removeProperty("zoom");
+      host.style.removeProperty("--mm-review-zoom");
       if (!hadBodyClass) body.classList.remove("mm-review");
       if (!hadHtmlClass) html.classList.remove("mm-review-document");
       if (previousTheme === null) delete body.dataset.mmTheme;

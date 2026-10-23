@@ -18,7 +18,7 @@ convert your real notes to the test model; evaluate with the included examples f
 
 Try folding the current branch then locating it; click current answers individually;
 use ordered reveal/reverse hide; reveal other groups; search prose without exposing hidden
-answers; open the diagram, annotation and image; switch the paper/bamboo theme. Use Anki's
+answers; open the diagram and annotations; use the client’s own image zoom; switch the paper/bamboo theme. Use Anki's
 own Show Answer and rating buttons. The personal-note popup is gone; all original fields
 and content are retained. A Cloze present only in the personal-note field appears inline
 when needed, without restoring that popup.
@@ -58,6 +58,12 @@ New cards still reset; answer state stays native. See [behavior and fallback lim
 Alpha.7 contains wide answers inside the knowledge surface so mobile layout
 zoom cannot stretch the edge controls, and matches the theme during startup.
 The package includes a wide-table card. [Mobile regression details and remaining flicker limits](docs/mobile-viewport.md).
+
+Alpha.9 removes the duplicate image viewer and leaves client image gestures unclaimed.
+Buttons respond immediately with a 90ms release, panels fade in over 140ms, and manual
+location/search navigation briefly outlines the destination. Reduced motion is respected.
+The four edge controls share one stable viewport frame, including restored review zoom.
+[Motion, image and iOS edge details](docs/motion-and-images.md).
 
 ## How the code fits together
 

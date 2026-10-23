@@ -383,7 +383,9 @@ async function captureInteractions(page, base, engine, out) {
                       `${engineName} ${device} ${theme} ${mode} ${key} ${side} ${control} ${field}`,
                     );
                 assert.equal(pair.react.treeButton.y, 0);
-                assert.equal(pair.react.treeButton.height, viewport.height / 2);
+                // Shared viewport lengths may round to 1/64px in WebKit.
+                assert.ok(Math.abs(pair.react.treeButton.height - viewport.height / 2) < .5,
+                  "edge control remains half the viewport within subpixel rounding");
                 assert.equal(
                   pair.react.frosted?.blur,
                   pair.main.frosted?.blur,

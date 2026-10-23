@@ -36,7 +36,14 @@ bundled locally with its OFL, so the package is about 19 MB. The new visual-desi
 sample covers heading levels, highlights and notes; there are 20 notes / 26 native
 Cloze cards. See [old/new screenshots](visual-comparison/README.md).
 
-Top deck strip opens search; left lower tab locates; right upper/middle/lower tabs
-open the diagram, expand/collapse the tree and show/hide other groups. Current
+Top deck strip opens search; left upper/lower tabs open the diagram and locate;
+right upper/lower tabs expand/collapse the tree and show/hide other groups. Current
 Cloze can still be tapped independently. The removed personal-note popup stays
 removed, with its field and content preserved.
+
+Alpha.9 adds immediate press feedback, local panel fade-in and a short navigation
+outline, respecting reduced motion. Inline images use the client's own gestures;
+there is no second template image viewer. Four edge controls now share a stable
+viewport frame, including review zoom. Both engines pass scroll/flip/resize tests;
+AnkiMobile rubber-band scrolling and native image zoom need physical retest.
+[Changes and limits](../docs/motion-and-images.md).
