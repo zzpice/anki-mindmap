@@ -9,6 +9,12 @@
 #mm-react [data-mm-content] {
   display: block;
 }
+/* The host can paint inserted HTML before running template scripts. Suppress
+   transient custom-answer images until core.ts has projected their state.
+   Unknown wrappers become readable again as soon as mounting completes. */
+#mm-react:where(:not([data-ready]):not([data-mm-failed])) cloze2 {
+  display: none;
+}
 #mm-react .cloze cloze2 {
   display: inline;
 }

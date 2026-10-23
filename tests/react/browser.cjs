@@ -145,6 +145,8 @@ async function run() {
     record.checks.push(
       "native reviewer body-class reset preserves skin and host night mode without changing business state",
     );
+    record.transitions = await require("./transitions.cjs")(browser, base, renders);
+    record.checks.push("mobile-size flip first-paint image guards, inert diagrams, cached runtime and pending-load replacement");
     const invariants = await page.evaluate(() => {
       const r = AnkiMindmap.current();
       r.dispatch({ type: "toggleAnswer", id: "a0" });

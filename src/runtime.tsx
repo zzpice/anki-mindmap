@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { flushSync } from "react-dom";
 import { createStore, type Command, type Side, type Theme } from "./core";
 import { readContent } from "./content";
 import { Interface } from "./ui";
@@ -381,7 +382,7 @@ export function mount(host: HTMLElement): Runtime {
   const lifecycle = (delta: number) => {
     effects += delta;
   };
-  react.render(
+  flushSync(() => react.render(
     <StrictMode>
       <Interface
         store={store}
@@ -395,9 +396,11 @@ export function mount(host: HTMLElement): Runtime {
         lifecycle={lifecycle}
       />
     </StrictMode>,
-  );
+  ));
   project();
-  cancelAuto = scope.later(() => scroll(renderer.firstActive()), 100);
+  // Position before the next paint rather than showing the top of the tree
+  // for 100 ms on every flip. Manual input still cancels this card-owned frame.
+  cancelAuto = scope.frame(() => scroll(renderer.firstActive()));
   scope.observe(doc.documentElement, () => {
     if (!valid()) runtime.dispose();
   });

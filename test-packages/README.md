@@ -13,6 +13,12 @@ reveal, search, diagram, annotations and images. Show Answer and ratings remain 
 Desktop 26.9.3 is exercised in an isolated profile. Physical phones/gamepad are unverified.
 Consult `react-test-manifest.json` and `SHA256SUMS` for the exact build. No formal release.
 
+Alpha.3 addresses transient image/layout flashes during flips. CSS is inline
+before native content; the exact loaded runtime is reused as code only, every
+card still gets fresh state. Diagram source images stay inert until opened.
+Mobile-size Chromium/WebKit checks pass; Android/iOS device confirmation is
+pending. See [flip rendering evidence](../docs/flip-rendering.md).
+
 Alpha.2 restores the original main visual design. The original WenKai font is
 bundled locally with its OFL, so the package is about 19 MB. The new visual-design
 sample covers heading levels, highlights and notes; there are 20 notes / 26 native

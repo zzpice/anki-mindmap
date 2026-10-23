@@ -9,6 +9,9 @@ for side in ('front','back'):
     text=(ROOT/f'cards/templates/mindmap/{side}.html').read_text()
     assert '{{cloze:Text}}' in text and '{{cloze:填写笔记}}' in text
     assert 'FrontSide' not in text
+    assert text.startswith('<style>__MM_CSS__</style>')
+    assert '<template data-mm-diagram>{{导图}}</template>' in text
+    assert '__MM_BOOTSTRAP__' in text and '<script src=' not in text
     assert not re.search(r'(?:src|href)=["\'](?:https?:)?//',text)
 sources='\n'.join(p.read_text() for p in (ROOT/'src').glob('*') if p.suffix in ('.ts','.tsx'))
 assert 'jquery' not in sources.lower()

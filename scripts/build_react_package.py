@@ -23,13 +23,18 @@ def compiled():
     assets={font_name:font}
     for suffix in ('js','css'):
         data=(BUILD/'runtime'/f'_mm_react.{suffix}').read_bytes()
-        if suffix=='css':data=data.replace(b'__MM_FONT__',font_name.encode())
+        if suffix=='css':
+            css=data.replace(b'__MM_FONT__',font_name.encode()).decode()
+            continue  # Inline before content: no asynchronous stylesheet flash.
         name=f'_mm_react_{sha(data)[:12]}.{suffix}';assets[name]=data
     templates={}
+    bootstrap=(ROOT/'cards/templates/mindmap/bootstrap.html').read_text()
     for side in ('front','back'):
         text=(ROOT/f'cards/templates/mindmap/{side}.html').read_text()
+        text=text.replace('__MM_CSS__',css).replace('__MM_BOOTSTRAP__',bootstrap)
         text=text.replace('__MM_FONT__',font_name)
-        for suffix,token in [('js','__MM_SCRIPT__'),('css','__MM_STYLE__')]:text=text.replace(token,next(name for name in assets if name.endswith('.'+suffix)))
+        text=text.replace('__MM_SCRIPT__',next(name for name in assets if name.endswith('.js')))
+        assert '__MM_' not in text, 'Unresolved template asset token'
         templates[side]=text
     assets['_mm_react_sample.svg']=('<svg xmlns="http://www.w3.org/2000/svg" width="640" height="180" viewBox="0 0 640 180"><rect width="640" height="180" rx="12" fill="#edf2e8"/><g fill="#3c5946" font-family="sans-serif" font-size="24" text-anchor="middle"><text x="110" y="98">记忆</text><text x="320" y="98">理解</text><text x="530" y="98">应用</text><text x="215" y="98">→</text><text x="425" y="98">→</text></g></svg>').encode()
     return assets,templates

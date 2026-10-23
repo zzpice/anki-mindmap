@@ -1,0 +1,48 @@
+<script>
+(function () {
+  // Cache executable code, never card state. Both sides still call the same
+  // mount/dispose path; no network/parse delay is needed for a cached bundle.
+  var key = Symbol.for("anki-mindmap.react.loader.v1");
+  var src = "__MM_SCRIPT__";
+  var host = document.getElementById("mm-react");
+  var loader = document[key];
+  function start(api, target) {
+    if (!target || !target.isConnected || document.getElementById("mm-react") !== target) return;
+    try { api.mount(target); }
+    catch (error) {
+      target.dataset.mmFailed = "true";
+      console.error("Mindmap: native content retained after startup failure", error);
+    }
+  }
+  if (loader && loader.src === src) {
+    if (loader.api) start(loader.api, host);
+    else loader.host = host;
+    return;
+  }
+  loader = { src: src, host: host };
+  document[key] = loader;
+  var script = document.createElement("script");
+  script.src = src;
+  script.onload = function () {
+    var api = window.AnkiMindmap;
+    script.remove();
+    script.onload = script.onerror = null;
+    if (document[key] !== loader) return;
+    loader.api = api;
+    var target = loader.host;
+    delete loader.host;
+    start(api, target);
+  };
+  script.onerror = function () {
+    script.remove();
+    script.onload = script.onerror = null;
+    if (document[key] === loader) {
+      if (loader.host && loader.host.isConnected) loader.host.dataset.mmFailed = "true";
+      delete loader.host;
+      delete document[key];
+    }
+    console.error("Mindmap: local runtime unavailable; native content retained");
+  };
+  document.head.appendChild(script);
+})();
+</script>

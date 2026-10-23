@@ -32,12 +32,16 @@ export function resources(valid: () => boolean) {
       };
     },
     frame(callback: (time: number) => void) {
-      if (!alive || !valid()) return;
+      if (!alive || !valid()) return () => {};
       const id = requestAnimationFrame((time) => {
         frames.delete(id);
         if (alive && valid()) callback(time);
       });
       frames.add(id);
+      return () => {
+        cancelAnimationFrame(id);
+        frames.delete(id);
+      };
     },
     observe(
       target: Node,
