@@ -61,7 +61,7 @@ export function Interface({
       >
         {deck || "知识树"}
       </button>
-      <nav className="mm-edge-controls" aria-label="复习工具">
+      <nav aria-label="复习工具">
         <button
           className="floating-button"
           aria-label="定位"
@@ -69,7 +69,7 @@ export function Interface({
           disabled={!model.active.length}
           onClick={() => dispatch({ type: "locate" })}
         >
-          <span className="mm-edge-label"><span>定位</span></span>
+          <EdgeLabel text="定位" />
         </button>
         {diagram.trim() && (
           <button
@@ -86,7 +86,7 @@ export function Interface({
               })
             }
           >
-            <span className="mm-edge-label"><span>导图</span></span>
+            <EdgeLabel text="导图" />
           </button>
         )}
         <button
@@ -95,7 +95,7 @@ export function Interface({
           title={expanded ? "收起全部分支 · K" : "展开全部分支 · K"}
           onClick={() => dispatch({ type: "toggleTree" })}
         >
-          <span className="mm-edge-label"><span>{expanded ? "收起" : "展开"}</span></span>
+          <EdgeLabel text={expanded ? "收起" : "展开"} />
         </button>
         <button
           className="custom-button"
@@ -104,7 +104,7 @@ export function Interface({
           disabled={!model.groups.length}
           onClick={() => dispatch({ type: "toggleOther" })}
         >
-          <span className="mm-edge-label"><span>答案</span></span>
+          <EdgeLabel text="答案" />
         </button>
       </nav>
       <div className="search-box" role="search" hidden={!state.searchOpen}>
@@ -223,6 +223,11 @@ export function Interface({
       )}
     </>
   );
+}
+function EdgeLabel({ text }: { text: string }) {
+  // Horizontal glyphs on explicit lines avoid mobile vertical-font metrics and
+  // automatic narrow-column wrapping. The entire hit area stays on screen.
+  return <span className="mm-edge-label"><span>{Array.from(text).join("\n")}</span></span>;
 }
 function OverlayView({
   overlay,

@@ -97,39 +97,29 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
 #mm-react button:disabled {
   cursor: default;
 }
-/* Only the inner half of each original edge tab is on screen. Put the label
-   inside that half without widening the tab or covering more of the text. */
+/* Preserve the old visible width, but keep the whole tab on screen. Offscreen
+   halves + vertical glyph metrics caused text clipping in the supplied iOS
+   screenshot. Labels are explicit horizontal lines, not vertical writing. */
 #mm-react .mm-edge-label {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 50%;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  writing-mode: horizontal-tb;
-  font-size: 12px;
+  font-size: min(12px, calc(1em - 2px));
   line-height: 1.1;
+  writing-mode: horizontal-tb;
   text-align: center;
   color: inherit;
   pointer-events: none;
 }
+#mm-react .mm-edge-label > span {
+  white-space: pre;
+  writing-mode: horizontal-tb;
+}
 #mm-react button.floating-button,
 #mm-react button#left-floating-widget {
   color: inherit;
-}
-#mm-react .floating-button .mm-edge-label {
-  left: auto;
-  right: 0;
-}
-#mm-react .mm-edge-label > span {
-  /* Explicit upright characters, rather than wrapping horizontal text in a
-     narrow column. Flex centres this text box inside the visible tab half. */
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  white-space: nowrap;
-  line-height: 1;
 }
 /* Compact context heading; keep the field and title text intact. */
 #mm-react [data-mm-content] > .title {
@@ -144,10 +134,6 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
   left: -1em;
   right: auto;
   height: 50%;
-}
-#mm-react #left-floating-widget .mm-edge-label {
-  left: auto;
-  right: 0;
 }
 #mm-react .custom2-button {
   top: 0;
@@ -288,28 +274,39 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
   line-height: 18px;
 }
 
-/* One viewport frame owns all four edge hit areas. Opposing fixed insets
-   resolve in the client's actual containing viewport, including CSS zoom.
-   Do not substitute vh/svh: native WebViews can expose a different viewport
-   unit height from the area available to these fixed controls. */
-#mm-react .mm-edge-controls {
-  position: fixed;
-  inset: 0;
-  display: block;
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  border: 0;
+/* Independent fixed controls, without a new containing frame. Opposing insets
+   use the host's fixed viewport. No vh/svh, zoom compensation or offscreen edge. */
+#mm-react button.floating-button,
+#mm-react button#left-floating-widget,
+#mm-react button.custom-button,
+#mm-react button.custom2-button {
+  width: 1em;
+  height: auto;
   writing-mode: horizontal-tb;
-  pointer-events: none;
-  z-index: 1000;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
-#mm-react .mm-edge-controls > button {
-  position: absolute;
-  height: 50%;
-  box-sizing: border-box;
-  writing-mode: horizontal-tb;
-  pointer-events: auto;
+#mm-react button.floating-button,
+#mm-react button#left-floating-widget {
+  left: 0;
+  right: auto;
+  border-radius: 0 10px 10px 0;
+}
+#mm-react button.custom-button,
+#mm-react button.custom2-button {
+  right: 0;
+  left: auto;
+  border-radius: 10px 0 0 10px;
+}
+#mm-react button#left-floating-widget,
+#mm-react button.custom2-button {
+  top: 0;
+  bottom: 50%;
+}
+#mm-react button.floating-button,
+#mm-react button.custom-button {
+  top: 50%;
+  bottom: 0;
 }
 
 /* Feedback never delays a command or animates answer/tree geometry. Keep entry

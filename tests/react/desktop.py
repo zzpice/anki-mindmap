@@ -71,7 +71,7 @@ SNAPSHOT = r'''(() => {
  ua:navigator.userAgent, images:[...c.querySelectorAll('img')].map(x=>({src:x.getAttribute('src'),loaded:x.complete&&x.naturalWidth>0})),
  mathML:c.querySelectorAll('math').length, typeset:c.querySelectorAll('mjx-container').length,
  edgeFrame:(() => {
- const frame=document.querySelector('nav').getBoundingClientRect();
+ const frame={height:innerHeight};
  return {height:frame.height, bars:[...document.querySelectorAll('nav button')].map(b=>{
  const r=b.getBoundingClientRect(),t=b.querySelector('.mm-edge-label > span').getBoundingClientRect();
  return {height:r.height, centerError:Math.abs(t.y+t.height/2-r.y-r.height/2)};})};})(),

@@ -62,10 +62,11 @@ The package includes a wide-table card. [Mobile regression details and remaining
 Alpha.9 removes the duplicate image viewer and leaves client image gestures unclaimed.
 Buttons respond immediately with a 90ms release, panels fade in over 140ms, and manual
 location/search navigation briefly outlines the destination. Reduced motion is respected.
-The four edge controls share one stable viewport frame, including restored review zoom.
+The four edge controls retain the earlier independent fixed layout.
 [Motion, image and iOS edge details](docs/motion-and-images.md).
-Alpha.10 uses opposing fixed insets for the shared frame and explicit centred upright
-labels, correcting the mobile proportions/alignment reported after alpha.9.
+Alpha.11 removes the shared frame and keeps narrow edge buttons wholly on screen,
+with explicit two-line horizontal labels. This addresses clipping visible in supplied
+iOS screenshots; original scroll/flip stability still needs physical retesting.
 
 ## How the code fits together
 

@@ -51,3 +51,8 @@ AnkiMobile rubber-band scrolling and native image zoom need physical retest.
 Alpha.10 corrects edge proportions and label centring using fixed insets and a
 centred text container, rather than viewport-unit/transform estimates. Mobile
 regressions check actual text centres during scroll, flip, review zoom and rotation.
+
+Alpha.11 removes the shared edge frame and keeps the same visible-width tabs fully
+on screen. Labels use explicit horizontal lines with text autosizing disabled.
+This targets clipping visible in iOS screenshots; native scroll/flip stability still
+needs physical retesting. Motion and native image gestures remain.

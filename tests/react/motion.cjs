@@ -24,7 +24,8 @@ module.exports = async function motion(browser, base, renders) {
     const rect = b.getBoundingClientRect();
     const text = b.querySelector('.mm-edge-label > span').getBoundingClientRect();
     const left = Math.max(0, rect.left), right = Math.min(innerWidth, rect.right);
-    return Math.abs(text.y + text.height / 2 - (rect.y + rect.height / 2)) < .6 &&
+    return rect.left >= -.5 && rect.right <= innerWidth + .5 &&
+      Math.abs(text.y + text.height / 2 - (rect.y + rect.height / 2)) < .6 &&
       Math.abs(text.x + text.width / 2 - (left + right) / 2) < .6;
   }));
   const geometry = () => page.evaluate(() => [...document.querySelectorAll('nav button')].map(b => {

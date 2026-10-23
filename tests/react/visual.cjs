@@ -375,13 +375,17 @@ async function captureInteractions(page, base, engine, out) {
                     "margin",
                     "shadow",
                   ])
-                    if (control !== "treeButton" || !["y", "height"].includes(field)) assert.equal(
+                    if (control !== "treeButton" || !["y", "height", "width", "radius"].includes(field)) assert.equal(
                       control === "bullet" && field === "y"
                         ? pair.react[control][field] - pair.react.nodes[0].y : pair.react[control][field],
                       control === "bullet" && field === "y"
                         ? pair.main[control][field] - pair.main.nodes[0].y : pair.main[control][field],
                       `${engineName} ${device} ${theme} ${mode} ${key} ${side} ${control} ${field}`,
                     );
+                // Alpha.11 keeps exactly the old visible half-width entirely on
+                // screen, rather than putting the other half beyond the edge.
+                assert.ok(Math.abs(pair.react.treeButton.width - pair.main.treeButton.width / 2) < .5);
+                assert.equal(pair.react.treeButton.radius, "10px 0px 0px 10px");
                 assert.equal(pair.react.treeButton.y, 0);
                 // Shared viewport lengths may round to 1/64px in WebKit.
                 assert.ok(Math.abs(pair.react.treeButton.height - viewport.height / 2) < .5,
