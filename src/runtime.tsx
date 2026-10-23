@@ -302,7 +302,7 @@ export function mount(host: HTMLElement): Runtime {
         lastFire.set(`${key}:${i}`, time);
         if (side === "front" && i === 1) hostAction("flip");
         else if (side === "back" && i < 4)
-          hostAction((["again", "hard", "good", "easy"] as const)[i]);
+          hostAction((["again", "good", "hard", "easy"] as const)[i]);
         else if (i === 4) dispatch({ type: "hideLast" });
         else if (i === 5) dispatch({ type: "revealNext" });
         else if (i === 6) dispatch({ type: "toggleTree" });

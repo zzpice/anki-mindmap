@@ -219,6 +219,20 @@ async function run() {
     await touch.close();
     record.checks.push("touch tap dispatches once");
 
+    await page.goto(`${base}/mixed-0-front.html`);
+    await ready(page);
+    const unicode = await page.evaluate(() => {
+      const p = document.createElement("p");
+      p.textContent = "İSTANBUL 与 Unicode 🧠";
+      document.querySelector("[data-mm-content]").append(p);
+      const runtime = AnkiMindmap.current();
+      runtime.dispatch({ type: "search", query: "İstanbul" });
+      return runtime.inspect().state.matches.length;
+    });
+    assert.equal(unicode, 1);
+    record.checks.push(
+      "Unicode case expansion keeps source text range offsets valid",
+    );
     const gc = await browser.newContext();
     await gc.addInitScript(() => {
       window.mmTestPads = [];
@@ -276,6 +290,68 @@ async function run() {
     });
     await gp.waitForTimeout(60);
     assert.equal((await inspect(gp)).resources.frames, 0);
+    const hostContext = await browser.newContext({
+      userAgent: "Mozilla/5.0 QtWebEngine/6.11 mock host",
+    });
+    await hostContext.addInitScript(() => {
+      window.mmCalls = [];
+      window.pycmd = (command) => {
+        window.mmCalls.push(command);
+        if (window.mmDisposeOnNative) {
+          window.mmLastRuntime = AnkiMindmap.current();
+          window.mmLastRuntime.dispose();
+        }
+      };
+      window.mmPads = [
+        {
+          index: 0,
+          id: "desktop-controller",
+          buttons: Array.from({ length: 12 }, () => ({
+            pressed: false,
+            value: 0,
+          })),
+          axes: [0, 0, 0, 0],
+        },
+      ];
+      Object.defineProperty(navigator, "getGamepads", {
+        value: () => window.mmPads,
+      });
+    });
+    const hp = await hostContext.newPage();
+    await hp.goto(`${base}/mixed-0-back.html`);
+    await ready(hp);
+    await hp.evaluate(() => {
+      window.mmPads[0].buttons[1].pressed = true;
+    });
+    await hp.waitForFunction(() => window.mmCalls.length === 1);
+    assert.equal(await hp.evaluate(() => window.mmCalls[0]), "ease3");
+    await hp.evaluate(() =>
+      AnkiMindmap.mount(document.querySelector("#mm-react")),
+    );
+    await hp.waitForTimeout(60);
+    assert.equal(await hp.evaluate(() => window.mmCalls.length), 1);
+    await hp.evaluate(() => {
+      window.mmPads[0].buttons[1].pressed = false;
+    });
+    await hp.waitForTimeout(40);
+    await hp.evaluate(() => {
+      window.mmDisposeOnNative = true;
+      window.mmPads[0].buttons[2].pressed = true;
+    });
+    await hp.waitForFunction(() => window.mmCalls.length === 2);
+    assert.equal(await hp.evaluate(() => window.mmCalls[1]), "ease2");
+    assert.ok(
+      await hp.evaluate(() =>
+        Object.values(window.mmLastRuntime.inspect().resources).every(
+          (x) => !x,
+        ),
+      ),
+      "sync native disposal cannot register a new RAF or timer",
+    );
+    await hostContext.close();
+    record.checks.push(
+      "mock Desktop controller preserves original B=Good/X=Hard and held-button safety",
+    );
     await gc.close();
     record.checks.push(
       "mock controller connect/edge/held remount/disconnect, no idle polling without hardware",

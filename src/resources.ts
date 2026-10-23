@@ -12,6 +12,7 @@ export function resources(valid: () => boolean) {
       callback: EventListener,
       options?: AddEventListenerOptions,
     ) {
+      if (!alive) return;
       const guarded: EventListener = (event) => {
         if (alive && valid()) callback(event);
       };
@@ -19,6 +20,7 @@ export function resources(valid: () => boolean) {
       listeners.add(() => target.removeEventListener(type, guarded, options));
     },
     later(callback: () => void, delay: number) {
+      if (!alive || !valid()) return () => {};
       const id = window.setTimeout(() => {
         timers.delete(id);
         if (alive && valid()) callback();
@@ -30,6 +32,7 @@ export function resources(valid: () => boolean) {
       };
     },
     frame(callback: (time: number) => void) {
+      if (!alive || !valid()) return;
       const id = requestAnimationFrame((time) => {
         frames.delete(id);
         if (alive && valid()) callback(time);
@@ -37,6 +40,7 @@ export function resources(valid: () => boolean) {
       frames.add(id);
     },
     observe(target: Node, callback: () => void) {
+      if (!alive) return;
       // Removal detection must run even after valid() becomes false.
       const observer = new MutationObserver(() => {
         if (alive) callback();

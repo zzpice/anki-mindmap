@@ -270,12 +270,28 @@ export function readContent(root: HTMLElement, side: Side, math: MathBridge) {
         text += node.data;
         segments.push({ node, start, end: text.length });
       }
-      const haystack = text.toLocaleLowerCase(),
-        needle = query.trim().toLocaleLowerCase();
+      // Lowercasing can expand a character (for example İ). Ranges still use source UTF-16 offsets.
+      let haystack = "",
+        sourceOffset = 0;
+      const starts: number[] = [],
+        ends: number[] = [];
+      for (const character of text) {
+        const lower = character.toLowerCase();
+        haystack += lower;
+        for (let i = 0; i < lower.length; i++) {
+          starts.push(sourceOffset);
+          ends.push(sourceOffset + character.length);
+        }
+        sourceOffset += character.length;
+      }
+      const needle = Array.from(query.trim(), (character) =>
+        character.toLowerCase(),
+      ).join("");
       for (let offset = 0; matches.length < 1000;) {
-        const start = haystack.indexOf(needle, offset);
-        if (start < 0) break;
-        const end = start + needle.length;
+        const found = haystack.indexOf(needle, offset);
+        if (found < 0) break;
+        const start = starts[found],
+          end = ends[found + needle.length - 1];
         const a = segments.find((s) => s.start <= start && s.end > start),
           b = segments.find((s) => s.start < end && s.end >= end);
         if (a && b) {
@@ -289,7 +305,7 @@ export function readContent(root: HTMLElement, side: Side, math: MathBridge) {
             element: a.node.parentElement!,
           });
         }
-        offset = end;
+        offset = found + needle.length;
       }
       return matches.map(({ id, ancestors }) => ({ id, ancestors }));
     },

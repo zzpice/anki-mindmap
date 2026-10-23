@@ -19,7 +19,7 @@ lesson in preview or study the test deck. The runtime also works directly on the
 
 Gamepad mappings retain LB/RB step, LT tree, RT other groups, L3 locate, R3 theme, left-stick
 scroll and right-stick zoom. Front B requests flip on recognized Desktop; back buttons
-0/1/2/3 request Again/Hard/Good/Easy. Held buttons are seeded per device on each mount.
+0/1/2/3 request Again/Good/Hard/Easy. Held buttons are seeded per device on each mount.
 Hardware and phone behavior remain unverified; native Anki controls remain available.
 
 There is no personal-note popup or G action. The original field/data stays intact. If the
