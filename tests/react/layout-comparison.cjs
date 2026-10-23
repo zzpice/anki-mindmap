@@ -24,7 +24,7 @@ const server = http.createServer((req, res) => {
   res.end(fs.readFileSync(file));
 });
 const result = { status: 'running', engines: [], externalRequests: [],
-  limitation: 'Browser host only. Native iOS measurements are pending; no fix certification.' };
+  limitation: 'Browser host only. See verification.json for scoped user device feedback; these checks are not device certification.' };
 (async () => {
   await new Promise(r => server.listen(0, '127.0.0.1', r));
   const base = `http://127.0.0.1:${server.address().port}`;

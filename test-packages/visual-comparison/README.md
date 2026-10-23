@@ -1,5 +1,7 @@
 # 原版与 React 视觉还原对比
 
+Alpha.14 的[圆点裁切修复对比](alpha14-marker-gutter.png)：同一匿名卡、同一 React 运行时，左侧恢复旧的 28px 外层缩进，右侧为新的 38px。只改外层留白，内层缩进和边栏不变。这是 WebKit 390px 浏览器截图；iOS 边栏稳定的用户反馈与圆点尚待实机确认的区别见 [说明](../../docs/ios-layout-viewport.md)。
+
 Alpha.13 清理后的同一短树：[main 正面](alpha13-main-front.png)、[React 正面](alpha13-react-front.png)、[main 背面](alpha13-main-back.png)、[React 背面](alpha13-react-back.png)。这是 WebKit 中等高页面的对照，没有复现 iOS 原生动态故障，不能作为已修好手机问题的证明。另有 [独立实机对照包与测量说明](../../docs/ios-edge-continuity.md)。
 
 长图样例第二版：[main 长图中段](layout-long-main-middle.png)、[React 长图中段](layout-long-react-middle.png)。同一张 720 × 8400px PNG，截图位于 A06–A08 附近。这是 WebKit 390 × 780 浏览器截图，仅证明样例确实能滚动多屏，不是 iOS 实机认证。

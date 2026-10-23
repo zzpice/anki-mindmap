@@ -162,12 +162,8 @@
 
   body.mm-review {
     transform: none !important;
-    /*
-     * 侧边距使用 em 单位（与按钮保持相同的缩放基准）：
-     * 按钮可见宽 = 1em（2em 总宽 - 1em 偏移），
-     * 正文边距 1.5em > 1em，始终保有 0.5em 的安全间距，
-     * 字体放大时两者同步缩放，永不重叠。
-     */
+    /* Card-box margin. Tree markers extend left of their text, so their
+       complete painted ring also needs the outer-list gutter defined below. */
     margin: 50px 1.5em;
     padding: 0;
     background-color: var(--body-bg);
@@ -991,6 +987,14 @@
     margin: 0 0 0 28px;
     padding: 0;
     list-style: none;
+  }
+
+  /* The outer list needs room for its negative bullet offset and the folded
+     dot's 4px ring inside the content scroller. Ten extra pixels also keep it
+     clear of the edge button at the supported 2x text zoom. Nested indentation
+     stays at 28px; enlarging every level would waste narrow-screen text width. */
+  :where(#mm-react) [data-mm-content] > .node-list {
+    margin-left: 38px;
   }
 
   :where(#mm-react) .node {

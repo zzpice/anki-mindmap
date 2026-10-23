@@ -154,7 +154,7 @@ def build():
               'modelIds': [1792748514, 1792748524], 'productionUnchanged': True,
               'existingLegacyMediaUnchanged': True, 'contentAddressedLegacyMedia': True,
               'repeatImportNoDuplicates': True, 'sha256': sha(package.read_bytes()),
-              'physicalIOS': 'not yet measured; diagnosis only, not a claimed fix'}
+              'physicalIOS': 'See verification.json for scoped user device feedback; browser checks are not device certification'}
     (OUT/'layout-comparison-manifest.json').write_text(json.dumps(result, indent=2))
     (BUILD/'layout-package-results.json').write_text(json.dumps(result, indent=2))
     print(json.dumps(result, indent=2))

@@ -30,6 +30,11 @@ zoom and reading position from front to back. Missing/mismatched metadata starts
 fresh; every new front invalidates the prior handoff. Answers/search/dialogs never
 carry across a flip. See reading-layout.md for identity limits. Theme alone is a
 long-lived local preference. Edge-control coordinates are not stored or restored.
+`viewport.ts` projects only the live root clientHeight into a card-owned CSS
+variable. CSS owns the four half-height controls and cancels the card's own zoom.
+Visual-viewport growth caused by expanded content does not redefine that frame;
+real root resizing still updates it. Scope disposal removes observers/listeners
+and the projection. See ios-layout-viewport.md for measured inputs and limits.
 
 Production identity is unchanged in cards/note-types.json. Packaging defaults ONLY to the
 separate test model. Future production installation/export is a separate explicit step.

@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0-alpha.13",
+  "version": "0.2.0-alpha.14",
   "testModel": {
     "id": 1792748414,
     "kind": 1,
@@ -39,8 +39,8 @@
   ],
   "assets": {
     "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
-    "_mm_react_85688674ad11.js": "85688674ad11e7f0f4b683dab77fdd19ad2c44870e2a3d313b6a19860611c72a",
+    "_mm_react_6e63bf6e2cad.js": "6e63bf6e2cadac4b893ea697e22f1de93d673302c619148d2034a7d33a145bcd",
     "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
   },
-  "apkgSha256": "639def83946ddcf609beda162ac84e197d76ca2ab352f82dd7d63ee6d75f25fa"
+  "apkgSha256": "e997806d7c3e3323ec8baad761d6c89e5dc3b4985899faa7e1fcddc3a09e7e91"
 }

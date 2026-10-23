@@ -12,6 +12,7 @@ import { bindTap } from "./tap";
 import { reviewContinuity } from "./continuity";
 import { readingPosition } from "./reading";
 import { navigationCue } from "./motion";
+import { bindReviewViewport } from "./viewport";
 
 const SLOT = Symbol.for("anki-mindmap.react.runtime.v1");
 const PREF = "anki_mindmap.preferences.v1";
@@ -111,6 +112,7 @@ export function mount(host: HTMLElement): Runtime {
     host.contains(ui) &&
     renderer.isIntact();
   const scope = resources(valid);
+  const releaseViewport = bindReviewViewport(host, scope);
   const reading = readingPosition(content, scope);
   const cue = navigationCue(scope);
   const remember = () => {
@@ -132,6 +134,10 @@ export function mount(host: HTMLElement): Runtime {
     // whole card so controller zoom still includes its floating controls.
     const zoom = String(store.getSnapshot().zoom);
     if (host.style.zoom !== zoom) host.style.zoom = zoom;
+    // Edge lengths are viewport CSS pixels. Cancel only this card's own zoom,
+    // so increasing content size cannot also enlarge the control frame.
+    if (host.style.getPropertyValue("--mm-view-zoom") !== zoom)
+      host.style.setProperty("--mm-view-zoom", zoom);
   };
   const unsubscribe = store.subscribe(project);
   let cancelAuto: (() => void) | undefined;
@@ -501,6 +507,7 @@ export function mount(host: HTMLElement): Runtime {
       reading.cancel();
       alive = false;
       scope.dispose();
+      releaseViewport();
       unsubscribe();
       react.unmount();
       store.dispose();
@@ -508,6 +515,7 @@ export function mount(host: HTMLElement): Runtime {
       renderer.restore();
       if (usedFallback && intact) content.innerHTML = originalContent;
       host.style.removeProperty("zoom");
+      host.style.removeProperty("--mm-view-zoom");
       if (!hadBodyClass) body.classList.remove("mm-review");
       if (!hadHtmlClass) html.classList.remove("mm-review-document");
       if (previousTheme === null) delete body.dataset.mmTheme;

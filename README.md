@@ -70,8 +70,14 @@ iOS screenshots; original scroll/flip stability still needs physical retesting.
 
 Alpha.13 withdraws alpha.12's ineffective edge-coordinate cache and consolidates
 edge layout into one CSS definition. Manual scrolling no longer changes business
-state or forces React updates. The iOS native flip issue is **still open**.
+state or forces React updates. At that stage the iOS native flip issue remained open.
 [Confirmed findings and independent main/React diagnostic APKG](docs/ios-edge-continuity.md).
+
+Alpha.14 uses the live document layout height after user measurements showed the
+visual height growing when other branches opened. The user reports that this
+specific iOS real-card scenario now stays stable; broader mobile validation remains
+open. An extra 10px outer-tree gutter also keeps folded marker rings inside the
+content scroller. [Evidence, changes and limits](docs/ios-layout-viewport.md).
 
 ## How the code fits together
 
@@ -86,6 +92,7 @@ state or forces React updates. The iOS native flip issue is **still open**.
   client capability boundaries. No pile of window-global patches.
 - `src/reading.ts` handles cancellable viewport anchoring; `continuity.ts` hands only
   layout geometry from front to back, without persisting answers or note content.
+- `src/viewport.ts` projects the current host layout height; CSS owns edge geometry.
 - `scripts/build_react_package.py`: native backend packaging and collision-safety checks.
 - `tests/react/`: business invariants, browser behavior, 100-cycle lifecycle stress and
   actual Desktop preview/reviewer checks. `tests/legacy/` is historical evidence only.

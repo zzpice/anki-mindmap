@@ -13,7 +13,7 @@
   if (document[slot]) document[slot]();
   var root = document.querySelector('[data-mm-layout-probe]');
   var key = 'mm-layout-probe.' + root.dataset.kind + '.' + root.dataset.case;
-  var rows = [], previous, storage = 'available', alive = true, frame, removals = [];
+  var rows = [], initial, previous, storage = 'available', alive = true, frame, removals = [];
   try { previous = JSON.parse(sessionStorage.getItem(key) || 'null'); }
   catch (_) { storage = 'unavailable'; }
   if (root.dataset.side === 'front') previous = null;
@@ -40,10 +40,12 @@
     rows.push({ event: reason, vh: innerHeight, dh: document.documentElement.clientHeight,
       document: document.documentElement.scrollHeight, y: round(scrollY),
       visual: v ? [round(v.height), round(v.offsetTop), round(v.scale)] : null,
+      layoutHeight: document.querySelector('#mm-react')?.style.getPropertyValue('--mm-layout-height') || null,
       locate: rect('.floating-button'), diagram: rect('#left-floating-widget'),
       expand: rect('.custom2-button'), answers: rect('.custom-button'), containers: containers() });
+    if (!initial && rows[rows.length-1].locate) initial = rows[rows.length-1];
     if (rows.length > 12) rows.shift();
-    var value = { kind: root.dataset.kind, side: root.dataset.side, userAgent: navigator.userAgent, rows: rows };
+    var value = { kind: root.dataset.kind, side: root.dataset.side, userAgent: navigator.userAgent, initial: initial, rows: rows };
     if (root.dataset.side === 'front') {
       try { sessionStorage.setItem(key, JSON.stringify(value)); } catch (_) { storage = 'unavailable'; }
     }
@@ -55,10 +57,13 @@
         '\n定位 ' + JSON.stringify(row.locate) + ' / 导图 ' + JSON.stringify(row.diagram) +
         '\n展开 ' + JSON.stringify(row.expand) + ' / 答案 ' + JSON.stringify(row.answers);
     }
-    var frontRow = root.dataset.side === 'front' ? rows[rows.length-1] : previous && previous.rows[previous.rows.length-1];
+    // Retain the first mounted front sample. Otherwise inspecting a changed
+    // front would show the same new coordinates twice and lose the baseline.
+    var frontRow = root.dataset.side === 'front' ? initial : previous && (previous.initial || previous.rows[previous.rows.length-1]);
     root.querySelector('output').textContent = root.dataset.kind + ' / ' + root.dataset.side + '\n存储 ' + storage +
       '\n正面：' + summary(frontRow) +
-      '\n当前：' + summary(rows[rows.length-1]) + '\n坐标为 [顶部, 高度]，单位 CSS px。';
+      '\n当前：' + summary(rows[rows.length-1]) + '\n边栏基准 ' + (rows[rows.length-1].layoutHeight || 'CSS 百分比') +
+      '\n正面值为初次挂载记录。坐标为 [顶部, 高度]，单位 CSS px。';
   }
   function listen(target, name) {
     function update() {

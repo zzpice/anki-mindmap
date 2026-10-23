@@ -1,7 +1,7 @@
 {
   "status": "passed",
   "baseline": "f67c932a02bef79f0feab1121c6783a9a3ff9e17",
-  "reactVersion": "0.2.0-alpha.13",
+  "reactVersion": "0.2.0-alpha.14",
   "fixtureRevision": 2,
   "notes": 14,
   "cards": 14,
@@ -22,6 +22,6 @@
   "existingLegacyMediaUnchanged": true,
   "contentAddressedLegacyMedia": true,
   "repeatImportNoDuplicates": true,
-  "sha256": "2d35f8737fc9058c6400536fe71f8d00e46370ea750b387fb67001c7eba7642d",
-  "physicalIOS": "not yet measured; diagnosis only, not a claimed fix"
+  "sha256": "f5e2037ac88a65a9ad6e20054b3c28e3b2fd5d7a72c8f76e57e396de1f3d898e",
+  "physicalIOS": "See verification.json for scoped user device feedback; browser checks are not device certification"
 }

@@ -90,11 +90,13 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
 #mm-react button:disabled {
   cursor: default;
 }
-/* One authority for edge-control geometry. Original colours/shadows and the
-   approved two-part layout remain; old offscreen/vertical rules are not loaded
-   and there is no JS coordinate cache. Host viewport changes remain responsive. */
+/* The host adapter supplies its current layout height. This is intentionally
+   independent of fixed percentage insets / visual-viewport expansion on iOS.
+   One CSS definition owns all four halves; no per-button coordinate writes. */
 #mm-react .mm-edge {
+  --mm-edge-half: calc(var(--mm-layout-height, 100vh) / var(--mm-view-zoom, 1) / 2);
   position: fixed;
+  height: var(--mm-edge-half);
   z-index: 1000;
   width: 1em;
   background-color: rgba(245, 245, 245, 0.2);
@@ -115,11 +117,9 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
 }
 #mm-react .mm-edge-top {
   top: 0;
-  bottom: 50%;
 }
 #mm-react .mm-edge-bottom {
-  top: 50%;
-  bottom: 0;
+  top: var(--mm-edge-half);
 }
 #mm-react .mm-edge-left.mm-edge-top {
   box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.5);

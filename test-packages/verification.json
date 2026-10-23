@@ -1,10 +1,10 @@
 {
-  "startingDevelopmentCommit": "b47c3639e1a855e1803c2e46f4877bc3c73a64ed",
-  "version": "0.2.0-alpha.13",
+  "startingDevelopmentCommit": "bd56f608521ce53ba4bc938aa0a97a5e0d787306",
+  "version": "0.2.0-alpha.14",
   "coreTests": 10,
   "native": {
     "status": "passed",
-    "version": "0.2.0-alpha.13",
+    "version": "0.2.0-alpha.14",
     "testModel": {
       "id": 1792748414,
       "kind": 1,
@@ -44,10 +44,10 @@
     ],
     "assets": {
       "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
-      "_mm_react_85688674ad11.js": "85688674ad11e7f0f4b683dab77fdd19ad2c44870e2a3d313b6a19860611c72a",
+      "_mm_react_6e63bf6e2cad.js": "6e63bf6e2cadac4b893ea697e22f1de93d673302c619148d2034a7d33a145bcd",
       "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
     },
-    "apkgSha256": "639def83946ddcf609beda162ac84e197d76ca2ab352f82dd7d63ee6d75f25fa"
+    "apkgSha256": "e997806d7c3e3323ec8baad761d6c89e5dc3b4985899faa7e1fcddc3a09e7e91"
   },
   "nativeBackend25": {
     "status": "passed",
@@ -110,11 +110,147 @@
               "centred": true
             }
           ],
+          "foldedMarkers": [
+            {
+              "width": 320,
+              "side": "front",
+              "zoom": 0.5,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 320,
+              "side": "front",
+              "zoom": 1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 320,
+              "side": "front",
+              "zoom": 1.1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 320,
+              "side": "front",
+              "zoom": 2,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 320,
+              "side": "back",
+              "zoom": 0.5,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 320,
+              "side": "back",
+              "zoom": 1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 320,
+              "side": "back",
+              "zoom": 1.1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 320,
+              "side": "back",
+              "zoom": 2,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "front",
+              "zoom": 0.5,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "front",
+              "zoom": 1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "front",
+              "zoom": 1.1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "front",
+              "zoom": 2,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "back",
+              "zoom": 0.5,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "back",
+              "zoom": 1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "back",
+              "zoom": 1.1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "back",
+              "zoom": 2,
+              "completeRing": true,
+              "tap": "passed"
+            }
+          ],
+          "splitHostMetrics": [
+            {
+              "rootHeight": 606,
+              "visualHeight": 681,
+              "seam": 303
+            },
+            {
+              "rootHeight": 606,
+              "visualHeight": 684,
+              "seam": 303
+            },
+            {
+              "rootHeight": 606,
+              "visualHeight": 606,
+              "seam": 303
+            },
+            {
+              "rootHeight": 606,
+              "visualHeight": 684,
+              "seam": 303
+            }
+          ],
           "constantViewportRevealFlipAndScroll": "passed",
           "zoomAndOrientation": "passed",
           "inlineCompensation": "absent",
           "disposal": "passed",
-          "limitation": "A changing real iOS visible inset/viewport still requires device measurements; this test does not claim it is fixed."
+          "limitation": "Mocked host-metric divergence follows user iOS readings. This adapter contract does not certify a physical iOS fix."
         },
         "motion": {
           "labelCentres": "passed: front/back, scroll, zoom, landscape",
@@ -186,19 +322,19 @@
                 "selector": ".floating-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.5
+                "releaseHandlerMs": 0.4000000059604645
               },
               {
                 "selector": ".custom2-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.09999999403953552
+                "releaseHandlerMs": 0
               },
               {
                 "selector": ".custom-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 1
+                "releaseHandlerMs": 0.5
               },
               {
                 "selector": "#left-floating-widget",
@@ -219,7 +355,7 @@
             },
             {
               "navigation": 1,
-              "paintedFrames": 4,
+              "paintedFrames": 3,
               "scrolls": 0
             },
             {
@@ -234,32 +370,32 @@
             },
             {
               "navigation": 4,
-              "paintedFrames": 4,
+              "paintedFrames": 2,
               "scrolls": 1
             },
             {
               "navigation": 5,
-              "paintedFrames": 3,
+              "paintedFrames": 2,
               "scrolls": 0
             },
             {
               "navigation": 6,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 1
             },
             {
               "navigation": 7,
-              "paintedFrames": 3,
+              "paintedFrames": 2,
               "scrolls": 0
             },
             {
               "navigation": 8,
-              "paintedFrames": 3,
+              "paintedFrames": 2,
               "scrolls": 1
             },
             {
               "navigation": 9,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 0
             }
           ]
@@ -316,11 +452,147 @@
               "centred": true
             }
           ],
+          "foldedMarkers": [
+            {
+              "width": 320,
+              "side": "front",
+              "zoom": 0.5,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 320,
+              "side": "front",
+              "zoom": 1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 320,
+              "side": "front",
+              "zoom": 1.1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 320,
+              "side": "front",
+              "zoom": 2,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 320,
+              "side": "back",
+              "zoom": 0.5,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 320,
+              "side": "back",
+              "zoom": 1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 320,
+              "side": "back",
+              "zoom": 1.1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 320,
+              "side": "back",
+              "zoom": 2,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "front",
+              "zoom": 0.5,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "front",
+              "zoom": 1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "front",
+              "zoom": 1.1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "front",
+              "zoom": 2,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "back",
+              "zoom": 0.5,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "back",
+              "zoom": 1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "back",
+              "zoom": 1.1,
+              "completeRing": true,
+              "tap": "passed"
+            },
+            {
+              "width": 390,
+              "side": "back",
+              "zoom": 2,
+              "completeRing": true,
+              "tap": "passed"
+            }
+          ],
+          "splitHostMetrics": [
+            {
+              "rootHeight": 606,
+              "visualHeight": 681,
+              "seam": 303
+            },
+            {
+              "rootHeight": 606,
+              "visualHeight": 684,
+              "seam": 303
+            },
+            {
+              "rootHeight": 606,
+              "visualHeight": 606,
+              "seam": 303
+            },
+            {
+              "rootHeight": 606,
+              "visualHeight": 684,
+              "seam": 303
+            }
+          ],
           "constantViewportRevealFlipAndScroll": "passed",
           "zoomAndOrientation": "passed",
           "inlineCompensation": "absent",
           "disposal": "passed",
-          "limitation": "A changing real iOS visible inset/viewport still requires device measurements; this test does not claim it is fixed."
+          "limitation": "Mocked host-metric divergence follows user iOS readings. This adapter contract does not certify a physical iOS fix."
         },
         "motion": {
           "labelCentres": "passed: front/back, scroll, zoom, landscape",
@@ -410,7 +682,7 @@
                 "selector": "#left-floating-widget",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 1
+                "releaseHandlerMs": 0
               }
             ],
             "dragCommands": 0,
@@ -420,12 +692,12 @@
           "rows": [
             {
               "navigation": 0,
-              "paintedFrames": 3,
+              "paintedFrames": 2,
               "scrolls": 1
             },
             {
               "navigation": 1,
-              "paintedFrames": 3,
+              "paintedFrames": 2,
               "scrolls": 0
             },
             {
@@ -516,7 +788,7 @@
         "family": "lxgw, \"霞鹜文楷 GB 屏幕阅读版\"",
         "ready": true
       },
-      "frame": "1792774258575:answer",
+      "frame": "1792795187912:answer",
       "hooks": {
         "shown": 1,
         "update": 1
@@ -537,8 +809,8 @@
         "animations": 0,
         "effects": 1,
         "frames": 0,
-        "listeners": 15,
-        "observers": 3,
+        "listeners": 17,
+        "observers": 4,
         "reactRoots": 1,
         "subscribers": 2,
         "timers": 0
@@ -626,22 +898,51 @@
     "reviewSteps": 5
   },
   "physicalMobile": {
-    "status": "unresolved on iOS",
-    "evidence": "Repeated user failure on alpha.12. No physical measurements have been collected. The simulated resize-before-dispose counterexample invalidates the former handoff test.",
-    "current": "Alpha.13 removes coordinate freezing. Independent main/React diagnostic APKG prepared; no hardware fix claim. Daily live template left unchanged this turn."
+    "status": "limited user-reported iOS pass; broader mobile validation open",
+    "alpha13MeasuredTrigger": {
+      "source": "user screenshots",
+      "trigger": "open other branches on the same front",
+      "rootHeight": 606,
+      "windowAndVisualHeights": [
+        606,
+        681,
+        684
+      ],
+      "sidebarSeamsAndHalfLengths": [
+        303,
+        340.5,
+        342
+      ]
+    },
+    "alpha14IOS": {
+      "source": "user reply after private same-card alpha.13/14 comparison",
+      "result": "sidebar stable after opening the other branches",
+      "numericMeasurements": "not provided",
+      "systemAndAnkiMobileVersions": "not provided",
+      "scope": "one card and trigger; not a general mobile certification"
+    },
+    "markerGutter": {
+      "status": "browser checked after the user sidebar pass; physical feedback pending",
+      "outerIndentPixels": 38,
+      "previousOuterIndentPixels": 28,
+      "nestedIndentPixels": 28
+    },
+    "android": "alpha.14 not physically verified; prior mild flash remains unconfirmed",
+    "dailyTemplate": "left at alpha.13; no automatic installation or sync in this change"
   },
   "visual": {
     "status": "passed",
     "pairs": 108,
-    "interactionScenes": 60
+    "interactionScenes": 60,
+    "intentionalLayoutChange": "10px extra outer-tree gutter; prose may wrap earlier. Marker shape, nested indentation, fonts and colours retained."
   },
   "layoutComparison": {
     "fixtureStartingCommit": "919c489b2359c21be432c920287906c0fb9941e8",
-    "scope": "Diagnostic fixtures only. Application runtime and daily templates unchanged.",
+    "scope": "alpha.14 live layout-height adapter and outer marker gutter. Public samples anonymous; actual-card comparison remains private. Daily template unchanged.",
     "package": {
       "status": "passed",
       "baseline": "f67c932a02bef79f0feab1121c6783a9a3ff9e17",
-      "reactVersion": "0.2.0-alpha.13",
+      "reactVersion": "0.2.0-alpha.14",
       "fixtureRevision": 2,
       "notes": 14,
       "cards": 14,
@@ -662,8 +963,8 @@
       "existingLegacyMediaUnchanged": true,
       "contentAddressedLegacyMedia": true,
       "repeatImportNoDuplicates": true,
-      "sha256": "2d35f8737fc9058c6400536fe71f8d00e46370ea750b387fb67001c7eba7642d",
-      "physicalIOS": "not yet measured; diagnosis only, not a claimed fix"
+      "sha256": "f5e2037ac88a65a9ad6e20054b3c28e3b2fd5d7a72c8f76e57e396de1f3d898e",
+      "physicalIOS": "See verification.json for scoped user device feedback; browser checks are not device certification"
     },
     "nativeBackends": [
       {
@@ -1067,11 +1368,11 @@
                 "front": {
                   "width": 390,
                   "height": 780,
-                  "documentHeight": 4397,
+                  "documentHeight": 4280,
                   "longImages": [
                     {
                       "loaded": true,
-                      "height": 3737.328125
+                      "height": 3620.65625
                     }
                   ],
                   "bars": {
@@ -1086,22 +1387,22 @@
                     },
                     {
                       "part": 0.5,
-                      "y": 1809
+                      "y": 1750
                     },
                     {
                       "part": 1,
-                      "y": 3617
+                      "y": 3500
                     }
                   ]
                 },
                 "back": {
                   "width": 390,
                   "height": 780,
-                  "documentHeight": 4421,
+                  "documentHeight": 4304,
                   "longImages": [
                     {
                       "loaded": true,
-                      "height": 3737.328125
+                      "height": 3620.65625
                     }
                   ],
                   "bars": {
@@ -1116,11 +1417,11 @@
                     },
                     {
                       "part": 0.5,
-                      "y": 1821
+                      "y": 1762
                     },
                     {
                       "part": 1,
-                      "y": 3641
+                      "y": 3524
                     }
                   ]
                 }
@@ -1157,11 +1458,11 @@
                 "back": {
                   "width": 390,
                   "height": 780,
-                  "documentHeight": 7248,
+                  "documentHeight": 7132,
                   "longImages": [
                     {
                       "loaded": true,
-                      "height": 3598.0625
+                      "height": 3481.40625
                     }
                   ],
                   "bars": {
@@ -1176,19 +1477,19 @@
                     },
                     {
                       "part": 0.5,
-                      "y": 3234
+                      "y": 3176
                     },
                     {
                       "part": 1,
-                      "y": 6468
+                      "y": 6352
                     }
                   ]
                 }
               },
               "tapReveal": {
                 "status": "passed",
-                "documentHeight": 7248,
-                "imageHeight": 3598.0625,
+                "documentHeight": 7132,
+                "imageHeight": 3481.40625,
                 "hiddenAgain": true
               }
             },
@@ -1198,15 +1499,15 @@
                 "front": {
                   "width": 390,
                   "height": 780,
-                  "documentHeight": 9747,
+                  "documentHeight": 9514,
                   "longImages": [
                     {
                       "loaded": true,
-                      "height": 3737.328125
+                      "height": 3620.65625
                     },
                     {
                       "loaded": true,
-                      "height": 3737.328125
+                      "height": 3620.65625
                     }
                   ],
                   "bars": {
@@ -1221,26 +1522,26 @@
                     },
                     {
                       "part": 0.5,
-                      "y": 4484
+                      "y": 4367
                     },
                     {
                       "part": 1,
-                      "y": 8967
+                      "y": 8734
                     }
                   ]
                 },
                 "back": {
                   "width": 390,
                   "height": 780,
-                  "documentHeight": 9747,
+                  "documentHeight": 9538,
                   "longImages": [
                     {
                       "loaded": true,
-                      "height": 3737.328125
+                      "height": 3620.65625
                     },
                     {
                       "loaded": true,
-                      "height": 3737.328125
+                      "height": 3620.65625
                     }
                   ],
                   "bars": {
@@ -1255,11 +1556,11 @@
                     },
                     {
                       "part": 0.5,
-                      "y": 4484
+                      "y": 4379
                     },
                     {
                       "part": 1,
-                      "y": 8967
+                      "y": 8758
                     }
                   ]
                 }
@@ -1763,11 +2064,11 @@
                 "front": {
                   "width": 390,
                   "height": 780,
-                  "documentHeight": 4397,
+                  "documentHeight": 4280,
                   "longImages": [
                     {
                       "loaded": true,
-                      "height": 3737.328125
+                      "height": 3620.65625
                     }
                   ],
                   "bars": {
@@ -1782,22 +2083,22 @@
                     },
                     {
                       "part": 0.5,
-                      "y": 1808
+                      "y": 1750
                     },
                     {
                       "part": 1,
-                      "y": 3617
+                      "y": 3500
                     }
                   ]
                 },
                 "back": {
                   "width": 390,
                   "height": 780,
-                  "documentHeight": 4421,
+                  "documentHeight": 4304,
                   "longImages": [
                     {
                       "loaded": true,
-                      "height": 3737.328125
+                      "height": 3620.65625
                     }
                   ],
                   "bars": {
@@ -1812,11 +2113,11 @@
                     },
                     {
                       "part": 0.5,
-                      "y": 1820
+                      "y": 1762
                     },
                     {
                       "part": 1,
-                      "y": 3641
+                      "y": 3524
                     }
                   ]
                 }
@@ -1853,11 +2154,11 @@
                 "back": {
                   "width": 390,
                   "height": 780,
-                  "documentHeight": 7248,
+                  "documentHeight": 7132,
                   "longImages": [
                     {
                       "loaded": true,
-                      "height": 3598.0625
+                      "height": 3481.40625
                     }
                   ],
                   "bars": {
@@ -1872,19 +2173,19 @@
                     },
                     {
                       "part": 0.5,
-                      "y": 3234
+                      "y": 3176
                     },
                     {
                       "part": 1,
-                      "y": 6468
+                      "y": 6352
                     }
                   ]
                 }
               },
               "tapReveal": {
                 "status": "passed",
-                "documentHeight": 7248,
-                "imageHeight": 3598.0625,
+                "documentHeight": 7132,
+                "imageHeight": 3481.40625,
                 "hiddenAgain": true
               }
             },
@@ -1894,15 +2195,15 @@
                 "front": {
                   "width": 390,
                   "height": 780,
-                  "documentHeight": 9747,
+                  "documentHeight": 9514,
                   "longImages": [
                     {
                       "loaded": true,
-                      "height": 3737.328125
+                      "height": 3620.65625
                     },
                     {
                       "loaded": true,
-                      "height": 3737.328125
+                      "height": 3620.65625
                     }
                   ],
                   "bars": {
@@ -1917,26 +2218,26 @@
                     },
                     {
                       "part": 0.5,
-                      "y": 4483
+                      "y": 4367
                     },
                     {
                       "part": 1,
-                      "y": 8967
+                      "y": 8734
                     }
                   ]
                 },
                 "back": {
                   "width": 390,
                   "height": 780,
-                  "documentHeight": 9747,
+                  "documentHeight": 9538,
                   "longImages": [
                     {
                       "loaded": true,
-                      "height": 3737.328125
+                      "height": 3620.65625
                     },
                     {
                       "loaded": true,
-                      "height": 3737.328125
+                      "height": 3620.65625
                     }
                   ],
                   "bars": {
@@ -1951,11 +2252,11 @@
                     },
                     {
                       "part": 0.5,
-                      "y": 4483
+                      "y": 4379
                     },
                     {
                       "part": 1,
-                      "y": 8967
+                      "y": 8758
                     }
                   ]
                 }
@@ -2082,7 +2383,7 @@
         }
       ],
       "externalRequests": [],
-      "limitation": "Browser host only. Native iOS measurements are pending; no fix certification."
+      "limitation": "Browser host only. See verification.json for scoped user device feedback; these checks are not device certification."
     }
   }
 }

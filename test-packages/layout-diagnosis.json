@@ -155,5 +155,28 @@
     "nativeFrontBackSourceOrdinalTopologyMatchedInBothEngines": true,
     "personalTextUploaded": false
   },
-  "meaning": "Counterexample to alpha.12 handoff. Not evidence that an iPhone changes its viewport this way. Real device cause is still open."
+  "meaning": "Historical alpha.12 handoff counterexample. Subsequent user alpha.13 measurements and alpha.14 feedback below are separate evidence.",
+  "alpha13PhysicalIOS": {
+    "source": "user screenshots and description; private screenshots are not committed",
+    "trigger": "Open other sibling branches on the same front",
+    "rootHeight": 606,
+    "windowAndVisualHeights": [
+      606,
+      681,
+      684
+    ],
+    "sidebarHalfLengthsAndSeams": [
+      303,
+      340.5,
+      342
+    ],
+    "systemAndAnkiMobileVersions": "not provided"
+  },
+  "alpha14PhysicalIOS": {
+    "source": "user reported result on private same-card alpha.13/14 comparison package",
+    "status": "sidebar stable after opening the other branches",
+    "numericMeasurement": "not provided",
+    "scope": "one actual iOS card and sibling-opening trigger; not all-client certification",
+    "subsequentMarkerGutter": "browser checked; physical feedback pending"
+  }
 }
