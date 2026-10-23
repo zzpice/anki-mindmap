@@ -195,6 +195,9 @@ export function readContent(root: HTMLElement, side: Side, math: MathBridge) {
     }
   }
   prepareLinks(root);
+  // Memoize only what has already been projected. The store remains the sole
+  // authority; scroll/touch interruption must not rewrite every branch/group.
+  let projected: State | undefined;
   return {
     model,
     diagnostics,
@@ -215,35 +218,43 @@ export function readContent(root: HTMLElement, side: Side, math: MathBridge) {
         .find((link) => link.hash.slice(1) === id)
         ?.getBoundingClientRect(),
     project(state: State) {
-      for (const b of branches) {
-        b.children.hidden = !isExpanded(state, b.id);
-        b.bullet.setAttribute("aria-expanded", String(isExpanded(state, b.id)));
-      }
-      for (const o of occurrences) {
-        const shown = state.revealed[o.id];
-        if (shown === o.shown) continue;
-        const initial = o.shown === undefined;
-        if (!initial) math.clear(o.element);
-        const nodes = shown
-          ? initial && side === "back"
-            ? o.original
-            : o.answer.map((n) => n.cloneNode(true))
-          : o.hint;
-        o.element.replaceChildren(...nodes);
-        o.element.dataset.mmRevealed = String(shown);
-        o.shown = shown;
-        if (shown) {
-          prepareLinks(o.element);
-          prepareAnnotations();
-          if (!initial) math.reveal(o.element);
+      if (projected?.expanded !== state.expanded ||
+          projected?.searchExpanded !== state.searchExpanded) {
+        for (const b of branches) {
+          b.children.hidden = !isExpanded(state, b.id);
+          b.bullet.setAttribute("aria-expanded", String(isExpanded(state, b.id)));
         }
       }
-      for (const p of groupParts) {
-        p.element.classList.toggle("reveal-cloze2", !!state.groups[p.id]);
-        p.element.hidden = p.answer
-          ? !state.groups[p.id]
-          : !!state.groups[p.id];
+      if (projected?.revealed !== state.revealed) {
+        for (const o of occurrences) {
+          const shown = state.revealed[o.id];
+          if (shown === o.shown) continue;
+          const initial = o.shown === undefined;
+          if (!initial) math.clear(o.element);
+          const nodes = shown
+            ? initial && side === "back"
+              ? o.original
+              : o.answer.map((n) => n.cloneNode(true))
+            : o.hint;
+          o.element.replaceChildren(...nodes);
+          o.element.dataset.mmRevealed = String(shown);
+          o.shown = shown;
+          if (shown) {
+            prepareLinks(o.element);
+            prepareAnnotations();
+            if (!initial) math.reveal(o.element);
+          }
+        }
       }
+      if (projected?.groups !== state.groups) {
+        for (const p of groupParts) {
+          p.element.classList.toggle("reveal-cloze2", !!state.groups[p.id]);
+          p.element.hidden = p.answer
+            ? !state.groups[p.id]
+            : !!state.groups[p.id];
+        }
+      }
+      projected = state;
     },
     search(query: string): readonly Match[] {
       clearHighlights();

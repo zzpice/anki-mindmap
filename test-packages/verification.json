@@ -1,11 +1,11 @@
 {
-  "startingDevelopmentCommit": "63279947b08ee68208779e8e13623f2c99b4573c",
-  "version": "0.2.0-alpha.4",
+  "startingDevelopmentCommit": "59a23ca15753f22b8ede5a8d6903e28206581596",
+  "version": "0.2.0-alpha.5",
   "coreTests": 8,
   "businessCoreUnchanged": true,
   "native": {
     "status": "passed",
-    "version": "0.2.0-alpha.4",
+    "version": "0.2.0-alpha.5",
     "testModel": {
       "id": 1792748414,
       "kind": 1,
@@ -45,10 +45,10 @@
     ],
     "assets": {
       "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
-      "_mm_react_9df590a9686f.js": "9df590a9686fe1e579e2537312970fafab0ecfd78693afbbcd0947367cfccb07",
+      "_mm_react_e9f0b2e57b88.js": "e9f0b2e57b88814882dd020d186357d9b8c7392c23fe5849df15ca0af90ee5da",
       "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
     },
-    "apkgSha256": "6241057df50d6cdfecd8c1c03665d7d7b3b0630d36b11b4769045e130cd56065"
+    "apkgSha256": "fa8c88be63d819de23195ff4c67dd022d4aa0d66a689fcd9192351b7889fabd6"
   },
   "browser": {
     "status": "passed",
@@ -95,6 +95,36 @@
           "navigations": 10,
           "firstPaintPositionAndFont": "passed",
           "pendingDisposal": "passed",
+          "edgeTouch": {
+            "rows": [
+              {
+                "selector": ".floating-button",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 0.30000001192092896
+              },
+              {
+                "selector": ".custom2-button",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 0.19999998807907104
+              },
+              {
+                "selector": ".custom-button",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 0
+              },
+              {
+                "selector": "#left-floating-widget",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 0.10000000894069672
+              }
+            ],
+            "dragCommands": 0,
+            "redundantMutations": 0
+          },
           "rows": [
             {
               "navigation": 0,
@@ -123,12 +153,12 @@
             },
             {
               "navigation": 5,
-              "paintedFrames": 3,
+              "paintedFrames": 2,
               "scrolls": 1
             },
             {
               "navigation": 6,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 1
             },
             {
@@ -192,6 +222,36 @@
           "navigations": 10,
           "firstPaintPositionAndFont": "passed",
           "pendingDisposal": "passed",
+          "edgeTouch": {
+            "rows": [
+              {
+                "selector": ".floating-button",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 0
+              },
+              {
+                "selector": ".custom2-button",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 0
+              },
+              {
+                "selector": ".custom-button",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 0
+              },
+              {
+                "selector": "#left-floating-widget",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 0
+              }
+            ],
+            "dragCommands": 0,
+            "redundantMutations": 0
+          },
           "rows": [
             {
               "navigation": 0,
@@ -250,6 +310,291 @@
     ],
     "externalRequests": []
   },
+  "edgeLayout": {
+    "status": "passed",
+    "results": [
+      {
+        "name": "chromium",
+        "width": 320,
+        "night": false,
+        "content": {
+          "x": 21,
+          "right": 299
+        },
+        "labels": [
+          {
+            "text": "定位",
+            "x": 1,
+            "right": 13,
+            "color": "rgb(33, 33, 33)"
+          },
+          {
+            "text": "导图",
+            "x": 307,
+            "right": 319,
+            "color": "rgb(33, 33, 33)"
+          },
+          {
+            "text": "展开",
+            "x": 307,
+            "right": 319,
+            "color": "rgb(33, 33, 33)"
+          },
+          {
+            "text": "答案",
+            "x": 307,
+            "right": 319,
+            "color": "rgb(33, 33, 33)"
+          }
+        ]
+      },
+      {
+        "name": "chromium",
+        "width": 320,
+        "night": true,
+        "content": {
+          "x": 21,
+          "right": 299
+        },
+        "labels": [
+          {
+            "text": "定位",
+            "x": 1,
+            "right": 13,
+            "color": "rgb(224, 224, 224)"
+          },
+          {
+            "text": "导图",
+            "x": 307,
+            "right": 319,
+            "color": "rgb(224, 224, 224)"
+          },
+          {
+            "text": "展开",
+            "x": 307,
+            "right": 319,
+            "color": "rgb(224, 224, 224)"
+          },
+          {
+            "text": "答案",
+            "x": 307,
+            "right": 319,
+            "color": "rgb(224, 224, 224)"
+          }
+        ]
+      },
+      {
+        "name": "chromium",
+        "width": 390,
+        "night": false,
+        "content": {
+          "x": 21,
+          "right": 369
+        },
+        "labels": [
+          {
+            "text": "定位",
+            "x": 1,
+            "right": 13,
+            "color": "rgb(33, 33, 33)"
+          },
+          {
+            "text": "导图",
+            "x": 377,
+            "right": 389,
+            "color": "rgb(33, 33, 33)"
+          },
+          {
+            "text": "展开",
+            "x": 377,
+            "right": 389,
+            "color": "rgb(33, 33, 33)"
+          },
+          {
+            "text": "答案",
+            "x": 377,
+            "right": 389,
+            "color": "rgb(33, 33, 33)"
+          }
+        ]
+      },
+      {
+        "name": "chromium",
+        "width": 390,
+        "night": true,
+        "content": {
+          "x": 21,
+          "right": 369
+        },
+        "labels": [
+          {
+            "text": "定位",
+            "x": 1,
+            "right": 13,
+            "color": "rgb(224, 224, 224)"
+          },
+          {
+            "text": "导图",
+            "x": 377,
+            "right": 389,
+            "color": "rgb(224, 224, 224)"
+          },
+          {
+            "text": "展开",
+            "x": 377,
+            "right": 389,
+            "color": "rgb(224, 224, 224)"
+          },
+          {
+            "text": "答案",
+            "x": 377,
+            "right": 389,
+            "color": "rgb(224, 224, 224)"
+          }
+        ]
+      },
+      {
+        "name": "webkit",
+        "width": 320,
+        "night": false,
+        "content": {
+          "x": 21,
+          "right": 299
+        },
+        "labels": [
+          {
+            "text": "定位",
+            "x": 1,
+            "right": 13,
+            "color": "rgb(33, 33, 33)"
+          },
+          {
+            "text": "导图",
+            "x": 307,
+            "right": 319,
+            "color": "rgb(33, 33, 33)"
+          },
+          {
+            "text": "展开",
+            "x": 307,
+            "right": 319,
+            "color": "rgb(33, 33, 33)"
+          },
+          {
+            "text": "答案",
+            "x": 307,
+            "right": 319,
+            "color": "rgb(33, 33, 33)"
+          }
+        ]
+      },
+      {
+        "name": "webkit",
+        "width": 320,
+        "night": true,
+        "content": {
+          "x": 21,
+          "right": 299
+        },
+        "labels": [
+          {
+            "text": "定位",
+            "x": 1,
+            "right": 13,
+            "color": "rgb(224, 224, 224)"
+          },
+          {
+            "text": "导图",
+            "x": 307,
+            "right": 319,
+            "color": "rgb(224, 224, 224)"
+          },
+          {
+            "text": "展开",
+            "x": 307,
+            "right": 319,
+            "color": "rgb(224, 224, 224)"
+          },
+          {
+            "text": "答案",
+            "x": 307,
+            "right": 319,
+            "color": "rgb(224, 224, 224)"
+          }
+        ]
+      },
+      {
+        "name": "webkit",
+        "width": 390,
+        "night": false,
+        "content": {
+          "x": 21,
+          "right": 369
+        },
+        "labels": [
+          {
+            "text": "定位",
+            "x": 1,
+            "right": 13,
+            "color": "rgb(33, 33, 33)"
+          },
+          {
+            "text": "导图",
+            "x": 377,
+            "right": 389,
+            "color": "rgb(33, 33, 33)"
+          },
+          {
+            "text": "展开",
+            "x": 377,
+            "right": 389,
+            "color": "rgb(33, 33, 33)"
+          },
+          {
+            "text": "答案",
+            "x": 377,
+            "right": 389,
+            "color": "rgb(33, 33, 33)"
+          }
+        ]
+      },
+      {
+        "name": "webkit",
+        "width": 390,
+        "night": true,
+        "content": {
+          "x": 21,
+          "right": 369
+        },
+        "labels": [
+          {
+            "text": "定位",
+            "x": 1,
+            "right": 13,
+            "color": "rgb(224, 224, 224)"
+          },
+          {
+            "text": "导图",
+            "x": 377,
+            "right": 389,
+            "color": "rgb(224, 224, 224)"
+          },
+          {
+            "text": "展开",
+            "x": 377,
+            "right": 389,
+            "color": "rgb(224, 224, 224)"
+          },
+          {
+            "text": "答案",
+            "x": 377,
+            "right": 389,
+            "color": "rgb(224, 224, 224)"
+          }
+        ]
+      }
+    ]
+  },
   "desktop": {
     "status": "passed",
     "anki": "26.9.3",
@@ -270,9 +615,12 @@
       "timers": 0
     }
   },
-  "physicalClientFeedback": {
-    "alpha.3": "iOS flicker resolved according to user; Android still jumped; iOS touch-only branching failed",
-    "alpha.4": "Android presentation and iOS touch fixes await device retest"
+  "scope": {
+    "edgeWidthUnchanged": true,
+    "contentMarginsUnchanged": true,
+    "knowledgeTitlesUnchanged": true,
+    "themePaletteAndAnimationsUnchanged": true
   },
+  "physicalClients": "Android touch responsiveness after this patch awaits device retest",
   "mainModified": false
 }

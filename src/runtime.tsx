@@ -8,6 +8,7 @@ import { nativeMath } from "./math";
 import { platform } from "./platform";
 import { resources } from "./resources";
 import { presentCard } from "./presentation";
+import { bindTap } from "./tap";
 
 const SLOT = Symbol.for("anki-mindmap.react.runtime.v1");
 const PREF = "anki_mindmap.preferences.v1";
@@ -106,11 +107,13 @@ export function mount(host: HTMLElement): Runtime {
   const project = () => {
     if (!valid()) return;
     renderer.project(store.getSnapshot());
-    host.dataset.theme = store.getSnapshot().theme;
-    body.dataset.mmTheme = store.getSnapshot().theme;
+    const theme = store.getSnapshot().theme;
+    if (host.dataset.theme !== theme) host.dataset.theme = theme;
+    if (body.dataset.mmTheme !== theme) body.dataset.mmTheme = theme;
     // Fixed-pixel node typography is part of the original design. Scale the
     // whole card so controller zoom still includes its floating controls.
-    host.style.zoom = String(store.getSnapshot().zoom);
+    const zoom = String(store.getSnapshot().zoom);
+    if (host.style.zoom !== zoom) host.style.zoom = zoom;
   };
   const unsubscribe = store.subscribe(project);
   let cancelAuto: (() => void) | undefined;
@@ -212,50 +215,18 @@ export function mount(host: HTMLElement): Runtime {
     else if (group) dispatch({ type: "toggleGroup", id: group });
     return !!(node || answer || group);
   };
-  // Some mobile review hosts do not synthesize a bubbling click for divs.
-  // Translate stationary single-finger taps through the same command handler;
-  // never treat scrolling, a pinch, or a keyboard activation as a second tap.
-  let touch: { id: number; x: number; y: number; target: Element } | undefined;
-  let lastTap: { target: Element; time: number } | undefined;
-  scope.listen(content, "touchstart", (event) => {
-    const e = event as TouchEvent, point = e.touches[0];
-    touch = e.touches.length === 1 && e.target instanceof Element
-      ? { id: point.identifier, x: point.clientX, y: point.clientY, target: e.target }
-      : undefined;
-  }, { passive: true });
-  scope.listen(content, "touchmove", (event) => {
-    const e = event as TouchEvent, point = e.touches[0];
-    if (!touch || e.touches.length !== 1 || point.identifier !== touch.id ||
-        Math.abs(point.clientX - touch.x) >= 10 || Math.abs(point.clientY - touch.y) >= 10)
-      touch = undefined;
-  }, { passive: true });
-  scope.listen(content, "touchcancel", () => { touch = undefined; });
-  scope.listen(content, "touchend", (event) => {
-    const e = event as TouchEvent, start = touch, point = e.changedTouches[0];
-    touch = undefined;
-    if (!start || e.touches.length || e.changedTouches.length !== 1 ||
-        point.identifier !== start.id || Math.abs(point.clientX - start.x) >= 10 ||
-        Math.abs(point.clientY - start.y) >= 10) return;
-    const stableTarget = start.target.closest(".bullet,.cloze") ?? start.target;
-    if (activateContent(start.target, e)) {
-      e.preventDefault();
-      // Revealing replaces placeholder children; retain the stable control so
-      // a compatibility click retargeted to its parent cannot reveal twice.
-      lastTap = { target: stableTarget, time: e.timeStamp };
-    }
-  }, { passive: false });
-  scope.listen(content, "click", (event) => {
-    const e = event as MouseEvent;
-    const target = e.target instanceof Element ? e.target : null;
-    if (!target) return;
-    if (lastTap && e.detail > 0 && e.timeStamp - lastTap.time < 600 &&
-        (lastTap.target === target || lastTap.target.contains(target) || target.contains(lastTap.target))) {
-      e.preventDefault();
-      lastTap = undefined;
-      return;
-    }
-    activateContent(target, e);
-  });
+  bindTap(content, scope, activateContent);
+  if (html.classList.contains("android")) {
+    bindTap(ui, scope, (target, event) => {
+      if (event.type !== "touchend") return false;
+      const button = target.closest<HTMLButtonElement>("nav button");
+      if (!button || !ui.contains(button) || button.disabled) return false;
+      // Reuse React's existing click handler immediately on release instead
+      // of waiting for the WebView's later compatibility click.
+      button.click();
+      return true;
+    });
+  }
   scope.listen(
     doc,
     "click",

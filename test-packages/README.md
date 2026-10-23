@@ -13,6 +13,12 @@ reveal, search, diagram, annotations and images. Show Answer and ratings remain 
 Desktop 26.9.3 is exercised in an isolated profile. Physical phones/gamepad are unverified.
 Consult `react-test-manifest.json` and `SHA256SUMS` for the exact build. No formal release.
 
+Alpha.5 adds short readable edge labels without widening the tabs or reducing
+content width. Android edge buttons act on stationary touch release and ignore
+the later compatibility click; unchanged tree/answer projections no longer
+rewrite DOM on navigation interruption. Knowledge titles, theme palette and
+animations are unchanged. See [edge control details](../docs/edge-controls.md).
+
 Alpha.4 restores touch-only node expansion on mobile, deduplicates compatibility
 clicks, and waits for AnkiDroid's full-page load/font/layout before presenting
 and locating the tree. The iOS presentation path stays as in alpha.3. These new

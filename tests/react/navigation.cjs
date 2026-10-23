@@ -55,6 +55,7 @@ module.exports = async function navigation(browser, base, renders) {
     assert.equal(result.resources.timers, 0);
     rows.push({ navigation: i, paintedFrames: result.paints.length, scrolls: result.scrolls });
   }
+  const edgeTouch = await require("./edge-touch.cjs")(page);
   let releaseImage;
   imageGate = new Promise((resolve) => { releaseImage = resolve; });
   await page.goto(`${base}/android-card?side=front`, { waitUntil: "domcontentloaded" });
@@ -70,5 +71,5 @@ module.exports = async function navigation(browser, base, renders) {
   releaseImage();
   await page.waitForLoadState("load");
   await context.close();
-  return { navigations: rows.length, firstPaintPositionAndFont: "passed", pendingDisposal: "passed", rows };
+  return { navigations: rows.length, firstPaintPositionAndFont: "passed", pendingDisposal: "passed", edgeTouch, rows };
 };

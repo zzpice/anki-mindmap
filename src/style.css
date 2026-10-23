@@ -82,6 +82,31 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
 #mm-react button:disabled {
   cursor: default;
 }
+/* Only the inner half of each original edge tab is on screen. Put the label
+   inside that half without widening the tab or covering more of the text. */
+#mm-react .mm-edge-label {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 50%;
+  transform: translateY(-50%);
+  writing-mode: horizontal-tb;
+  white-space: normal;
+  word-break: break-all;
+  font-size: 12px;
+  line-height: 1.1;
+  text-align: center;
+  color: inherit;
+  pointer-events: none;
+}
+#mm-react button.floating-button,
+#mm-react button#left-floating-widget {
+  color: inherit;
+}
+#mm-react .floating-button .mm-edge-label {
+  left: auto;
+  right: 0;
+}
 #mm-react .search-box:not([hidden]) {
   visibility: visible;
   height: auto;
