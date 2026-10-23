@@ -647,8 +647,10 @@
         1792748524
       ],
       "productionUnchanged": true,
+      "existingLegacyMediaUnchanged": true,
+      "contentAddressedLegacyMedia": true,
       "repeatImportNoDuplicates": true,
-      "sha256": "fcc39d7c64976e978454d85f5deb73bb096f1d8cee861bdec93373519cc97579",
+      "sha256": "a0047bf504a9459fbe5b808a1999cff53ad491c088df3300f27346a04f295320",
       "physicalIOS": "not yet measured; diagnosis only, not a claimed fix"
     },
     "browser": {

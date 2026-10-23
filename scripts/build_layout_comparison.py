@@ -22,9 +22,15 @@ def build():
     spec.loader.exec_module(original)
     assets, templates = compiled()
     font = next(name for name in assets if name.endswith('.ttf'))
+    media_names = {'_guoqijihua_lxgwgbr.ttf': font}
     for file in (original_root / 'cards/media').iterdir():
-        if not file.name.endswith('.ttf'):
-            assets[file.name] = file.read_bytes()
+        # The baseline needs its local helper script. Sample images already
+        # use the React sample asset, so do not package an unused legacy SVG.
+        if file.suffix == '.js':
+            data = file.read_bytes()
+            name = f'_mm_main_{sha(data)[:12]}{file.suffix}'
+            assets[name] = data
+            media_names[file.name] = name
     probe = (ROOT / 'tests/react/layout-probe.html').read_text()
     cases = {key: inputs()[key] for key in ('overview', 'deep', 'wide-review', 'image')}
     package = OUT / 'anki-mindmap-layout-comparison.apkg'
@@ -40,7 +46,12 @@ def build():
                     contract = json.loads((original_root / 'cards/note-types.json').read_text())[0]
                     contract.update(id=mid, name=name)
                     model = original.make_model(col, contract, int(time.time()), source_root=original_root / 'cards')
-                    model['css'] = model['css'].replace('_guoqijihua_lxgwgbr.ttf', font)
+                    # Change asset aliases, never the pinned main business code.
+                    # Generic legacy filenames must not collide with daily media.
+                    for before, after in media_names.items():
+                        model['css'] = model['css'].replace(before, after)
+                        for field in ('qfmt', 'afmt'):
+                            model['tmpls'][0][field] = model['tmpls'][0][field].replace(before, after)
                 else:
                     model = make_model(col, mid, name, templates)
                 for side, field in (('front', 'qfmt'), ('back', 'afmt')):
@@ -70,6 +81,8 @@ def build():
             note = target.new_note(production); note.fields = ['保留字段', '保留导图', '{{c1::保留答案}}']
             target.add_note(note, 1)
             card = note.cards()[0]; card.reps = 8; card.ivl = 20; target.update_card(card)
+            sentinel = b'Existing unrelated media must stay unchanged'
+            target.media.write_data('_jquery.mark.es6.js', sentinel)
             before = (target.db.all('select * from notes'), target.db.all('select * from cards'),
                       json.dumps(target.models.get(1303378414), sort_keys=True))
             for _ in range(2):
@@ -80,6 +93,9 @@ def build():
                 assert json.dumps(target.models.get(1303378414), sort_keys=True) == before[2]
                 assert target.db.scalar('select count(*) from notes') == 9
                 assert target.models.get(1792748414) is None
+                assert (Path(target.media.dir())/'_jquery.mark.es6.js').read_bytes() == sentinel
+                for name, data in assets.items():
+                    assert (Path(target.media.dir())/name).read_bytes() == data
         finally:
             target.close()
     with zipfile.ZipFile(package, 'a', zipfile.ZIP_DEFLATED) as z:
@@ -91,6 +107,7 @@ def build():
     result = {'status': 'passed', 'baseline': 'f67c932a02bef79f0feab1121c6783a9a3ff9e17',
               'reactVersion': (ROOT/'VERSION').read_text().strip(), 'notes': 8, 'cards': 8,
               'modelIds': [1792748514, 1792748524], 'productionUnchanged': True,
+              'existingLegacyMediaUnchanged': True, 'contentAddressedLegacyMedia': True,
               'repeatImportNoDuplicates': True, 'sha256': sha(package.read_bytes()),
               'physicalIOS': 'not yet measured; diagnosis only, not a claimed fix'}
     (OUT/'layout-comparison-manifest.json').write_text(json.dumps(result, indent=2))
