@@ -125,6 +125,26 @@ async function run() {
     );
     await page.goto(`${base}/mixed-0-front.html`);
     await ready(page);
+    const hostReset = await page.evaluate(async () => {
+      const before = AnkiMindmap.current().inspect().state;
+      document.body.className = "card nightMode";
+      await new Promise(requestAnimationFrame);
+      return {
+        before,
+        after: AnkiMindmap.current().inspect().state,
+        font: getComputedStyle(document.body).fontFamily,
+        classes: document.body.className,
+      };
+    });
+    assert.deepEqual(hostReset.before, hostReset.after);
+    assert.ok(
+      hostReset.classes.includes("nightMode") &&
+        hostReset.classes.includes("mm-review"),
+    );
+    assert.match(hostReset.font, /lxgw/);
+    record.checks.push(
+      "native reviewer body-class reset preserves skin and host night mode without changing business state",
+    );
     const invariants = await page.evaluate(() => {
       const r = AnkiMindmap.current();
       r.dispatch({ type: "toggleAnswer", id: "a0" });
@@ -424,6 +444,12 @@ async function run() {
           await pause();
           r.dispose();
           r.dispose();
+          if (
+            document.body.classList.contains("mm-review") ||
+            document.documentElement.classList.contains("mm-review-document") ||
+            document.body.hasAttribute("data-mm-theme")
+          )
+            throw Error("card skin leaked into next note type");
           for (const instance of [old, r])
             if (
               instance.inspect().alive ||
@@ -471,6 +497,7 @@ async function run() {
       pathToFileURL(path.join(detached, "mixed-0-front.html")).href,
     );
     await ready(page);
+    await page.getByRole("button", { name: "搜索", exact: true }).click();
     await page.getByRole("button", { name: "揭示下一处", exact: true }).click();
     assert.equal((await inspect(page)).state.revealed.a0, true);
     if (name === "chromium") await context.setOffline(false);

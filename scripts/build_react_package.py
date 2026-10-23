@@ -18,13 +18,17 @@ PRODUCTION_MODEL_ID=1303378414
 def sha(data):return hashlib.sha256(data).hexdigest()
 
 def compiled():
-    assets={}
+    font=(ROOT/'cards/media/_guoqijihua_lxgwgbr.ttf').read_bytes()
+    font_name=f'_mm_react_lxgw_{sha(font)[:12]}.ttf'
+    assets={font_name:font}
     for suffix in ('js','css'):
         data=(BUILD/'runtime'/f'_mm_react.{suffix}').read_bytes()
+        if suffix=='css':data=data.replace(b'__MM_FONT__',font_name.encode())
         name=f'_mm_react_{sha(data)[:12]}.{suffix}';assets[name]=data
     templates={}
     for side in ('front','back'):
         text=(ROOT/f'cards/templates/mindmap/{side}.html').read_text()
+        text=text.replace('__MM_FONT__',font_name)
         for suffix,token in [('js','__MM_SCRIPT__'),('css','__MM_STYLE__')]:text=text.replace(token,next(name for name in assets if name.endswith('.'+suffix)))
         templates[side]=text
     assets['_mm_react_sample.svg']=('<svg xmlns="http://www.w3.org/2000/svg" width="640" height="180" viewBox="0 0 640 180"><rect width="640" height="180" rx="12" fill="#edf2e8"/><g fill="#3c5946" font-family="sans-serif" font-size="24" text-anchor="middle"><text x="110" y="98">记忆</text><text x="320" y="98">理解</text><text x="530" y="98">应用</text><text x="215" y="98">→</text><text x="425" y="98">→</text></g></svg>').encode()
@@ -101,6 +105,7 @@ def build():
     with zipfile.ZipFile(package,'a',zipfile.ZIP_DEFLATED) as z:
         for name,data in licenses.items():z.writestr('licenses/'+name+'.txt',data)
         for name in ('LICENSE','NOTICE'):z.write(ROOT/name,name)
+        z.write(ROOT/'licenses/LXGW-OFL.txt','licenses/LXGW-OFL.txt')
     for name,data in assets.items():(SITE/name).write_bytes(data)
     for key,cards in renders.items():
         for i,card in enumerate(cards):

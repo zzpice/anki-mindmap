@@ -39,13 +39,17 @@ export function resources(valid: () => boolean) {
       });
       frames.add(id);
     },
-    observe(target: Node, callback: () => void) {
+    observe(
+      target: Node,
+      callback: () => void,
+      options: MutationObserverInit = { childList: true, subtree: true },
+    ) {
       if (!alive) return;
       // Removal detection must run even after valid() becomes false.
       const observer = new MutationObserver(() => {
         if (alive) callback();
       });
-      observer.observe(target, { childList: true, subtree: true });
+      observer.observe(target, options);
       observers.add(observer);
     },
     inspect: () => ({

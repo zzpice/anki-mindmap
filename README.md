@@ -47,13 +47,17 @@ personal collection. CI tests official Anki backends 25.9.2 and 26.9.3 and uploa
 under `test-packages/` is a tested branch snapshot for direct public downloading; no formal
 Release is published. `build/react-site/` is only an optional local developer aid.
 
+The alpha.2 package restores the original WenKai typography, ivory/bamboo palettes,
+round bullets, dotted tree connectors, Cloze frosting and fixed edge controls.
+See [same-card visual comparisons](test-packages/visual-comparison/README.md).
+
 ## How the code fits together
 
 - `src/core.ts`: one pure state/command implementation for tree, answers, search, overlays
   and preferences; no React or DOM dependencies.
 - `src/content.ts`: indexes native HTML and projects state inside its owned content root.
   It preserves rich fragments, native Cloze payloads, MathML, tables, images and unknown HTML.
-- `src/ui.tsx`: React toolbar, search and accessible dialogs subscribe to the same store.
+- `src/ui.tsx`: React floating controls, search and accessible dialogs subscribe to the same store.
 - `src/runtime.tsx`: assembles one card render, dispatches commands, coordinates navigation,
   input and disposal. Front and back share this entry.
 - `src/resources.ts`, `math.ts`, `platform.ts`: cancellable resource ownership and narrow

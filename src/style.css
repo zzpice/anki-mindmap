@@ -1,300 +1,209 @@
+/* Lifecycle/React adapters to the original visual language. Business state
+   remains in core.ts; these selectors only project it into the skin. */
 #mm-react {
-  --paper: #fcfaf5;
-  --panel: #f3f0e7;
-  --ink: #30312f;
-  --muted: #74786d;
-  --line: #d8d9cd;
-  --accent: #496a60;
-  --answer: #245b83;
-  box-sizing: border-box;
-  max-width: 1100px;
-  margin: auto;
-  padding: 14px 22px 64px;
-  background: var(--paper);
-  color: var(--ink);
-  font-family:
-    system-ui,
-    -apple-system,
-    "PingFang SC",
-    "Microsoft YaHei",
-    sans-serif;
-  font-size: 18px;
-  line-height: 1.75;
   text-align: left;
-  overflow-wrap: anywhere;
-}
-#mm-react[data-theme="bamboo"] {
-  --paper: #f0f5ed;
-  --panel: #e6eee0;
-  --ink: #2e3b2c;
-  --line: #cbd7c3;
-  --accent: #4b7052;
-}
-.nightMode #mm-react,
-.night_mode #mm-react {
-  --paper: #252924;
-  --panel: #30372d;
-  --ink: #e1e5da;
-  --muted: #adb6a3;
-  --line: #505c49;
-  --answer: #a6cce5;
-  --accent: #b8d0a5;
-}
-#mm-react * {
-  box-sizing: border-box;
 }
 #mm-react [hidden] {
   display: none !important;
 }
-#mm-react .mm-toolbar {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  background: var(--paper);
-  padding: 8px 0 14px;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 25px;
-}
-#mm-react .mm-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-.mm-deck {
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-}
-.mm-side {
-  font-size: 11px;
-  color: var(--accent);
-  padding: 1px 10px;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-}
-#mm-react nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-#mm-react button {
-  font: inherit;
-  font-size: 13px;
-  color: var(--ink);
-  background: var(--panel);
-  border: 1px solid transparent;
-  border-radius: 6px;
-  padding: 6px 11px;
-  min-height: 35px;
-  cursor: pointer;
-  touch-action: manipulation;
-}
-#mm-react button:hover {
-  border-color: var(--line);
-}
-#mm-react button:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-#mm-react button:focus-visible,
-#mm-react .bullet:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-}
-#mm-react .mm-search {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-top: 12px;
-}
-#mm-react .mm-search input {
-  flex: 1;
-  min-width: 160px;
-  padding: 9px 10px;
-  font: inherit;
-  font-size: 15px;
-  color: var(--ink);
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-}
-#mm-react output {
-  font-size: 12px;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
 #mm-react [data-mm-content] {
-  min-height: 100px;
-  overflow-x: auto;
-  padding: 6px 3px 40px;
-}
-#mm-react .title {
-  font-size: 1.45em;
-  font-weight: 650;
-  line-height: 1.35;
-  margin: 0 0 25px;
-}
-#mm-react .node-list {
-  list-style: none;
-  margin: 0;
-  padding: 0 0 0 1.4em;
-}
-#mm-react .node {
-  position: relative;
-  margin: 0.6em 0;
-}
-#mm-react .bullet {
-  position: absolute;
-  left: -1.3em;
-  top: 0;
-  width: 1.2em;
-  min-height: 1.6em;
-  cursor: pointer;
-  color: var(--muted);
-  text-align: center;
-}
-#mm-react .bullet-dot {
-  display: none;
-}
-#mm-react .bullet::before {
-  content: "·";
-}
-#mm-react .bullet[aria-expanded]::before {
-  content: "▸";
-  font-size: 0.75em;
-}
-#mm-react .bullet[aria-expanded="true"]::before {
-  content: "▾";
-}
-#mm-react .children {
-  margin: 0.5em 0 0.6em 0.2em;
-  padding-left: 0.4em;
-  border-left: 1px solid var(--line);
-}
-#mm-react .note {
-  color: var(--muted);
-  font-size: 0.87em;
-  margin: 0.4em 0;
-}
-#mm-react .content {
-  min-width: 0;
-}
-#mm-react .cloze {
-  cursor: pointer;
-  color: var(--answer);
-  border-bottom: 1px dashed var(--answer);
+  display: block;
 }
 #mm-react .cloze cloze2 {
-  display: inline !important;
+  display: inline;
 }
 #mm-react .cloze cloze2_w {
   display: none !important;
 }
-#mm-react cloze2,
-#mm-react cloze2_w {
+#mm-react .cloze-placeholder {
+  pointer-events: none;
+}
+#mm-react .cloze-frosted {
+  pointer-events: none;
+}
+#mm-react .bullet {
   cursor: pointer;
 }
-#mm-react cloze2_w {
-  color: var(--muted);
-  border-bottom: 1px dotted var(--line);
+#mm-react .bullet[aria-expanded="true"] .bullet-dot {
+  background: rgb(100, 106, 115);
+  box-shadow: none;
 }
-#mm-react img {
-  max-width: 100%;
+#mm-react .bullet[aria-expanded="false"] .bullet-dot {
+  background: transparent;
+  box-shadow:
+    0 0 0 2px rgb(100, 106, 115),
+    0 0 0 4px rgb(200, 200, 200);
+}
+.nightMode #mm-react .bullet[aria-expanded="false"] .bullet-dot {
+  box-shadow:
+    0 0 0 2px rgb(100, 106, 115),
+    0 0 0 4px rgb(58, 58, 58);
+}
+/* Semantic buttons retain the dimensions and typography of the original div controls. */
+#mm-react button.floating,
+#mm-react button.floating-button,
+#mm-react button.custom-button,
+#mm-react button.custom2-button,
+#mm-react button#left-floating-widget {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  font-weight: normal;
+  font-size: inherit;
+  line-height: normal;
+  appearance: none;
+  touch-action: manipulation;
+}
+#mm-react button.floating {
+  font-size: 0.75em;
+}
+#mm-react button.custom-button,
+#mm-react button.custom2-button {
+  color: inherit;
+}
+#mm-react button:focus-visible,
+#mm-react .bullet:focus-visible {
+  outline: 2px solid var(--marker-color);
+  outline-offset: 2px;
+}
+#mm-react button:disabled {
+  cursor: default;
+}
+#mm-react .search-box:not([hidden]) {
+  visibility: visible;
   height: auto;
+  overflow: visible;
+}
+#mm-react .search-box input {
+  font-family: inherit;
+}
+#mm-react .search-box .mm-step {
+  background: transparent;
+  padding: 0 7px;
+}
+#mm-react .mm-dialog {
+  position: fixed;
+  z-index: 1999;
+  top: 1%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 1%;
+  border: 0;
+  border-radius: 10px;
+  width: auto;
+  min-width: 90%;
+  min-height: 50%;
+  max-width: 96%;
+  max-height: 80%;
+  box-sizing: content-box;
+  right: auto;
+  bottom: auto;
+  overflow: auto;
+  color: var(--body-color);
+  background: white;
+  font-family: inherit;
+  font-size: inherit;
+}
+#mm-react .mm-dialog::backdrop {
+  background: transparent;
+}
+#mm-react .mm-dialog-heading {
+  position: sticky;
+  top: 0;
+  height: 0;
+  text-align: right;
+  z-index: 1;
+}
+#mm-react .mm-dialog-heading button {
+  font: inherit;
+  color: var(--floating-color);
+  background: var(--floating-bg);
+  border: 0;
   border-radius: 4px;
-  cursor: zoom-in;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  font-size: 18px;
+  margin: 0;
+  cursor: pointer;
 }
-#mm-react table {
-  border-collapse: collapse;
-  max-width: 100%;
-  margin: 16px 0;
-  font-size: 0.92em;
+#mm-react .mm-dialog-annotation {
+  position: absolute;
+  transform: none;
+  min-height: 0;
+  min-width: 20vw;
+  max-width: min(500px, calc(100vw - 32px));
+  padding: 10px 15px;
+  border-radius: 8px;
+  background: var(--tooltip-bg);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  line-height: 1.4;
+  overflow-wrap: break-word;
 }
-#mm-react td,
-#mm-react th {
-  padding: 8px 12px;
-  border: 1px solid var(--line);
+
+#mm-react .mm-dialog-image {
+  min-height: 0;
 }
-#mm-react th {
-  background: var(--panel);
+#mm-react .mm-full-image {
+  max-height: 76vh;
+  object-fit: contain;
 }
-#mm-react math {
-  font-size: 1.1em;
-}
-#mm-react a {
-  color: var(--accent);
+.nightMode #mm-react .mm-dialog {
+  background: #242424;
+  color: #e0e0e0;
 }
 #mm-react .mm-note-link {
   text-decoration-style: dotted;
 }
 #mm-react [data-mm-hit] {
-  outline: 2px solid #d5af4e;
-  outline-offset: 3px;
+  outline: 2px solid var(--marker-color);
+  outline-offset: 2px;
 }
 ::highlight(anki-mindmap-search) {
-  background: #ead382;
-  color: #1e281e;
+  background: yellow;
+  color: black;
 }
-#mm-react .mm-dialog {
-  color: var(--ink);
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  max-width: min(900px, 94vw);
-  width: max-content;
-  max-height: 85vh;
-  padding: 18px 22px;
-  box-shadow: 0 24px 80px #0004;
-}
-#mm-react .mm-dialog::backdrop {
-  background: #1d231e88;
-}
-.mm-dialog-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 30px;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 12px;
-  margin-bottom: 16px;
-}
-#mm-react .mm-full-image {
-  display: block;
-  max-height: 70vh;
-  object-fit: contain;
-  cursor: default;
-}
-#mm-react .mm-rich-overlay {
-  min-width: min(480px, 80vw);
+#mm-react .mm-field-fallback {
+  margin-top: 20px;
 }
 #mm-react .mm-context-label {
-  font-size: 12px;
-  color: var(--muted);
+  color: var(--note-color);
+  font-size: 14px;
 }
-@media (max-width: 600px) {
-  #mm-react {
-    padding: 8px 10px 40px;
-    font-size: 17px;
+/* Keep the original annotation-image hover enlargement, as a visual rule. */
+@media (hover: hover) {
+  #mm-react .mm-dialog-annotation:has(img:hover) {
+    position: fixed;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%);
+    min-width: 80vw;
+    max-width: calc(100vw - 32px);
+    max-height: 80vh;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   }
-  #mm-react .mm-toolbar {
-    margin-bottom: 16px;
-  }
-  #mm-react button {
-    min-height: 40px;
-    padding: 6px 9px;
-    font-size: 12px;
-  }
-  #mm-react .node-list {
-    padding-left: 1.15em;
-  }
-  #mm-react .children {
-    padding-left: 0.2em;
-  }
-  #mm-react td,
-  #mm-react th {
-    padding: 6px 8px;
-  }
+}
+
+/* Anki Desktop supplies button {margin: 1em .5em}. Keep the original compact
+   search layout usable at 320px rather than inheriting those host margins. */
+#mm-react .search-box button {
+  margin: 0;
+}
+.nightMode #mm-react .mm-dialog-annotation {
+  background: #333;
+  border: 1px solid #555;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+}
+
+#mm-react .mm-dialog-annotation .mm-dialog-heading {
+  display: contents;
+}
+#mm-react .mm-dialog-annotation .mm-dialog-heading button {
+  float: right;
+  margin-left: 4px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
 }

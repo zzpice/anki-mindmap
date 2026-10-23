@@ -67,6 +67,7 @@ SNAPSHOT = r'''(() => {
  const c=document.querySelector('[data-mm-content]');
  const info=runtime.inspect();
  return {frame:document.querySelector('[data-frame]')?.dataset.frame, ...info,
+ font:{family:getComputedStyle(document.body).fontFamily,ready:document.fonts.check("16px lxgw")},
  ua:navigator.userAgent, images:[...c.querySelectorAll('img')].map(x=>({src:x.getAttribute('src'),loaded:x.complete&&x.naturalWidth>0})),
  mathML:c.querySelectorAll('math').length, typeset:c.querySelectorAll('mjx-container').length,
  activeTypeset:[...c.querySelectorAll('.cloze')].map(x=>x.querySelectorAll('mjx-container').length),
@@ -95,10 +96,11 @@ def stop(error=None):
 def poll_preview(cid, side, attempt=0):
     def got(value):
         try:
-            if not value or value.get('frame') != f'{cid}:{side}' or value['side'] != ('front' if side=='question' else 'back'):
+            if not value or value.get('frame') != f'{cid}:{side}' or value['side'] != ('front' if side=='question' else 'back') or not value.get('font',{}).get('ready'):
                 if attempt > 100: raise AssertionError(('preview timeout', cid, side, value))
                 QTimer.singleShot(60, lambda:poll_preview(cid, side, attempt+1)); return
             assert value['alive'] and value['resources']['reactRoots']==1
+            assert value['font']['family'].startswith('lxgw')
             assert all(v==(side=='answer') for v in value['state']['revealed'].values()), value
             result['preview'].append(value)
             if len(result['preview']) <= 4: preview._web.grab().save(str(BUILD / f'desktop-preview-{len(result["preview"])}.png'))

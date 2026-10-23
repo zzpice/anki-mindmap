@@ -12,3 +12,13 @@ Open the welcome lesson to try folding, locating, per-occurrence reveal, other-g
 reveal, search, diagram, annotations and images. Show Answer and ratings remain native.
 Desktop 26.9.3 is exercised in an isolated profile. Physical phones/gamepad are unverified.
 Consult `react-test-manifest.json` and `SHA256SUMS` for the exact build. No formal release.
+
+Alpha.2 restores the original main visual design. The original WenKai font is
+bundled locally with its OFL, so the package is about 19 MB. The new visual-design
+sample covers heading levels, highlights and notes; there are 20 notes / 26 native
+Cloze cards. See [old/new screenshots](visual-comparison/README.md).
+
+Top deck strip opens search; left lower tab locates; right upper/middle/lower tabs
+open the diagram, expand/collapse the tree and show/hide other groups. Current
+Cloze can still be tapped independently. The removed personal-note popup stays
+removed, with its field and content preserved.

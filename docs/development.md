@@ -30,3 +30,16 @@ prioritizes no cross-card contamination. Theme alone is a long-lived local prefe
 Production identity is unchanged in cards/note-types.json. Packaging defaults ONLY to the
 separate test model. Future production installation/export is a separate explicit step.
 Do not change field IDs/order, native ordinals, GUIDs or data as part of a UI repair.
+
+The visual skin lives separately in src/visual/original.css and src/style.css.
+Historical HTML classes retain their original visual meaning. The first file
+preserves original appearance values; the second handles the React/semantic-button
+adapters. Page decorations are owned by the mounted runtime and removed on dispose.
+New note types cannot inherit our page margins, themes or tree selectors. The pure
+business core is unchanged by the visual restoration.
+
+Anki executes the template before its reviewer resets body.className. The runtime
+therefore observes the two owned page class decorations and restores them after a
+host reset, preserving host classes such as nightMode. Those observers share the
+same resource scope as other card work and are removed on disposal. Tests cover
+this order explicitly; merely checking a standalone browser page would miss it.

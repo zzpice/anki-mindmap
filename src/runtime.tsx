@@ -79,6 +79,15 @@ export function mount(host: HTMLElement): Runtime {
     /* review remains usable */
   }
   const store = createStore(renderer.model, side, theme);
+  // The skin owns these host decorations only during this card's lifetime.
+  // In particular, unrelated Anki note types must never inherit our page margins.
+  const body = doc.body,
+    html = doc.documentElement;
+  const previousTheme = body.getAttribute("data-mm-theme");
+  const hadBodyClass = body.classList.contains("mm-review");
+  const hadHtmlClass = html.classList.contains("mm-review-document");
+  body.classList.add("mm-review");
+  html.classList.add("mm-review-document");
   let alive = true,
     effects = 0,
     scrolls = 0,
@@ -96,7 +105,10 @@ export function mount(host: HTMLElement): Runtime {
     if (!valid()) return;
     renderer.project(store.getSnapshot());
     host.dataset.theme = store.getSnapshot().theme;
-    content.style.fontSize = `${store.getSnapshot().zoom}em`;
+    body.dataset.mmTheme = store.getSnapshot().theme;
+    // Fixed-pixel node typography is part of the original design. Scale the
+    // whole card so controller zoom still includes its floating controls.
+    host.style.zoom = String(store.getSnapshot().zoom);
   };
   const unsubscribe = store.subscribe(project);
   let cancelAuto: (() => void) | undefined;
@@ -162,9 +174,14 @@ export function mount(host: HTMLElement): Runtime {
     );
     if (annotation && renderer.annotation(annotation.hash.slice(1))) {
       event.preventDefault();
+      const overlay = store.getSnapshot().overlay;
       dispatch({
         type: "overlay",
-        value: { kind: "annotation", id: annotation.hash.slice(1) },
+        value:
+          overlay?.kind === "annotation" &&
+          overlay.id === annotation.hash.slice(1)
+            ? null
+            : { kind: "annotation", id: annotation.hash.slice(1) },
       });
       return;
     }
@@ -194,6 +211,20 @@ export function mount(host: HTMLElement): Runtime {
     else if (answer) dispatch({ type: "toggleAnswer", id: answer });
     else if (group) dispatch({ type: "toggleGroup", id: group });
   });
+  scope.listen(
+    doc,
+    "click",
+    (event) => {
+      const target = event.target instanceof Element ? event.target : null;
+      if (
+        store.getSnapshot().overlay &&
+        target &&
+        !target.closest('.mm-dialog,#left-floating-widget,a[href^="#_msocom_"]')
+      )
+        dispatch({ type: "overlay", value: null });
+    },
+    { capture: true },
+  );
   scope.listen(doc, "keydown", (event) => {
     const e = event as KeyboardEvent;
     if (e.isComposing || e.repeat) return;
@@ -236,7 +267,13 @@ export function mount(host: HTMLElement): Runtime {
         type: "theme",
         value: store.getSnapshot().theme === "paper" ? "bamboo" : "paper",
       },
-      KeyJ: { type: "overlay", value: { kind: "diagram" } },
+      KeyJ: {
+        type: "overlay",
+        value:
+          store.getSnapshot().overlay?.kind === "diagram"
+            ? null
+            : { kind: "diagram" },
+      },
     };
     if (mapping[e.code]) {
       e.preventDefault();
@@ -353,6 +390,7 @@ export function mount(host: HTMLElement): Runtime {
         deck={host.querySelector("[data-mm-deck]")?.textContent?.trim() ?? ""}
         diagram={host.querySelector("[data-mm-diagram]")?.innerHTML ?? ""}
         annotation={renderer.annotation}
+        annotationAnchor={renderer.annotationAnchor}
         dispatch={dispatch}
         lifecycle={lifecycle}
       />
@@ -362,6 +400,23 @@ export function mount(host: HTMLElement): Runtime {
   cancelAuto = scope.later(() => scroll(renderer.firstActive()), 100);
   scope.observe(doc.documentElement, () => {
     if (!valid()) runtime.dispose();
+  });
+  // Anki's reviewer assigns body.className in onUpdateHook AFTER executing
+  // template scripts. Restore only our decorations, preserving host classes
+  // such as nightMode. This observer is card-owned and disconnected on disposal.
+  const restoreSkin = () => {
+    if (!valid()) return;
+    if (!body.classList.contains("mm-review")) body.classList.add("mm-review");
+    if (!html.classList.contains("mm-review-document"))
+      html.classList.add("mm-review-document");
+  };
+  scope.observe(body, restoreSkin, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+  scope.observe(html, restoreSkin, {
+    attributes: true,
+    attributeFilter: ["class"],
   });
   const runtime: Runtime = {
     dispatch,
@@ -388,7 +443,11 @@ export function mount(host: HTMLElement): Runtime {
       const intact = renderer.isIntact();
       renderer.restore();
       if (usedFallback && intact) content.innerHTML = originalContent;
-      content.style.removeProperty("font-size");
+      host.style.removeProperty("zoom");
+      if (!hadBodyClass) body.classList.remove("mm-review");
+      if (!hadHtmlClass) html.classList.remove("mm-review-document");
+      if (previousTheme === null) delete body.dataset.mmTheme;
+      else body.setAttribute("data-mm-theme", previousTheme);
       delete host.dataset.theme;
       delete host.dataset.ready;
       if (doc[SLOT] === runtime) delete doc[SLOT];

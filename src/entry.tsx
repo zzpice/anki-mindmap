@@ -1,3 +1,4 @@
+import "./visual/original.css";
 import "./style.css";
 import { mount } from "./runtime";
 export { current, dispose, mount } from "./runtime";

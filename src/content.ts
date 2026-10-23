@@ -80,8 +80,17 @@ export function readContent(root: HTMLElement, side: Side, math: MathBridge) {
         : payload === null
           ? originalNodes.map((n) => n.cloneNode(true))
           : [...fragment.content.childNodes];
-    const hint =
-      side === "front" ? originalNodes : [document.createTextNode("[…]")];
+    const placeholder = document.createElement("span");
+    placeholder.className = "cloze-placeholder";
+    placeholder.append(
+      ...(side === "front"
+        ? originalNodes.map((n) => n.cloneNode(true))
+        : [document.createTextNode("[...]")]),
+    );
+    const frosted = document.createElement("span");
+    frosted.className = "cloze-frosted";
+    frosted.setAttribute("aria-hidden", "true");
+    const hint = [placeholder, frosted];
     occurrences.push({ id, element, original: originalNodes, answer, hint });
     active.push({
       id,
@@ -104,7 +113,6 @@ export function readContent(root: HTMLElement, side: Side, math: MathBridge) {
       return;
     }
     const answer = element.localName === "cloze2";
-    if (!answer && !element.textContent?.trim()) element.textContent = "~~";
     groupParts.push({ id, element, answer });
   });
   const model: ContentModel = {
@@ -202,6 +210,10 @@ export function readContent(root: HTMLElement, side: Side, math: MathBridge) {
     activeElement: (id: string) =>
       occurrences.find((o) => o.id === id)?.element,
     annotation: (id: string) => annotations.get(id),
+    annotationAnchor: (id: string) =>
+      [...root.querySelectorAll<HTMLAnchorElement>('a[href^="#_msocom_"]')]
+        .find((link) => link.hash.slice(1) === id)
+        ?.getBoundingClientRect(),
     project(state: State) {
       for (const b of branches) {
         b.children.hidden = !isExpanded(state, b.id);
@@ -218,6 +230,7 @@ export function readContent(root: HTMLElement, side: Side, math: MathBridge) {
             : o.answer.map((n) => n.cloneNode(true))
           : o.hint;
         o.element.replaceChildren(...nodes);
+        o.element.dataset.mmRevealed = String(shown);
         o.shown = shown;
         if (shown) {
           prepareLinks(o.element);
@@ -225,10 +238,12 @@ export function readContent(root: HTMLElement, side: Side, math: MathBridge) {
           if (!initial) math.reveal(o.element);
         }
       }
-      for (const p of groupParts)
+      for (const p of groupParts) {
+        p.element.classList.toggle("reveal-cloze2", !!state.groups[p.id]);
         p.element.hidden = p.answer
           ? !state.groups[p.id]
           : !!state.groups[p.id];
+      }
     },
     search(query: string): readonly Match[] {
       clearHighlights();

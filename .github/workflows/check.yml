@@ -35,6 +35,13 @@ jobs:
       - run: npm run build
       - run: python scripts/build_react_package.py
       - run: npm test
+      - name: Compare original and React visuals
+        if: matrix.anki-version == '26.9.3'
+        run: |
+          python -m pip install --no-deps aqt==26.9.3
+          git fetch --no-tags --depth=1 origin f67c932a02bef79f0feab1121c6783a9a3ff9e17
+          python scripts/prepare_visual_comparison.py
+          node tests/react/visual.cjs
       - uses: actions/upload-artifact@v6
         if: matrix.anki-version == '26.9.3'
         with:
@@ -48,4 +55,5 @@ jobs:
           path: |
             build/*-results.json
             build/*.log
+            build/visual-comparison/
           retention-days: 14

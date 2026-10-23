@@ -11,12 +11,12 @@ historical evidence, not silently changed to bless old defects.
 - Eight core tests, including 1000 invariant sequences: folding never changes answers,
   reveal never changes layout, native occurrences stay independent, other groups exclude
   current, ordered reveal/reverse hide and search/manual-layout precedence.
-- Official Anki backend: 19 anonymous notes, 24 cards, same-number occurrences, c1/c30,
+- Official Anki backend: 20 anonymous notes, 26 cards, same-number occurrences, c1/c30,
   nested/native/custom Cloze, field-only questions, empty Text, HTML/image/table/MathML.
 - Collision-safe test import into a collection already containing model 1303378414 and a
   synthetic scheduled note: original model JSON, complete note/card rows unchanged.
   Repeated import does not duplicate test notes; fields, ordinals and media round-trip.
-- Chromium and WebKit each load 48 native sides and run 100 front/back/next lifecycle
+- Chromium and WebKit each load 52 native sides and run 100 front/back/next lifecycle
   sequences, including duplicate bundle execution, same-root remount, externally removed
   hosts, rejected stale commands and zero owned resources after disposal.
 - Search excludes hidden answers, navigates folded prose, does not change reveal and does
@@ -30,7 +30,7 @@ historical evidence, not silently changed to bless old defects.
 
 Official Anki/aqt 26.9.3 on macOS 27.0.1 arm64, PyQt/Qt compiled 6.11.0, WebEngine UA
 6.11.2/Chromium 140. A uniquely keyed safe-mode process uses a fresh profile with auto-sync
-disabled. It loads 48 preview sides and a fresh direct-back view, then runs the actual
+disabled. It loads 52 preview sides and a fresh direct-back view, then runs the actual
 reviewer: reveal, native Show Answer, native Again rating, next different anonymous card.
 Only the temporary profile receives a review-log entry. Removing the reviewer host
 cleans every owned resource. The driver explicitly closes its collection and Qt services.
@@ -59,3 +59,37 @@ logs; passing assertions do not mean warning-free operation.
 GitHub Actions independently builds/tests both official backend versions and uploads an
 artifact. The directly downloadable committed APKG is a verified local build; its manifest
 and SHA256SUMS identify exact bytes. No formal Release, main merge or deployment is used.
+
+## Visual restoration (alpha.2)
+
+Baseline is main f67c932, not the preceding React page design. Identical native
+front/back card inputs pass through both actual templates and official reviewer
+rendering, including locally supplied MathJax. Chromium and WebKit compare 1280,
+390 and 320px widths, ivory/bamboo themes and night mode. Title/body typography,
+node geometry, connectors, bullet/control geometry and Cloze frosting are checked
+against the original. The new visual-design sample covers heading levels, notes,
+highlights, tables, images and MathML; field contents survive native round trip.
+
+Additional scenes cover expanded trees, other-group reveal, search, diagram and
+anchored annotations. Screenshots are browser evidence, not mobile device approval.
+The deliberately removed personal-note control is absent. Search retains the
+approved non-revealing behavior; its added step controls remain inside the search
+panel. Host button margins are reset to prevent narrow-screen crowding. Diagram
+closing is explicit/outside-click and night dialogs remain readable.
+
+The original visual rule values are retained in src/visual/original.css with scoped
+ownership selectors; src/style.css adapts semantic buttons, state projection and
+dialogs. No legacy JavaScript is imported. The bundled WenKai font is unchanged and
+its OFL is included. Font preload is required for Anki to discover and export the
+font referenced by an external CSS file. CSS minification stays off because it
+otherwise discards Chromium's standard backdrop-filter in this toolchain.
+
+Reproduce comparisons after building the test package:
+
+```sh
+.venv/bin/python scripts/prepare_visual_comparison.py
+node tests/react/visual.cjs
+```
+
+The preparer only reads the pinned Git commit and creates disposable collections.
+It does not change the checked-out branch or a personal Anki profile.

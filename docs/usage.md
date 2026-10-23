@@ -5,15 +5,15 @@ lesson in preview or study the test deck. The runtime also works directly on the
 
 | Action | Input |
 | --- | --- |
-| Fold one branch | Click/tap its triangle; focused triangle supports Enter/Space |
+| Fold one branch | Click/tap its round bullet; focused bullet supports Enter/Space |
 | Current answer | Click/tap each native Cloze occurrence |
-| Reveal next / hide reverse-text last | ] / [ or toolbar |
-| Expand/collapse branches | K or toolbar |
+| Reveal next / hide reverse-text last | ] / [ or the search panel |
+| Expand/collapse branches | K or the right middle tab |
 | Other custom groups | Click their prompt/answer; L toggles all other groups |
-| Locate current | H or toolbar; reopens required ancestors |
-| Search public prose | Ctrl/Cmd+F; Enter/Shift+Enter navigate; Escape closes |
+| Locate current | H or the left lower tab; reopens required ancestors |
+| Search public prose | Tap the top deck strip or Ctrl/Cmd+F; Enter/Shift+Enter navigate; Escape closes |
 | Theme | C or theme button |
-| Diagram | J or Diagram button |
+| Diagram | J or the right upper tab |
 | Annotation / image | Click a recognized reference or visible image |
 | Native flip / grade | Use Anki's own controls |
 

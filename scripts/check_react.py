@@ -17,4 +17,8 @@ assert not re.search(r'\b(?:fetch|XMLHttpRequest|WebSocket|sendBeacon|setInterva
 assert '填写笔记' not in (ROOT/'src/ui.tsx').read_text()
 assert '@import' not in (ROOT/'src/style.css').read_text()
 assert not re.search(r'url\(', (ROOT/'src/style.css').read_text())
+skin=(ROOT/'src/visual/original.css').read_text()
+assert re.findall(r'url\((.*?)\)',skin)==['"__MM_FONT__"']
+assert 'body.mm-review' in skin and ':where(#mm-react)' in skin
+assert (ROOT/'cards/media/_guoqijihua_lxgwgbr.ttf').is_file()
 print('React source, native identity, field preservation and offline checks passed')

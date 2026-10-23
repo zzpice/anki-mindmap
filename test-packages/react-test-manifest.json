@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0-alpha.1",
+  "version": "0.2.0-alpha.2",
   "testModel": {
     "id": 1792748414,
     "kind": 1,
@@ -28,8 +28,8 @@
     ]
   },
   "productionModelId": 1303378414,
-  "notes": 19,
-  "cards": 24,
+  "notes": 20,
+  "cards": 26,
   "checks": [
     "native same/multiple/gapped/nested Cloze ordinals",
     "full fields/media/identity round trip",
@@ -38,9 +38,10 @@
     "template update preserves original note/card rows"
   ],
   "assets": {
-    "_mm_react_0315560cd33f.js": "0315560cd33ff397d85bc39e3ea92aa362000554fceedb4d40011df4e695fee4",
-    "_mm_react_70f990ff976f.css": "70f990ff976fddfeb6f7292f0044bac39933cc10fa25e123951b58e2bfcfb51b",
+    "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
+    "_mm_react_c072d8653937.js": "c072d8653937edecb9ba3095840e38a21b9da2bdf01535d592f0f962826c1bf0",
+    "_mm_react_9c85965ec2be.css": "9c85965ec2bef137fc75850489da3d95de0d0cd70945c6f5b4913980f04acec0",
     "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
   },
-  "apkgSha256": "501b5de9bb866f781d07159a22c4c2e4b1a16ff072afc3a0dae55f00b1bbe950"
+  "apkgSha256": "9acb19e6aaa90b01c31bc4bfb0ca3e704277eb261a2e8eb15858cdcf0e3c9dc1"
 }
