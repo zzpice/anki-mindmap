@@ -1,0 +1,3 @@
+# Install after requirements-build.txt, using --no-deps.
+# Official reviewer JS/CSS for tests; full Qt dependencies are optional.
+aqt==26.9.3

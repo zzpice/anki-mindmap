@@ -1,0 +1,2 @@
+# Official Anki backend, used only in temporary build/test collections.
+anki==26.9.3

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Anki 模板 · 调试预览</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="heading"><div><p class="eyebrow">ANKI MINDMAP</p><h1>模板预览</h1></div><a href="https://github.com/zzpice/anki-mindmap">查看源码 ↗</a></header>
+<main>
+<section class="controls" aria-label="预览设置">
+<label>模板<select id="type"></select></label>
+<label class="scene-control">示例<select id="scene"></select></label>
+<label>卡片<select id="card"></select></label>
+<label>视口<select id="viewport"><option value="phone">手机 · 390 × 844</option><option value="narrow">窄屏 · 320 × 700</option><option value="landscape">横屏 · 844 × 390</option><option value="desktop">桌面 · 1280 × 900</option><option value="fit">适应窗口</option></select></label>
+<label>主题<select id="theme"><option value="light">浅色</option><option value="dark">深色</option></select></label>
+<div class="actions"><div class="sides" role="group" aria-label="卡片正反面"><button id="front" type="button" aria-pressed="true">正面</button><button id="back" type="button" aria-pressed="false">背面</button></div><button id="reset" type="button">重置本例</button><label class="compare"><input id="compare" type="checkbox">版本对照</label><button id="copy" type="button">复制此视图链接</button></div>
+</section>
+<p id="status" role="status" aria-live="polite">正在加载预览…</p>
+<section id="panels" aria-label="模板渲染结果">
+<article class="panel" id="current-panel"><header><div><h2>当前版本</h2><a class="commit" id="current-commit"></a></div><span class="dimensions"></span></header><div class="surface"><div class="frame-space"><iframe title="当前版本卡片" id="current" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe></div></div></article>
+<article class="panel" id="baseline-panel" hidden><header><div><h2>对照版本</h2><a class="commit" id="baseline-commit"></a></div><span class="dimensions"></span></header><div class="surface"><div class="frame-space"><iframe title="对照版本卡片" id="baseline" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe></div></div></article>
+</section>
+<details class="about"><summary>构建信息与验证范围</summary><p id="build-info"></p><p>官方 Anki 后端生成卡片，使用原模板及官方 reviewer 资源。尺寸表示卡片内部视口；空间不足时等比缩小，缩放比例显示在右上角。两侧交互独立；切换示例或点击“重置本例”清空临时选择。</p><p>这是浏览器调试预览，不写入个人 Anki，也不记录评分或进度。iOS 的安全区域、触控和客户端行为仍需在 AnkiMobile 验收。仅使用仓库公开示例与匿名复杂场景。</p><p><a href="LICENSE">模板 MIT 许可</a> · <a href="third-party/Anki-LICENSE">官方 reviewer AGPL 许可</a> · <a href="third-party/anki-source.tar.gz">对应 Anki 源码</a> · <a href="manifest.json">构建清单</a></p></details>
+<noscript>请启用 JavaScript 查看模板交互预览。</noscript>
+</main>
+<script src="manifest.js"></script><script src="app.js"></script>
+</body></html>

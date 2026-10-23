@@ -1,0 +1,14 @@
+[
+  {
+    "key": "mindmap",
+    "guid": "anki-cards-offline-mindmap",
+    "label": "思维导图 · 原版交互离线模板",
+    "type": "mindmap",
+    "fields": {
+      "填写笔记": "<p>自己的理解与错因，保存在本地字段。</p>",
+      "导图": "<img src=\"_rule-build.svg\" alt=\"匿名规则构建示意图\">",
+      "Text": "<div class=\"title\">规则与边界</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">域名匹配</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">完整域名：{{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"sample-domain\"></cloze2_w><cloze2 class=\"cz-1 czi-sample-domain\">domain</cloze2>}}</div></li><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">域名家族：{{c2::<cloze2_w class=\"cz-2\" data-cloze-id=\"sample-suffix\"></cloze2_w><cloze2 class=\"cz-2 czi-sample-suffix\">domain_suffix</cloze2>}}</div></li></ul></div></li><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">构建流程</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c3::<cloze2_w class=\"cz-3\" data-cloze-id=\"sample-build\"></cloze2_w><cloze2 class=\"cz-3 czi-sample-build\">本地示意图</cloze2>}}<img src=\"_rule-build.svg\" alt=\"匿名规则构建示意图\"></div></li></ul></div></li></ul>"
+    },
+    "tags": []
+  }
+]

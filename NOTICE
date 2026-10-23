@@ -1,0 +1,46 @@
+Anki Mindmap
+Copyright (c) 2026 zzpice. MIT License; see LICENSE.
+
+Extracted from zzpice/anki-cards at commit
+  aaea69d147f2fb39723b827b40086e4bcb2fa056 (2026-10-23).
+The source repository's copyright and original-template provenance are retained.
+The runtime files and licenses are unchanged; see tests/migration-baseline.json.
+There is no cross-repository build or runtime dependency.
+
+Inherited source provenance:
+- Card source was adapted from the author's zzpice/anki-template refactor/card-templates
+  snapshot 7bd3fd7f83ea974129fca1741b2c4417ad4f1134 (2026-10-18).
+- The original-style mindmap template was supplied by the repository owner. Its UI,
+  folding and custom Cloze code are retained in cards/templates/mindmap/; the online
+  loading/authorization shell had already been removed in the source baseline.
+  Course content is not part of the public examples. The source repository declares
+  MIT for its own code; migration does not independently establish earlier authorship
+  or extend rights beyond that declaration.
+
+Bundled runtime/example resources (retain their separate licenses):
+- mark.js v9.0.0, Julian Kühnel, MIT. Original header unchanged in
+  cards/media/_jquery.mark.es6.js; full license: licenses/mark.js-LICENSE.txt.
+  https://github.com/julkue/mark.js
+- LXGW WenKai GB Screen 1.321, LXGW and The Klee Project Authors, SIL OFL 1.1.
+  Unmodified font: cards/media/_guoqijihua_lxgwgbr.ttf.
+  Full copyright, reserved font names and license: licenses/LXGW-OFL.txt.
+  https://github.com/lxgw/LxgwWenKai-Screen
+- _rule-build.svg is the author's MIT-licensed anonymous example illustration.
+  Example subject matter credits https://github.com/zzpice/sing-box-rules.
+
+Development/preview dependencies (not copied into APKG or template ZIP):
+- Anki / aqt, Anki project contributors, GNU AGPL-3.0:
+  https://github.com/ankitects/anki/blob/main/LICENSE
+  Models, native Cloze generation and renders come from the official backend.
+  Local/CI preview uses unmodified official reviewer JS/CSS, and carries the matching
+  upstream source archive and AGPL license next to those preview files. Do not remove
+  those files when distributing the generated preview. Anki itself supplies jQuery
+  and math support on clients; those are not bundled by this template.
+- Playwright, Microsoft contributors, Apache-2.0:
+  https://github.com/microsoft/playwright/blob/main/LICENSE
+  Browsers are installed separately for development and CI.
+
+MIT permits redistribution with its notices; the font remains under OFL and is bundled
+unchanged with its license (not sold separately). The separate AGPL reviewer preview
+retains corresponding source and license. This extraction introduces no new third-party
+runtime code. Any later replacement or redistribution must retain applicable notices.

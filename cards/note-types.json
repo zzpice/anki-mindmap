@@ -1,0 +1,16 @@
+[
+  {
+    "key": "mindmap",
+    "id": 1303378414,
+    "name": "思维导图",
+    "kind": "cloze",
+    "fields": [
+      "填写笔记",
+      "导图",
+      "Text"
+    ],
+    "front": "templates/mindmap/front.html",
+    "back": "templates/mindmap/back.html",
+    "css": "templates/mindmap/style.css"
+  }
+]

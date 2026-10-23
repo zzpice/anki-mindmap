@@ -1,0 +1,22 @@
+{
+  "name": "anki-mindmap",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Standalone offline Anki mindmap template and development checks",
+  "scripts": {
+    "check": "python3 scripts/check_templates.py",
+    "test": "node tests/test_browser.cjs",
+    "test:preview": "node tests/preview_browser.cjs",
+    "build": "python3 scripts/build_package.py",
+    "test:native": "ANKI_RENDER_OUTPUT=build/cards.json python3 -m unittest discover -s tests -v",
+    "build:preview": "python3 scripts/build_preview.py",
+    "package": "python3 scripts/release_assets.py",
+    "test:desktop": "python3 tests/desktop_smoke.py"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
