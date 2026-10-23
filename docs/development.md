@@ -1,64 +1,65 @@
-# Development
+# 开发说明
 
-The rewrite uses React 19, TypeScript and Vite, with native CSS. All runtime libraries are
-bundled into one classic IIFE; Vite is never needed by an Anki client. The builder assigns
-content-addressed `_mm_react_<hash>` names and packages every local asset. JS/CSS filenames
-do not collide with the legacy runtime or a different build.
+## 构建和验收
 
-Use the commands in the root README. `npm run check` validates types and static scope;
-`npm run build` emits `build/runtime`; the official-backend builder emits dist/APKG and
-native browser fixtures; `npm test` runs the current core/browser acceptance suites.
+Node.js 24、Python 3.12 是已验证环境。依赖固定在 package-lock.json 和 Python requirements 中。先按[首页](../README.md)完成构建和正常测试包，再按需要运行下面的检查。
 
-Business state has one authority. `core` knows no DOM. The content module owns native
-HTML, React owns sibling UI. Search reads public text (including folded prose), excludes
-unrevealed custom/native answers, and only temporarily expands navigation paths. Closing
-search removes its own expansion; later manual operations survive. Highlighting uses the
-CSS Highlight API or a non-destructive element outline, never rewrites formula/link text.
+原版视觉对照需要官方 reviewer 资源，浏览器测试无需完整 Qt：
 
-All inputs call the runtime command dispatcher. Tree and answer state are independent;
-other custom groups are identified by explicit cz-number/data identifiers, not class order.
-Ordered reveal and reverse-text hide retain the old useful semantics. Native host actions
-are capability gated; unsupported mobile grading bridges are not guessed.
+```sh
+.venv/bin/python -m pip install --no-deps -r scripts/requirements-test.txt
+.venv/bin/python scripts/prepare_visual_comparison.py
+.venv/bin/python scripts/build_layout_comparison.py
+node tests/react/layout-comparison.cjs
+node tests/react/visual.cjs
+```
 
-Each render has a private store and resource scope. Replacement, same-root remount and
-pagehide dispose listeners, timers, observers, RAF, subscriptions and React root. Native
-content snapshots restore on owned-root remount; an externally replaced subtree is never
-restored over the host's new content. No cross-note preference is keyed by deck
-name or node index alone.
-An optional single-use source/ordinal/topology match carries only expanded paths,
-zoom and reading position from front to back. Missing/mismatched metadata starts
-fresh; every new front invalidates the prior handoff. Answers/search/dialogs never
-carry across a flip. See reading-layout.md for identity limits. Theme alone is a
-long-lived local preference. Edge-control coordinates are not stored or restored.
-`viewport.ts` projects only the live root clientHeight into a card-owned CSS
-variable. CSS owns the four half-height controls and cancels the card's own zoom.
-Visual-viewport growth caused by expanded content does not redefine that frame;
-real root resizing still updates it. Scope disposal removes observers/listeners
-and the projection. See ios-layout-viewport.md for measured inputs and limits.
+准备器只从固定旧版提交 `f67c932a02bef79f0feab1121c6783a9a3ff9e17` 提取源码，不从正在变化的 main 取得“原版”。浅克隆若缺少该提交，先执行：
 
-Production identity is unchanged in cards/note-types.json. Packaging defaults ONLY to the
-separate test model. Future production installation/export is a separate explicit step.
-Do not change field IDs/order, native ordinals, GUIDs or data as part of a UI repair.
+```sh
+git fetch --no-tags --depth=1 origin f67c932a02bef79f0feab1121c6783a9a3ff9e17
+```
 
-The visual skin lives separately in src/visual/original.css and src/style.css.
-Historical HTML classes retain their original visual meaning. The first file
-preserves rich-content/theme values and approved heading sizing; the second owns
-the actual React controls. Historical edge-control rules are removed from the skin
-instead of being overridden repeatedly. Page decorations are owned by the mounted runtime and removed on dispose.
-New note types cannot inherit our page margins, themes or tree selectors. The pure
-business core is unchanged by the visual restoration.
+真实 Desktop 检查需要图形会话和完整 Qt 依赖：
 
-Anki executes the template before its reviewer resets body.className. The runtime
-therefore observes the two owned page class decorations and restores them after a
-host reset, preserving host classes such as nightMode. Those observers share the
-same resource scope as other card work and are removed on disposal. Tests cover
-this order explicitly; merely checking a standalone browser page would miss it.
+```sh
+.venv/bin/python -m pip install aqt==26.9.3
+.venv/bin/python tests/react/desktop.py
+```
 
-Navigation interruption is a lifecycle action: it cancels pending location and
-queues at most one reading snapshot per frame. It does not mutate the business
-store or notify React. Do not introduce an unused scroll/intent counter into state.
+它只创建独立临时资料，禁用自动同步；不读取个人集合。检查覆盖 54 个预览面和实际 reviewer 的揭示、翻面、评分、下一张卡及卸载。不要把浏览器手机视口当作 AnkiMobile / AnkiDroid 实机。
 
-tests/react/layout-probe.html is diagnostic-package code only, never an application
-import. It records numeric layout/viewport measurements without answer text, does
-not apply styles to the application or dispatch commands, and cleans its own
-listeners/observer/frame on replacement. The pinned main runtime is a test fixture.
+## 代码如何协作
+
+| 模块 | 唯一职责 |
+| --- | --- |
+| `src/core.ts` | 树、答案、搜索、弹窗和偏好的纯状态／命令规则，不依赖 React 或 DOM |
+| `src/content.ts` | 索引 Anki 原生正文，在拥有的正文区域内投影状态，保留富文本与未知 HTML |
+| `src/ui.tsx` | React 控件、搜索、导图和批注界面，订阅同一个 store |
+| `src/runtime.tsx` | 组装一次卡片渲染；输入统一派发命令，连接平台、呈现和卸载 |
+| `src/resources.ts` | 跟踪事件、计时器、帧、动画、观察器和订阅，随卡片同步释放 |
+| `src/reading.ts` / `continuity.ts` | 可取消的阅读锚定与一次性正反面布局交接，不携带答案 |
+| `src/viewport.ts` | 将当前根布局高度投影为卡片自己的 CSS 变量，CSS 统一控制边栏几何 |
+| `src/tap.ts` / `platform.ts` / `math.ts` | 手势识别、有限客户端能力和宿主公式接口 |
+| `src/visual/original.css` / `style.css` | 富文本与主题皮肤／当前控件；每类规则只在所属文件定义 |
+
+React 界面和原生正文是相邻的两个根，不能互相随意改写。所有输入进入同一个 dispatcher；折叠与答案显隐互不修改。搜索只读可公开文字，临时展开路径，关闭时保留后来的手动操作。高亮不重写公式、链接或富文本。
+
+## 生命周期与兼容边界
+
+每次挂载有自己的 store 和资源作用域。宿主替换、重复挂载和 pagehide 都会清理旧卡；异步回调检查当前渲染是否仍有效。卸载只恢复仍由自己拥有的正文，不能覆盖宿主已经换上的下一张卡。
+
+主题是长期偏好。同一张卡的正面到背面可一次性交接展开路径、缩放和阅读位置；新正面重置，答案、搜索和弹窗不交接。匹配依据及局限见[阅读位置](reading-layout.md)。边栏不缓存正面坐标；根高度变化才更新布局投影，卸载移除 CSS 变量和监听。详见[布局边界](ios-layout-viewport.md)。
+
+Anki 在执行模板后可能重置 body 类名。runtime 只恢复自己拥有的两个装饰类，保留 nightMode 等宿主类；观察器仍由同一资源作用域清理。用户滚动或操作只取消自动定位、合并记录阅读位置，不改变业务 store 来触发界面刷新。
+
+正式兼容契约是 [cards/note-types.json](../cards/note-types.json)：原生 Cloze 模型 1303378414，字段为「填写笔记 / 导图 / Text」。不得因视觉维护更改字段、GUID、ordinal 或排程。公开构包只生成独立测试身份；个人模板更新属于另行明确授权的操作。
+
+## 产物与历史资源
+
+- `dist/` 保存新构建的 APKG、manifest 和摘要；`build/` 保存运行时、本地调试页面和完整测量，均不提交。
+- `test-packages/` 只保留当前可下载包、简要验证和精选截图；普通包和诊断包用途分开。
+- GitHub Actions 上传 `dist/` 和详细测试证据；不会部署 Pages 或发布 Release。
+- `scripts/sources.py` 仅支持固定旧版编译器的 include 展开；React 构包不依赖旧业务代码。
+- `tests/react/layout-probe.html` 只进入诊断包，记录不含答案的布局数字；不派发命令或改变应用位置。
+- 旧版预览壳、脚本别名、重复旧测试和过期截图不再复制到当前树；原文件可从[历史提交](history/README.md)查看。提取指纹文件不变。

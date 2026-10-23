@@ -1,6 +1,6 @@
 """Independent, anonymous native-device comparison; never updates daily templates.
 
-Run prepare_visual_comparison.py first. The pinned main source lives only in
+Run prepare_visual_comparison.py first. The pinned legacy source lives only in
 ignored build/visual-main; its legacy runtime is not an application dependency.
 """
 from pathlib import Path
@@ -145,6 +145,7 @@ def build():
     with zipfile.ZipFile(package, 'a', zipfile.ZIP_DEFLATED) as z:
         for name in ('LICENSE', 'NOTICE'): z.write(ROOT/name, name)
         z.write(ROOT/'licenses/LXGW-OFL.txt', 'licenses/LXGW-OFL.txt')
+        z.write(ROOT/'licenses/mark.js-LICENSE.txt', 'licenses/mark.js-LICENSE.txt')
         for name in ('react', 'react-dom', 'scheduler'):
             z.write(ROOT/'node_modules'/name/'LICENSE', f'licenses/{name}.txt')
     (site/'renders.json').write_text(json.dumps(renders, ensure_ascii=False))

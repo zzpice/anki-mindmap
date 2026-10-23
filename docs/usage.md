@@ -1,32 +1,35 @@
-# Usage
+# 使用说明
 
-Import the downloadable test APKG into a fresh, unsynced test profile. Open the welcome
-lesson in preview or study the test deck. The runtime also works directly on the back.
+先[下载测试包](../test-packages/README.md)，在独立资料导入，只操作新增的测试牌组。测试包不会升级正式模型，也不应把真实笔记转换成测试模型。
 
-| Action | Input |
+## 日常复习
+
+| 操作 | 入口 |
 | --- | --- |
-| Fold one branch | Click/tap its round bullet; focused bullet supports Enter/Space |
-| Current answer | Click/tap each native Cloze occurrence |
-| Reveal next / hide reverse-text last | ] / [ or the search panel |
-| Expand/collapse branches | K or the right upper tab |
-| Other custom groups | Click their prompt/answer; L toggles all other groups |
-| Locate current | H or the left lower tab; reopens required ancestors |
-| Search public prose | Tap the top deck strip or Ctrl/Cmd+F; Enter/Shift+Enter navigate; Escape closes |
-| Theme | C or theme button |
-| Diagram | J or the left upper tab |
-| Annotation | Click a recognized reference |
-| Images | Use client image gestures; the template does not open a second viewer |
-| Native flip / grade | Use Anki's own controls |
+| 展开／折叠一个分支 | 点节点圆点；键盘聚焦后可用 Enter / Space |
+| 显示／隐藏当前挖空 | 直接点对应 Cloze；不触发 Anki 正式翻面 |
+| 依次揭示／逆序收回当前挖空 | `]` / `[` 或搜索面板中的逐步按钮 |
+| 展开／收起知识树 | 右上边栏或 `K` |
+| 同组显示／隐藏其他编号自定义挖空 | 点相应挖空；右下「答案」或 `L` 切换全部其他组 |
+| 定位当前考查 | 左下「定位」或 `H`，自动展开必要祖先 |
+| 搜索正文 | **点顶部牌组路径**，或 Ctrl / Cmd + F |
+| 切换搜索命中 | Enter / Shift + Enter；Escape 关闭 |
+| 打开导图 | 左上「导图」或 `J` |
+| 切换纸色／竹露主题 | 搜索面板中的主题按钮或 `C` |
+| 查看批注 | 点已识别的批注引用 |
+| 查看图片 | 使用客户端原生图片手势，模板不再套第二层查看器 |
+| 正式翻面／评分 | 使用 Anki 自身按钮 |
 
-Gamepad mappings retain LB/RB step, LT tree, RT other groups, L3 locate, R3 theme, left-stick
-scroll and right-stick zoom. Front B requests flip on recognized Desktop; back buttons
-0/1/2/3 request Again/Good/Hard/Easy. Held buttons are seeded per device on each mount.
-Hardware and phone behavior remain unverified; native Anki controls remain available.
+搜索功能仍在。默认不检索未揭示答案，搜索命中不会自动揭示答案；结束搜索时不覆盖后续的手动折叠。输入框编辑时，不拦截普通字母快捷键。
 
-There is no personal-note popup or G action. The original field/data stays intact. If the
-current native Cloze exists only in that field, the current material is shown inline so
-an existing card does not become unusable.
+同一张卡翻面时尽量保留展开状态和阅读起点；当前答案由 Anki 背面显示，其他临时显隐、搜索、弹窗重置。下一张正面重新开始。用户滚动、折叠或导航会取消自动定位。极长内容、延迟图片及宿主限制见[阅读位置](reading-layout.md)。
 
-Unrecognized HTML stays readable with diagnostics instead of destructive cleanup. Basic
-MathML and loaded TeX are supported; formulas requiring asynchronous host extensions may
-retain source text. Follow validation.md for exact tested clients and limitations.
+独立的「填写笔记」弹窗和 G 操作已删除，但原字段和内容保留。若当前原生 Cloze 只存在该字段，会在正文补充显示，避免已有卡片无法复习。
+
+## 手柄与客户端差异
+
+保留 LB / RB 逐步显隐、LT 树、RT 其他组、L3 定位、R3 主题、左摇杆滚动、右摇杆缩放。识别的 Desktop 前面 B 请求翻面；背面按钮 0 / 1 / 2 / 3 分别请求重来 / 良好 / 困难 / 简单。挂载时记录已按住的按钮，避免切卡误触。
+
+手柄 API 的自动化替身不等于硬件认证；手机评分桥不做猜测，始终可用客户端原生控件。互链跳转只在宿主能力明确时执行。
+
+未知 HTML 优先保持可读。已验证基本图片、表格、MathML 和本地 TeX；复杂异步公式扩展、旧 WebView 与手机手势仍需要实际复测，详见[验证结果](validation.md)。

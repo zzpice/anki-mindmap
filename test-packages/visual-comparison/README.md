@@ -1,39 +1,31 @@
-# 原版与 React 视觉还原对比
+# 视觉对照
 
-Alpha.14 的[圆点裁切修复对比](alpha14-marker-gutter.png)：同一匿名卡、同一 React 运行时，左侧恢复旧的 28px 外层缩进，右侧为新的 38px。只改外层留白，内层缩进和边栏不变。这是 WebKit 390px 浏览器截图；iOS 边栏稳定的用户反馈与圆点尚待实机确认的区别见 [说明](../../docs/ios-layout-viewport.md)。
+所有图片使用匿名内容。浏览器手机视口不是 AnkiMobile / AnkiDroid 实机认证，当前手机反馈见[验证说明](../../docs/validation.md)。
 
-Alpha.13 清理后的同一短树：[main 正面](alpha13-main-front.png)、[React 正面](alpha13-react-front.png)、[main 背面](alpha13-main-back.png)、[React 背面](alpha13-react-back.png)。这是 WebKit 中等高页面的对照，没有复现 iOS 原生动态故障，不能作为已修好手机问题的证明。另有 [独立实机对照包与测量说明](../../docs/ios-edge-continuity.md)。
+## 当前 alpha.14 与固定旧版
 
-长图样例第二版：[main 长图中段](layout-long-main-middle.png)、[React 长图中段](layout-long-react-middle.png)。同一张 720 × 8400px PNG，截图位于 A06–A08 附近。这是 WebKit 390 × 780 浏览器截图，仅证明样例确实能滚动多屏，不是 iOS 实机认证。
+旧版固定为 f67c932，不跟随合并后的 main。相同字段经官方 Anki 后端渲染，以下为 WebKit 390 × 780 视口：
 
-Alpha.7 新增[手机宽表格答案截图](alpha7-wide-phone.png)：启用手机布局模式，超宽表格在正文区内滚动，边栏保持半屏长度。安卓纯短闪仍待实机复测，见 [说明](../../docs/mobile-viewport.md)。
+| 内容 | 旧版 | React alpha.14 |
+| --- | --- | --- |
+| 同一张卡正面 | [旧版正面](legacy-front.png) | [当前正面](react-front.png) |
+| 同一张卡背面 | [旧版背面](legacy-back.png) | [当前背面](react-back.png) |
+| 长图中段 | [旧版长图](layout-long-main-middle.png) | [当前长图](layout-long-react-middle.png) |
 
-Alpha.6 当前布局：[手机正面](alpha6-phone-front.png)、[手机背面](alpha6-phone-back.png)、[桌面正面](alpha6-desktop-front.png)、[桌面背面](alpha6-desktop-back.png)。本轮按用户确认压缩知识标题、左右各放两个边栏功能，并稳定翻面阅读位置。下面的拼接图与 `metrics.json` 是此前视觉还原基线的历史记录；本轮结果见上级 `verification.json` 和 [行为说明](../../docs/reading-layout.md)。
+[圆点裁切修复局部对比](alpha14-marker-gutter.png)：同一 React 运行时，左侧恢复旧的 28px 外层缩进，右侧为当前 38px。内层缩进和边栏不变；该图证明裁切差异，不表示手机已复测圆点。
 
-左侧为原版 `main f67c932`，右侧为本次 `feat/react-rewrite` 还原版。
-采用相同的匿名笔记字段、相同原生 Cloze 卡片及相同浏览器、视口和主题。
-原版模板由 Git 提交提取后经官方 Anki 后端生成；两侧都通过官方 reviewer
-渲染（包含本地 MathJax）。图片未修饰页面内容，仅拼接并添加对比标签。
+## 视觉还原基线
 
-- [桌面正反面](visual-restore-desktop.png)：1280 × 900
-- [手机视口正反面](visual-restore-phone.png)：390 × 844
+以下精选图记录 alpha.2 恢复视觉语言时的原版／React 对照，**不作为当前控件位置的截图**：
+
+- [桌面正反面](visual-restore-desktop.png)
+- [手机视口正反面](visual-restore-phone.png)
 - [竹露和夜间主题](visual-restore-themes.png)
-- [展开后的完整内容](visual-restore-expanded.png)：包含图片、表格和公式
+- [展开后的图片、表格与公式](visual-restore-expanded.png)
 - [搜索、导图与批注](visual-restore-controls.png)
 
-手机视口截图来自浏览器，不代表 AnkiMobile／AnkiDroid 实机认证。
-原版左上侧“填写笔记”入口按既定决定删除，其字段和数据保留。
-新版本保留搜索不自动揭示答案的既定规则；逐步揭示／收回按钮移入搜索面板，
-不再占用正文顶部。重置宿主默认按钮外边距，避免窄屏搜索栏拥挤。
+两版保留文楷、原主题色、树形连接线和挖空毛玻璃。当前批准的紧凑标题、两侧分区、原生图片手势与外层留白见[变更记录](../../docs/changelog.md)。已删除的填写笔记弹窗不恢复，字段继续保留。
 
-原版字号、字体、主题色、标题／节点／批注间距、节点圆点、虚线连接、
-挖空边框和毛玻璃效果保留。清晰的 React 状态核心保持不变，未恢复旧业务脚本。
-浮动控件使用可聚焦按钮，批注在引用旁弹出，导图保持原来的大浮层。
+每轮视觉回归包含两引擎、三宽度、两主题和夜间，108 对默认卡面及 60 个交互场景。完整 JSON 和逐场景截图生成在 build/ 并保存在 CI artifacts；本目录只选留有解释价值的图。已过期版本截图和旧测量可从[整理前提交](https://github.com/zzpice/anki-mindmap/tree/a2fa9761fe545ce7635effa69da7415e12f4beeb/test-packages/visual-comparison)查看。
 
-自动比较包含 108 组默认正反面、60 组交互场景；使用 Chromium 与 WebKit，
-覆盖 1280、390、320px 宽度、象牙笺／竹露、夜间模式。默认节点几何误差须小于
-1px；字体、标题、连接线、圆点、侧边控件和毛玻璃样式逐项断言。
-
-复现：先构建测试包，然后运行 `scripts/prepare_visual_comparison.py` 和
-`node tests/react/visual.cjs`。详细结果见 `metrics.json`，实际客户端结果见
-上一级 `verification.json`。这些证据仅覆盖样例，不承诺任意历史正文逐像素相同。
+复现命令见[开发说明](../../docs/development.md)。这些是样例证据，不承诺任意历史 HTML 与旧版逐像素相同。

@@ -1,5 +1,7 @@
 # Extraction record
 
+> 历史阶段记录；当前状态以[验证结果](../validation.md)为准，过期方案不再作为实现要求。
+
 Source: [zzpice/anki-cards main, aaea69d147f2fb39723b827b40086e4bcb2fa056](https://github.com/zzpice/anki-cards/tree/aaea69d147f2fb39723b827b40086e4bcb2fa056).
 The source was fetched and cloned separately; its tracked files and remote were not changed.
 The new public repository starts its own history on main.
@@ -42,4 +44,4 @@ update to real data. This migration never imports into a personal collection.
 
 Older historical mindmap model IDs are not silently converted. Physical mobile clients,
 actual controller hardware, native review grading and client-specific math processing require
-separate acceptance. See validation.md for measured results and remaining gaps.
+separate acceptance. See [current validation](../validation.md) for measured results and remaining gaps.

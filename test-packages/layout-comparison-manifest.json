@@ -22,6 +22,6 @@
   "existingLegacyMediaUnchanged": true,
   "contentAddressedLegacyMedia": true,
   "repeatImportNoDuplicates": true,
-  "sha256": "f5e2037ac88a65a9ad6e20054b3c28e3b2fd5d7a72c8f76e57e396de1f3d898e",
+  "sha256": "de0a98554f1653037d3a0ad0c13849b18814a7d6e193ef1ddfde36007037c65b",
   "physicalIOS": "See verification.json for scoped user device feedback; browser checks are not device certification"
 }

@@ -76,7 +76,7 @@ def prepare():
     native_web = importlib.metadata.distribution("aqt").locate_file("_aqt/data/web")
     assert (native_web / "js/reviewer.js").is_file()
     (BUILD / "anki-web.json").write_text(json.dumps(str(native_web.resolve())))
-    print(f"Official main native renders ready: {len(renders)} notes at {BASELINE[:7]}")
+    print(f"Official legacy native renders ready: {len(renders)} notes at {BASELINE[:7]}")
 
 
 if __name__ == "__main__":

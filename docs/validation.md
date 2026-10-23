@@ -1,102 +1,43 @@
-# Validation and remaining limits
+# 验证结果与尚存限制
 
-The publicly downloadable APKG uses an independent test model. Any separately
-authorized local template maintenance is not part of these isolated tests.
-The production contract file, original sample field content and historical extraction
-baseline are unchanged. The old runtime's duplicated scripts are replaced by shared React
-UI, pure business rules and a bounded native-content module. Legacy tests are retained as
-historical evidence, not silently changed to bless old defects.
+当前运行时为 **0.2.0-alpha.14**。仓库合并与整理不改复习业务逻辑。机器记录在 [verification.json](../test-packages/verification.json)，包身份及字节摘要见[下载目录](../test-packages/README.md)。本页区分自动化、隔离 Desktop 和用户手机反馈。
 
-## Current automated checks
+## 已完成检查
 
-- Ten core tests, including 1000 invariant sequences: folding never changes answers,
-  reveal never changes layout, native occurrences stay independent, other groups exclude
-  current, ordered reveal/reverse hide and search/manual-layout precedence.
-- Official Anki backend: 21 anonymous notes, 27 cards, same-number occurrences, c1/c30,
-  nested/native/custom Cloze, field-only questions, empty Text, HTML/image/table/MathML.
-- Collision-safe test import into a collection already containing model 1303378414 and a
-  synthetic scheduled note: original model JSON, complete note/card rows unchanged.
-  Repeated import does not duplicate test notes; fields, ordinals and media round-trip.
-- Chromium and WebKit each load 54 native sides and run 100 front/back/next lifecycle
-  sequences, including duplicate bundle execution, same-root remount, externally removed
-  hosts, rejected stale commands and zero owned resources after disposal.
-- Search excludes hidden answers, navigates folded prose, does not change reveal and does
-  not undo later manual folding. Diagram and annotation dialogs work; image gestures are left to the client. Mouse,
-  browser touch and keyboard use shared commands; editable fields protect shortcuts.
-- Twenty React updates preserve rich-content DOM identities. Detached local file assets
-  run in Chromium offline emulation; WebKit uses HTTP(S) blocking because its local-file
-  offline emulator fails on this host. Neither browser is a mobile-device certification.
+| 证据层 | 覆盖与结果 |
+| --- | --- |
+| 业务规则 | 10 项测试，含 1000 次不变量序列；折叠、答案、搜索与手动操作优先级 |
+| 官方 Anki 后端 | 25.9.2 / 26.9.3；21 条匿名笔记、27 张原生 Cloze 卡；同编号、多编号、c1/c30、嵌套、字段内 Cloze、复杂 HTML、图片、表格与 MathML |
+| 导入与兼容 | 字段、ordinal 和媒体往返；重复导入不增副本；既有正式模型、笔记、排程不被测试包改写 |
+| Chromium / WebKit | 各 54 个原生面、100 次连续挂载／翻面／切卡；宿主替换、重复执行、旧闭包拒绝及卸载资源清零 |
+| 交互与内容 | 鼠标／触控／键盘共用命令；搜索不揭示；20 次 React 更新保留富文本 DOM；导图、批注、互链与图片手势边界 |
+| 离线 | 本地资源；Chromium 离线模拟，WebKit 阻断 HTTP(S) 后使用本地文件；无运行时网络依赖 |
+| 视觉 | 对照固定旧版 f67c932；两引擎、1280/390/320px、两主题及夜间，108 对默认面、60 个交互场景 |
+| 布局专项 | 宽表格本地横滚；长图上中下翻面；根高度 606 与可见高度 681/684 分歧的宿主输入；0.5/1/1.1/2 倍缩放下圆点完整且可触控 |
+| 隔离 Desktop | Anki / aqt 26.9.3，macOS 27.0.1 arm64、Qt/PyQt 6.11.0；54 个预览面及 5 个真实 reviewer 步骤 |
 
-## Actual Desktop evidence
+Desktop 在唯一临时资料、安全模式和禁用自动同步的环境运行，验证直接打开背面、揭示、原生翻面、原生评分、下一张卡和宿主移除；只有临时资料产生复习记录。基本动态 TeX 可本地排版，反复显隐不累积公式项。Qt 输入、GPU、媒体及 MathJax 警告仍保留在日志，不能把断言通过描述成没有任何警告。
 
-Official Anki/aqt 26.9.3 on macOS 27.0.1 arm64, PyQt/Qt compiled 6.11.0, WebEngine UA
-6.11.2/Chromium 140. A uniquely keyed safe-mode process uses a fresh profile with auto-sync
-disabled. It loads 54 preview sides and a fresh direct-back view, then runs the actual
-reviewer: reveal, native Show Answer, native Again rating, next different anonymous card.
-Only the temporary profile receives a review-log entry. Removing the reviewer host
-cleans every owned resource. The driver explicitly closes its collection and Qt services.
+## 手机反馈
 
-Basic dynamically revealed TeX is typeset locally; ten hide/reveal cycles keep one active
-formula and two total MathJax items. Content source is restored if a synchronous math call
-requires an asynchronous extension. Qt input/GPU/media/MathJax warnings are retained in
-logs; passing assertions do not mean warning-free operation.
+| 平台 | 已有证据 | 仍未确认 |
+| --- | --- | --- |
+| iOS / AnkiMobile | 用户在 alpha.13 原卡提供展开其他分支时的布局数字；用户报告 alpha.14 同卡相同步骤中边栏稳定 | 未提供系统及客户端版本；没有 alpha.14 数字截图；圆点新增留白、其他卡和所有翻面／回弹路径未完成实机覆盖 |
+| Android / AnkiDroid | 用户此前确认边栏轻触更跟手；存在持续很轻微的翻面短闪反馈 | alpha.14 未取得完整实机回归；不能宣称短闪已经消除 |
+| 实体手柄 | 输入映射与挂载安全逻辑通过 API 替身测试 | 未做实际硬件认证 |
 
-## Limits to understand before testing
+浏览器只是复现宿主输入条件，不能证明 WKWebView 内部原因，也不能代替移动端实机。原版在同一 iPhone 上是否有相同问题，仍无确认结论。过程记录见[布局依据](ios-layout-viewport.md)和[历史诊断](history/ios-edge-continuity.md)。
 
-- No AnkiMobile, AnkiDroid physical device or real gamepad has been certified. Browser
-  touch and controller API substitutes only exercise input logic. Mobile grading bridges
-  are not guessed; use native app controls. Local-note navigation is capability gated.
-- A matched front/back can retain expanded branches, zoom and reading position;
-  every new front resets. The source/ordinal/topology match has documented limits
-  in reading-layout.md. Search, temporary answers and dialogs reset on native flip.
-- The iOS edge seam movement remains unresolved on hardware. Alpha.12's coordinate
-  cache was withdrawn after a teardown-order counterexample and repeated user reports.
-  Browser reference-height changes move the main baseline too; this does not prove
-  that the same event occurs on a particular iPhone. The separate layout comparison
-  APKG is for measurement, not a mobile reliability certification.
-- Basic MathML/loaded TeX work in the tested Desktop. Async-only formula extensions,
-  older WebViews, mobile math interfaces and arbitrary historical HTML need user testing.
-  Unknown structures stay readable rather than being destructively normalized.
-- No long-running heap/battery or very-large-tree performance certification is claimed.
-  Controller polling sleeps when no controller is present; every resource is disposed.
-- The test APKG never upgrades the production note type. Testing a real-note upgrade or
-  publishing/merging a formal version remains a separate authorized operation.
+## 兼容与使用边界
 
-GitHub Actions independently builds/tests both official backend versions and uploads an
-artifact. The directly downloadable committed APKG is a verified local build; its manifest
-and SHA256SUMS identify exact bytes. No formal Release, main merge or deployment is used.
+- 正式模型 1303378414、字段顺序和原生分卡契约保留；下载样例始终使用独立测试模型。
+- 正反面布局交接依靠内容摘要、牌组、ordinal 与结构匹配；不存答案。完全相同背面、跨 WebView 存储及过期降级的局限见[阅读位置](reading-layout.md)。
+- 复杂异步公式、任意历史 HTML、旧 WebView、手机宿主特有行为需继续实际复测。无法识别时优先可读，不静默删除内容。
+- 未声称完成超大树长期性能、堆内存或电池消耗认证；没有手柄时停止轮询，卸载统一释放资源。
+- 下载包不会自动升级任何个人模型；main 合并不改变本地集合，也不自动同步、部署站点或发布 Release。
 
-## Visual restoration (alpha.2)
+## 视觉规则与证据保存
 
-Baseline is main f67c932, not the preceding React page design. Identical native
-front/back card inputs pass through both actual templates and official reviewer
-rendering, including locally supplied MathJax. Chromium and WebKit compare 1280,
-390 and 320px widths, ivory/bamboo themes and night mode. Title/body typography,
-node geometry, connectors, bullet/control geometry and Cloze frosting are checked
-against the original. The new visual-design sample covers heading levels, notes,
-highlights, tables, images and MathML; field contents survive native round trip.
+保留文楷、原主题色、圆点、连接线和挖空毛玻璃。明确批准的差异是紧凑标题、左右分区边栏、原生图片手势及最外层树多 10px 留白；较窄文字区可提早换行，不要求继续与旧版纵坐标逐像素一致。
 
-Additional scenes cover expanded trees, other-group reveal, search, diagram and
-anchored annotations. Screenshots are browser evidence, not mobile device approval.
-The deliberately removed personal-note control is absent. Search retains the
-approved non-revealing behavior; its added step controls remain inside the search
-panel. Host button margins are reset to prevent narrow-screen crowding. Diagram
-closing is explicit/outside-click and night dialogs remain readable.
-
-Original rich-content/theme values and approved compact heading rules are in
-src/visual/original.css. src/style.css owns React controls, state projection and
-dialogs; historical unused edge/personal-popup rules are removed. No legacy
-JavaScript is imported by the application. The bundled WenKai font is unchanged and
-its OFL is included. Inline CSS and font preload advertise the packaged font
-before runtime startup. CSS minification stays off because it
-otherwise discards Chromium's standard backdrop-filter in this toolchain.
-
-Reproduce comparisons after building the test package:
-
-```sh
-.venv/bin/python scripts/prepare_visual_comparison.py
-node tests/react/visual.cjs
-```
-
-The preparer only reads the pinned Git commit and creates disposable collections.
-It does not change the checked-out branch or a personal Anki profile.
+CSS 构建不做压缩，避免当前优化器丢掉标准 backdrop-filter。详细测量生成在 `build/visual-comparison/metrics.json`，与截图一起由 CI 保存；仓库仅保留[精选截图](../test-packages/visual-comparison/README.md)和验证摘要，不保留每轮过期大 JSON。原迁移指纹 [tests/migration-baseline.json](../tests/migration-baseline.json) 未变。

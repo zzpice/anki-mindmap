@@ -1,31 +1,52 @@
-# Anki Mindmap · React rewrite
+# Anki Mindmap
 
-A usable offline React/TypeScript mindmap card runtime, developed on `feat/react-rewrite`.
-Main is unchanged. Anki remains responsible for native Cloze card generation, flipping,
-grading and scheduling; the runtime preserves existing three-field note compatibility.
+[![检查](https://github.com/zzpice/anki-mindmap/actions/workflows/check.yml/badge.svg?branch=main)](https://github.com/zzpice/anki-mindmap/actions/workflows/check.yml)
 
-## Try it safely / 安全体验
+保留熟悉的文楷字体、纸色主题、知识树与挖空体验，用 React + TypeScript 整理内部状态和交互。完全离线运行，由 Anki 负责原生 Cloze 分卡、翻面、评分和排程。
 
-Download [anki-mindmap-react-test.apkg](test-packages/anki-mindmap-react-test.apkg).
-Use a new Anki profile with sync disabled, then import the file. The package includes a
-Chinese experience card and anonymous compatibility examples. There is no website or
-Vite server to run. On a work computer, downloading and importing the APKG is sufficient.
+`main` 已采用 React 实现，当前版本为 **0.2.0-alpha.14**。合并源码不等于发布稳定版；手机客户端的已知限制见[验证结果](docs/validation.md)。原版固定保留在 [f67c932](https://github.com/zzpice/anki-mindmap/tree/f67c932a02bef79f0feab1121c6783a9a3ff9e17)，便于对照和回退。
 
-The test model is **思维导图 · React 测试版**, ID **1792748414**, separate from production
-**1303378414**. Test GUIDs, deck and hashed media are separate. An automated import test
-asserts an existing production model, note and scheduling rows remain unchanged. Do not
-convert your real notes to the test model; evaluate with the included examples first.
+## 下载体验
 
-Try folding the current branch then locating it; click current answers individually;
-use ordered reveal/reverse hide; reveal other groups; search prose without exposing hidden
-answers; open the diagram and annotations; use the client’s own image zoom; switch the paper/bamboo theme. Use Anki's
-own Show Answer and rating buttons. The personal-note popup is gone; all original fields
-and content are retained. A Cloze present only in the personal-note field appears inline
-when needed, without restoring that popup.
+**[下载可直接导入 Anki 的测试包](https://raw.githubusercontent.com/zzpice/anki-mindmap/main/test-packages/anki-mindmap-react-test.apkg)** · [包说明与 SHA-256](test-packages/README.md) · [视觉对照](test-packages/visual-comparison/README.md)
 
-## Build and verify
+测试包包含 21 条匿名笔记、27 张原生 Cloze 卡，无需网页、开发服务器或网络资源。建议在单独的 Anki 资料中导入；手机上只复习新增的测试牌组。**不要把真实笔记转换为测试模型。**
 
-Node 24 and Python 3.12 are the tested development defaults. Dependencies are locked.
+测试模型 **1792748414**、GUID、牌组和媒体命名与正式模型 **1303378414** 分开。导入这个包不会升级既有正式模板；已有笔记的模板维护应另外备份并精准更新，不能靠导入样例替代。
+
+## 保留的体验
+
+- 知识树展开、折叠和当前考查定位；折叠不改变答案。
+- 当前挖空单独显隐、按正文顺序揭示／逆序收回，其他编号自定义挖空按组控制。
+- 搜索正文及折叠分支，不自动揭示答案；导图、批注、互链和纸色／竹露主题。
+- 正反面延续展开状态和阅读位置；下一张卡重置临时状态，主题长期保存。
+- 图片交给客户端原生手势；鼠标、触控、键盘和手柄共用业务命令。
+
+已删除独立的「填写笔记」弹窗，**字段、顺序和内容全部保留**。只在该字段出现的当前 Cloze 必要时会在正文补充显示。具体入口和快捷键见[使用说明](docs/usage.md)。
+
+## 文档与目录
+
+| 入口 | 内容 |
+| --- | --- |
+| [文档导航](docs/README.md) | 使用、开发、验证和历史记录 |
+| [开发说明](docs/development.md) | 构建命令、模块职责和资源边界 |
+| [验证结果](docs/validation.md) | 后端、浏览器、Desktop 与手机证据分别记录 |
+| [变更记录](docs/changelog.md) | 当前版本与主要演进 |
+| [历史记录](docs/history/README.md) | 独立迁移、视觉还原和已撤回的诊断方案 |
+
+```text
+src/             React 界面、业务核心与正文适配
+cards/           Anki 模型约定、正反面模板和字体
+scripts/         构包、静态检查与原版对照工具
+tests/           React 验收样例、回归与原迁移指纹
+docs/            当前说明；history/ 保存过程记录
+test-packages/   可下载 APKG、摘要与精选视觉证据
+licenses/        字体及诊断资源的独立许可证
+```
+
+## 本地构建
+
+已验证的开发环境为 Node.js 24、Python 3.12，依赖版本已锁定。
 
 ```sh
 npm ci
@@ -38,65 +59,6 @@ npx playwright install chromium webkit
 npm test
 ```
 
-For actual isolated Desktop verification, install `aqt==26.9.3` with its Qt dependencies
-into that environment and run `.venv/bin/python tests/react/desktop.py` in a graphical
-session. It creates a unique disposable profile, disables sync, and never accesses a
-personal collection. CI tests official Anki backends 25.9.2 and 26.9.3 and uploads APKGs.
+构建产物在 `dist/`；`build/react-site/` 是构包时生成的本地调试页面，不是交付方式。GitHub Actions 对 Anki 25.9.2 / 26.9.3 分别构包和回归，并保存测试包与详细证据。原版视觉对照和隔离 Desktop 的完整命令见[开发说明](docs/development.md)。
 
-`dist/` contains the importable test package, manifest and SHA256SUMS. The tracked package
-under `test-packages/` is a tested branch snapshot for direct public downloading; no formal
-Release is published. `build/react-site/` is only an optional local developer aid.
-
-The alpha.2 package restores the original WenKai typography, ivory/bamboo palettes,
-round bullets, dotted tree connectors, Cloze frosting and fixed edge controls.
-See [same-card visual comparisons](test-packages/visual-comparison/README.md).
-
-Alpha.6 compacts the knowledge heading, places two controls on each edge, and
-keeps reading position and manual expansion across a front-to-back flip.
-New cards still reset; answer state stays native. See [behavior and fallback limits](docs/reading-layout.md).
-
-Alpha.7 contains wide answers inside the knowledge surface so mobile layout
-zoom cannot stretch the edge controls, and matches the theme during startup.
-The package includes a wide-table card. [Mobile regression details and remaining flicker limits](docs/mobile-viewport.md).
-
-Alpha.9 removes the duplicate image viewer and leaves client image gestures unclaimed.
-Buttons respond immediately with a 90ms release, panels fade in over 140ms, and manual
-location/search navigation briefly outlines the destination. Reduced motion is respected.
-The four edge controls retain the earlier independent fixed layout.
-[Motion, image and iOS edge details](docs/motion-and-images.md).
-Alpha.11 removes the shared frame and keeps narrow edge buttons wholly on screen,
-with explicit two-line horizontal labels. This addresses clipping visible in supplied
-iOS screenshots; original scroll/flip stability still needs physical retesting.
-
-Alpha.13 withdraws alpha.12's ineffective edge-coordinate cache and consolidates
-edge layout into one CSS definition. Manual scrolling no longer changes business
-state or forces React updates. At that stage the iOS native flip issue remained open.
-[Confirmed findings and independent main/React diagnostic APKG](docs/ios-edge-continuity.md).
-
-Alpha.14 uses the live document layout height after user measurements showed the
-visual height growing when other branches opened. The user reports that this
-specific iOS real-card scenario now stays stable; broader mobile validation remains
-open. An extra 10px outer-tree gutter also keeps folded marker rings inside the
-content scroller. [Evidence, changes and limits](docs/ios-layout-viewport.md).
-
-## How the code fits together
-
-- `src/core.ts`: one pure state/command implementation for tree, answers, search, overlays
-  and preferences; no React or DOM dependencies.
-- `src/content.ts`: indexes native HTML and projects state inside its owned content root.
-  It preserves rich fragments, native Cloze payloads, MathML, tables, images and unknown HTML.
-- `src/ui.tsx`: React floating controls, search and accessible dialogs subscribe to the same store.
-- `src/runtime.tsx`: assembles one card render, dispatches commands, coordinates navigation,
-  input and disposal. Front and back share this entry.
-- `src/resources.ts`, `math.ts`, `platform.ts`: cancellable resource ownership and narrow
-  client capability boundaries. No pile of window-global patches.
-- `src/reading.ts` handles cancellable viewport anchoring; `continuity.ts` hands only
-  layout geometry from front to back, without persisting answers or note content.
-- `src/viewport.ts` projects the current host layout height; CSS owns edge geometry.
-- `scripts/build_react_package.py`: native backend packaging and collision-safety checks.
-- `tests/react/`: business invariants, browser behavior, 100-cycle lifecycle stress and
-  actual Desktop preview/reviewer checks. `tests/legacy/` is historical evidence only.
-
-See [development](docs/development.md), [usage](docs/usage.md) and
-[validation and limits](docs/validation.md). The old migration documents describe the
-original extraction; its byte-level baseline is intentionally unchanged.
+本仓库代码采用 [MIT](LICENSE)，字体及其他资源遵循各自许可证，详见 [NOTICE](NOTICE)。不包含个人笔记、集合或授权数据。

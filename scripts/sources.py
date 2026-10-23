@@ -1,4 +1,8 @@
-"""Small build-time includes; exported Anki templates contain no directives."""
+"""Include reader used by the pinned legacy compiler in visual comparisons.
+
+The current React builder has no include directives. Keep this small interface
+because the imported f67c932 builder passes its own extracted source root here.
+"""
 from pathlib import Path
 import re
 

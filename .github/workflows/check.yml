@@ -1,7 +1,7 @@
 name: Check React Mindmap
 on:
   push:
-    branches: [main, feat/react-rewrite]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 permissions:
