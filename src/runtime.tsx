@@ -7,6 +7,7 @@ import { Interface } from "./ui";
 import { nativeMath } from "./math";
 import { platform } from "./platform";
 import { resources } from "./resources";
+import { presentCard } from "./presentation";
 
 const SLOT = Symbol.for("anki-mindmap.react.runtime.v1");
 const PREF = "anki_mindmap.preferences.v1";
@@ -167,9 +168,7 @@ export function mount(host: HTMLElement): Runtime {
       }
     }
   };
-  scope.listen(content, "click", (event) => {
-    const target = event.target instanceof Element ? event.target : null;
-    if (!target) return;
+  const activateContent = (target: Element, event: Event): boolean => {
     const annotation = target.closest<HTMLAnchorElement>(
       'a[href^="#_msocom_"]',
     );
@@ -184,16 +183,16 @@ export function mount(host: HTMLElement): Runtime {
             ? null
             : { kind: "annotation", id: annotation.hash.slice(1) },
       });
-      return;
+      return true;
     }
     const note = target.closest<HTMLElement>("[data-mm-note]");
     if (note) {
       event.preventDefault();
       bridge.note(note.dataset.mmNote!);
-      return;
+      return true;
     }
     if (target.closest('a,input,textarea,select,[contenteditable="true"]'))
-      return;
+      return false;
     if (target instanceof HTMLImageElement) {
       dispatch({
         type: "overlay",
@@ -203,7 +202,7 @@ export function mount(host: HTMLElement): Runtime {
           alt: target.alt,
         },
       });
-      return;
+      return true;
     }
     const node = renderer.targetNode(target),
       answer = renderer.targetAnswer(target),
@@ -211,6 +210,51 @@ export function mount(host: HTMLElement): Runtime {
     if (node) dispatch({ type: "toggleNode", id: node });
     else if (answer) dispatch({ type: "toggleAnswer", id: answer });
     else if (group) dispatch({ type: "toggleGroup", id: group });
+    return !!(node || answer || group);
+  };
+  // Some mobile review hosts do not synthesize a bubbling click for divs.
+  // Translate stationary single-finger taps through the same command handler;
+  // never treat scrolling, a pinch, or a keyboard activation as a second tap.
+  let touch: { id: number; x: number; y: number; target: Element } | undefined;
+  let lastTap: { target: Element; time: number } | undefined;
+  scope.listen(content, "touchstart", (event) => {
+    const e = event as TouchEvent, point = e.touches[0];
+    touch = e.touches.length === 1 && e.target instanceof Element
+      ? { id: point.identifier, x: point.clientX, y: point.clientY, target: e.target }
+      : undefined;
+  }, { passive: true });
+  scope.listen(content, "touchmove", (event) => {
+    const e = event as TouchEvent, point = e.touches[0];
+    if (!touch || e.touches.length !== 1 || point.identifier !== touch.id ||
+        Math.abs(point.clientX - touch.x) >= 10 || Math.abs(point.clientY - touch.y) >= 10)
+      touch = undefined;
+  }, { passive: true });
+  scope.listen(content, "touchcancel", () => { touch = undefined; });
+  scope.listen(content, "touchend", (event) => {
+    const e = event as TouchEvent, start = touch, point = e.changedTouches[0];
+    touch = undefined;
+    if (!start || e.touches.length || e.changedTouches.length !== 1 ||
+        point.identifier !== start.id || Math.abs(point.clientX - start.x) >= 10 ||
+        Math.abs(point.clientY - start.y) >= 10) return;
+    const stableTarget = start.target.closest(".bullet,.cloze") ?? start.target;
+    if (activateContent(start.target, e)) {
+      e.preventDefault();
+      // Revealing replaces placeholder children; retain the stable control so
+      // a compatibility click retargeted to its parent cannot reveal twice.
+      lastTap = { target: stableTarget, time: e.timeStamp };
+    }
+  }, { passive: false });
+  scope.listen(content, "click", (event) => {
+    const e = event as MouseEvent;
+    const target = e.target instanceof Element ? e.target : null;
+    if (!target) return;
+    if (lastTap && e.detail > 0 && e.timeStamp - lastTap.time < 600 &&
+        (lastTap.target === target || lastTap.target.contains(target) || target.contains(lastTap.target))) {
+      e.preventDefault();
+      lastTap = undefined;
+      return;
+    }
+    activateContent(target, e);
   });
   scope.listen(
     doc,
@@ -241,6 +285,13 @@ export function mount(host: HTMLElement): Runtime {
       return;
     }
     const target = e.target instanceof Element ? e.target : null;
+    const node = target && renderer.targetNode(target);
+    if (node && (e.code === "Enter" || e.code === "Space") &&
+        !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      dispatch({ type: "toggleNode", id: node });
+      return;
+    }
     if (
       target?.closest(
         'input,textarea,select,[contenteditable="true"],button,dialog',
@@ -282,7 +333,13 @@ export function mount(host: HTMLElement): Runtime {
     }
   });
   for (const name of ["wheel", "touchstart", "pointerdown", "scroll"])
-    scope.listen(doc, name, () => dispatch({ type: "interrupt" }), {
+    scope.listen(doc, name, () => {
+      // The Android host's own load-time reset is not manual navigation.
+      // Wheel/touch/pointer input still cancels our pending initial location.
+      if (name === "scroll" && html.classList.contains("android") &&
+          !host.dataset.mmPresented) return;
+      dispatch({ type: "interrupt" });
+    }, {
       passive: true,
       capture: true,
     });
@@ -400,7 +457,7 @@ export function mount(host: HTMLElement): Runtime {
   project();
   // Position before the next paint rather than showing the top of the tree
   // for 100 ms on every flip. Manual input still cancels this card-owned frame.
-  cancelAuto = scope.frame(() => scroll(renderer.firstActive()));
+  cancelAuto = presentCard(host, scope, () => scroll(renderer.firstActive()));
   scope.observe(doc.documentElement, () => {
     if (!valid()) runtime.dispose();
   });
@@ -453,6 +510,7 @@ export function mount(host: HTMLElement): Runtime {
       else body.setAttribute("data-mm-theme", previousTheme);
       delete host.dataset.theme;
       delete host.dataset.ready;
+      delete host.dataset.mmPresented;
       if (doc[SLOT] === runtime) delete doc[SLOT];
     },
   };

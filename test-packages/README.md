@@ -13,6 +13,12 @@ reveal, search, diagram, annotations and images. Show Answer and ratings remain 
 Desktop 26.9.3 is exercised in an isolated profile. Physical phones/gamepad are unverified.
 Consult `react-test-manifest.json` and `SHA256SUMS` for the exact build. No formal release.
 
+Alpha.4 restores touch-only node expansion on mobile, deduplicates compatibility
+clicks, and waits for AnkiDroid's full-page load/font/layout before presenting
+and locating the tree. The iOS presentation path stays as in alpha.3. These new
+paths have automated browser/isolated Desktop coverage; physical-device retest
+is pending.
+
 Alpha.3 addresses transient image/layout flashes during flips. CSS is inline
 before native content; the exact loaded runtime is reused as code only, every
 card still gets fresh state. Diagram source images stay inert until opened.

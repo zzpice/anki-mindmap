@@ -15,3 +15,13 @@
 验证：两种浏览器各 360 / 390 px、每个尺寸 40 次翻面，未揭示图片在插入 HTML 后、挂载后、绘制边界均不可见；翻面期间 bundle 请求为零；导图源图片只在主动打开后请求。另覆盖资源加载失败、加载中替换卡片、每个引擎 100 次正面/背面/切卡与卸载清理，以及 52 个原生卡片面。Anki Desktop 26.9.3 隔离资料完成 52 个预览面和 5 个实际 reviewer 阶段；原生 Cloze、离线媒体和测试包身份检查通过。
 
 这些结果证明已消除可复现的中间状态，不是 AnkiMobile / AnkiDroid 实机认证。手机宿主自身的翻面动画或 WebView 替换行为仍需实际复测。
+
+## Alpha.4：Android 整页重载与 iOS 触控补修
+
+后续实机反馈：alpha.3 的 iOS 闪烁已消失，Android 仍有树或图片跳动；iOS 的其他分支也无法通过轻触展开。因此 alpha.3 的同文档翻面模拟不足以覆盖手机验收。
+
+[AnkiDroid 的宿主源码](https://github.com/ankidroid/Anki-Android/blob/main/AnkiDroid/src/main/java/com/ichi2/anki/AbstractFlashcardViewer.kt)通过 loadDataWithBaseURL 加载每一面；[card.js](https://github.com/ankidroid/Anki-Android/blob/main/AnkiDroid/src/main/assets/scripts/card.js)还在 window.onload 中重置滚动位置。alpha.4 对 Android 单独等待文档、字体和宿主公式布局就绪，再定位并呈现树，避免旧的提前定位被宿主覆盖。等待有两秒可读回退，全部事件、观察器、帧和期限随卡片卸载清理。iOS 保留原有呈现路径。
+
+原版针对 iOS 有 touchstart/touchend 处理，React 版遗漏了不合成 click 的情况。现在触摸和点击共用 activateContent，再进入唯一的 dispatch；滑动、多指和取消不触发业务动作。兼容 click 去重，以免一次轻触展开后又折回；替换答案占位内容时仍能识别同一次触摸。聚焦节点支持 Enter/Space。
+
+新增回归不依赖浏览器自动生成 click，另覆盖每个引擎十次 Android 式整页导航、慢图片、宿主加载后重置滚动、首个可见帧的字体和位置，以及等待中卸载。现有每引擎一百次生命周期测试继续执行。该模拟仍不是 Android/iOS 实机认证，alpha.4 两项修复均待手机复测。

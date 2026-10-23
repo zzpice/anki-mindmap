@@ -9,6 +9,12 @@
 #mm-react [data-mm-content] {
   display: block;
 }
+/* Android navigates the whole document on each flip. Show the projected tree
+   only after the host's load-time scroll reset and local font/media layout.
+   iOS/Desktop retain their existing immediate presentation path. */
+html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
+  visibility: hidden;
+}
 /* The host can paint inserted HTML before running template scripts. Suppress
    transient custom-answer images until core.ts has projected their state.
    Unknown wrappers become readable again as soon as mounting completes. */

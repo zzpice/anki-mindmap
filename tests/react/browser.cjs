@@ -146,6 +146,7 @@ async function run() {
       "native reviewer body-class reset preserves skin and host night mode without changing business state",
     );
     record.transitions = await require("./transitions.cjs")(browser, base, renders);
+    record.androidNavigation = await require("./navigation.cjs")(browser, base, renders);
     record.checks.push("mobile-size flip first-paint image guards, inert diagrams, cached runtime and pending-load replacement");
     const invariants = await page.evaluate(() => {
       const r = AnkiMindmap.current();
@@ -237,9 +238,12 @@ async function run() {
     await ready(tp);
     await tp.locator("[data-mm-content] .cloze").first().tap();
     assert.equal((await inspect(tp)).state.revealed.a0, true);
+    await tp.goto(`${base}/welcome-0-front.html`);
+    await ready(tp);
+    await require("./touch.cjs")(tp);
     await tp.close();
     await touch.close();
-    record.checks.push("touch tap dispatches once");
+    record.checks.push("touch tap dispatches once; branch touchend works without click, compatibility click deduplicates, scroll/pinch/cancel are inert, focused keyboard works");
 
     await page.goto(`${base}/mixed-0-front.html`);
     await ready(page);

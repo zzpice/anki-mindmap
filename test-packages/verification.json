@@ -1,11 +1,11 @@
 {
-  "startingDevelopmentCommit": "eb9b35e7a009b58b657ca56b07ea8e7d21c21e4c",
-  "version": "0.2.0-alpha.3",
+  "startingDevelopmentCommit": "63279947b08ee68208779e8e13623f2c99b4573c",
+  "version": "0.2.0-alpha.4",
   "coreTests": 8,
   "businessCoreUnchanged": true,
   "native": {
     "status": "passed",
-    "version": "0.2.0-alpha.3",
+    "version": "0.2.0-alpha.4",
     "testModel": {
       "id": 1792748414,
       "kind": 1,
@@ -45,10 +45,10 @@
     ],
     "assets": {
       "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
-      "_mm_react_1b7647eed865.js": "1b7647eed865b3e6576a19ef7dbc2cb4eae9ba4d5934d3d6c6a3f3236b71ea64",
+      "_mm_react_9df590a9686f.js": "9df590a9686fe1e579e2537312970fafab0ecfd78693afbbcd0947367cfccb07",
       "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
     },
-    "apkgSha256": "794f6c2e5dcd05a3974c609a20a74f9c7463a6c1252c4d566a636b81738f7773"
+    "apkgSha256": "6241057df50d6cdfecd8c1c03665d7d7b3b0630d36b11b4769045e130cd56065"
   },
   "browser": {
     "status": "passed",
@@ -65,7 +65,7 @@
           "search excludes hidden answers, finds folded prose, leaves reveal untouched; closing respects later manual fold",
           "diagram, annotation and image overlays; personal-note popup absent",
           "ordered reveal/reverse hide keyboard, native host keys unclaimed, editable search protects single-letter shortcuts",
-          "touch tap dispatches once",
+          "touch tap dispatches once; branch touchend works without click, compatibility click deduplicates, scroll/pinch/cancel are inert, focused keyboard works",
           "Unicode case expansion keeps source text range offsets valid",
           "mock Desktop controller preserves original B=Good/X=Hard and held-button safety",
           "mock controller connect/edge/held remount/disconnect, no idle polling without hardware",
@@ -91,6 +91,63 @@
             "pendingLoadHostReplacement": "passed"
           }
         ],
+        "androidNavigation": {
+          "navigations": 10,
+          "firstPaintPositionAndFont": "passed",
+          "pendingDisposal": "passed",
+          "rows": [
+            {
+              "navigation": 0,
+              "paintedFrames": 2,
+              "scrolls": 1
+            },
+            {
+              "navigation": 1,
+              "paintedFrames": 2,
+              "scrolls": 1
+            },
+            {
+              "navigation": 2,
+              "paintedFrames": 2,
+              "scrolls": 1
+            },
+            {
+              "navigation": 3,
+              "paintedFrames": 2,
+              "scrolls": 1
+            },
+            {
+              "navigation": 4,
+              "paintedFrames": 2,
+              "scrolls": 1
+            },
+            {
+              "navigation": 5,
+              "paintedFrames": 3,
+              "scrolls": 1
+            },
+            {
+              "navigation": 6,
+              "paintedFrames": 2,
+              "scrolls": 1
+            },
+            {
+              "navigation": 7,
+              "paintedFrames": 2,
+              "scrolls": 1
+            },
+            {
+              "navigation": 8,
+              "paintedFrames": 2,
+              "scrolls": 1
+            },
+            {
+              "navigation": 9,
+              "paintedFrames": 2,
+              "scrolls": 1
+            }
+          ]
+        },
         "lifecycleCycles": 100
       },
       {
@@ -105,7 +162,7 @@
           "search excludes hidden answers, finds folded prose, leaves reveal untouched; closing respects later manual fold",
           "diagram, annotation and image overlays; personal-note popup absent",
           "ordered reveal/reverse hide keyboard, native host keys unclaimed, editable search protects single-letter shortcuts",
-          "touch tap dispatches once",
+          "touch tap dispatches once; branch touchend works without click, compatibility click deduplicates, scroll/pinch/cancel are inert, focused keyboard works",
           "Unicode case expansion keeps source text range offsets valid",
           "mock Desktop controller preserves original B=Good/X=Hard and held-button safety",
           "mock controller connect/edge/held remount/disconnect, no idle polling without hardware",
@@ -131,23 +188,68 @@
             "pendingLoadHostReplacement": "passed"
           }
         ],
+        "androidNavigation": {
+          "navigations": 10,
+          "firstPaintPositionAndFont": "passed",
+          "pendingDisposal": "passed",
+          "rows": [
+            {
+              "navigation": 0,
+              "paintedFrames": 2,
+              "scrolls": 1
+            },
+            {
+              "navigation": 1,
+              "paintedFrames": 2,
+              "scrolls": 1
+            },
+            {
+              "navigation": 2,
+              "paintedFrames": 2,
+              "scrolls": 1
+            },
+            {
+              "navigation": 3,
+              "paintedFrames": 2,
+              "scrolls": 1
+            },
+            {
+              "navigation": 4,
+              "paintedFrames": 4,
+              "scrolls": 1
+            },
+            {
+              "navigation": 5,
+              "paintedFrames": 2,
+              "scrolls": 1
+            },
+            {
+              "navigation": 6,
+              "paintedFrames": 2,
+              "scrolls": 1
+            },
+            {
+              "navigation": 7,
+              "paintedFrames": 3,
+              "scrolls": 1
+            },
+            {
+              "navigation": 8,
+              "paintedFrames": 3,
+              "scrolls": 1
+            },
+            {
+              "navigation": 9,
+              "paintedFrames": 2,
+              "scrolls": 1
+            }
+          ]
+        },
         "lifecycleCycles": 100
       }
     ],
     "externalRequests": []
   },
-  "oldPackageReproduction": [
-    {
-      "engine": "chromium",
-      "inactiveImageVisibleBeforeScripts": true,
-      "diagramSourceVisible": false
-    },
-    {
-      "engine": "webkit",
-      "inactiveImageVisibleBeforeScripts": true,
-      "diagramSourceVisible": false
-    }
-  ],
   "desktop": {
     "status": "passed",
     "anki": "26.9.3",
@@ -158,17 +260,6 @@
     "processTeardownCompleted": true,
     "previewSides": 52,
     "reviewStages": 5,
-    "dynamicMath": {
-      "cycles": 10,
-      "activeTypeset": [
-        1
-      ],
-      "mathItems": 2,
-      "math": {
-        "calls": 11,
-        "warnings": []
-      }
-    },
     "unmountResources": {
       "effects": 0,
       "frames": 0,
@@ -179,28 +270,9 @@
       "timers": 0
     }
   },
-  "physicalClientsNotVerified": [
-    "AnkiMobile",
-    "AnkiDroid",
-    "physical gamepad"
-  ],
-  "mainModified": false,
-  "visual": {
-    "status": "passed",
-    "baseline": "f67c932",
-    "defaultPairs": 108,
-    "interactionPairs": 60,
-    "widths": [
-      1280,
-      390,
-      320
-    ],
-    "themes": [
-      "paper",
-      "bamboo",
-      "night"
-    ],
-    "sameNativeInputs": true,
-    "note": "Settled visual design remains unchanged; transient frames are covered separately."
-  }
+  "physicalClientFeedback": {
+    "alpha.3": "iOS flicker resolved according to user; Android still jumped; iOS touch-only branching failed",
+    "alpha.4": "Android presentation and iOS touch fixes await device retest"
+  },
+  "mainModified": false
 }
