@@ -55,10 +55,10 @@ const server=http.createServer((req,res)=>{
       }
     }
     await change(()=>page.locator('#compare').check());
-    await frame().locator('#left-floating-widget').click();
+    await frame().locator('#floating-widget').click();
     assert.equal(await frame().locator('#popup').isVisible(), true);
     assert.equal(await baseline().locator('#popup').isVisible(), false);
-    await frame().locator('#left-floating-widget').click();
+    await frame().locator('#floating-widget').click();
     assert.equal(await frame().locator('#popup').isVisible(), false);
     for(const [preset,width,height] of [['narrow',320,700],['landscape',844,390],['desktop',1280,900]]) {
       await page.selectOption('#viewport',preset);
