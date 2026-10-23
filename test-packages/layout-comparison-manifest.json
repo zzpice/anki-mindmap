@@ -2,7 +2,11 @@
   "status": "passed",
   "baseline": "f67c932a02bef79f0feab1121c6783a9a3ff9e17",
   "reactVersion": "0.2.0-alpha.14",
-  "fixtureRevision": 2,
+  "fixtureRevision": 3,
+  "displayLabels": {
+    "main": "旧版基线 f67c932",
+    "react": "React 0.2.0-alpha.14"
+  },
   "notes": 14,
   "cards": 14,
   "longImageCases": [
@@ -22,6 +26,6 @@
   "existingLegacyMediaUnchanged": true,
   "contentAddressedLegacyMedia": true,
   "repeatImportNoDuplicates": true,
-  "sha256": "de0a98554f1653037d3a0ad0c13849b18814a7d6e193ef1ddfde36007037c65b",
+  "sha256": "724e411860fbf9f5f92b36dd071adcc8bc39ef1a165380b2bae949d7630e0860",
   "physicalIOS": "See verification.json for scoped user device feedback; browser checks are not device certification"
 }

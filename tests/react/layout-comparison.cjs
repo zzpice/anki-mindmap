@@ -1,4 +1,4 @@
-// Same official native cards, pinned main and current React, one host per kind.
+// Same official native cards, pinned legacy and current React, one host per kind.
 // The probe is diagnostic-only and cannot write application layout or commands.
 const fs = require('node:fs'), path = require('node:path'), http = require('node:http');
 const assert = require('node:assert/strict');

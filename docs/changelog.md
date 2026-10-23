@@ -8,6 +8,7 @@
 - 修正 NOTICE 的 React / React DOM / Scheduler 说明，诊断包补齐 mark.js 全文许可证。运行时及 Anki 数据契约未改。
 - 当前测试包下载文件名保持不变，GitHub Actions 继续构包和回归，不增加部署。
 - main 的 CI 通过后清理已完整并入的 React 开发分支，默认维护入口统一到 main；固定提交仍可查回全部历史。
+- 诊断包的旧版显示名称由 `main` 改为「旧版基线 f67c932」，React 一侧标明实际版本；模型 ID、GUID 和内容保留，避免合并后误认所测版本。
 
 ## 0.2.0-alpha.14
 

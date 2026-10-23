@@ -1,5 +1,5 @@
 <!-- Diagnostic package only. Never included in the application templates. -->
-<aside data-mm-layout-probe data-kind="__KIND__" data-side="__SIDE__" data-case="{{Tags}}"
+<aside data-mm-layout-probe data-kind="__KIND__" data-label="__LABEL__" data-side="__SIDE__" data-case="{{Tags}}"
   style="position:fixed;left:40px;right:40px;top:22px;z-index:10000;font:12px/1.4 monospace;writing-mode:horizontal-tb">
   <button style="font:12px sans-serif;margin:0;padding:4px;background:#eee;color:#222;border:1px solid #999">布局数据</button>
   <div hidden style="padding:6px;max-height:65vh;overflow:auto;background:#fff;color:#111;border:1px solid #999;text-align:left">
@@ -45,7 +45,7 @@
       expand: rect('.custom2-button'), answers: rect('.custom-button'), containers: containers() });
     if (!initial && rows[rows.length-1].locate) initial = rows[rows.length-1];
     if (rows.length > 12) rows.shift();
-    var value = { kind: root.dataset.kind, side: root.dataset.side, userAgent: navigator.userAgent, initial: initial, rows: rows };
+    var value = { kind: root.dataset.kind, label: root.dataset.label, side: root.dataset.side, userAgent: navigator.userAgent, initial: initial, rows: rows };
     if (root.dataset.side === 'front') {
       try { sessionStorage.setItem(key, JSON.stringify(value)); } catch (_) { storage = 'unavailable'; }
     }
@@ -60,7 +60,7 @@
     // Retain the first mounted front sample. Otherwise inspecting a changed
     // front would show the same new coordinates twice and lose the baseline.
     var frontRow = root.dataset.side === 'front' ? initial : previous && (previous.initial || previous.rows[previous.rows.length-1]);
-    root.querySelector('output').textContent = root.dataset.kind + ' / ' + root.dataset.side + '\n存储 ' + storage +
+    root.querySelector('output').textContent = root.dataset.label + ' / ' + root.dataset.side + '\n存储 ' + storage +
       '\n正面：' + summary(frontRow) +
       '\n当前：' + summary(rows[rows.length-1]) + '\n边栏基准 ' + (rows[rows.length-1].layoutHeight || 'CSS 百分比') +
       '\n正面值为初次挂载记录。坐标为 [顶部, 高度]，单位 CSS px。';

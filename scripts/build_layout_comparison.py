@@ -14,6 +14,7 @@ from anki.collection import Collection
 from anki.import_export_pb2 import ExportAnkiPackageOptions, ImportAnkiPackageRequest
 from build_react_package import ROOT, BUILD, OUT, compiled, inputs, make_model, sha
 from mindmap_examples import blank, node, fields
+from prepare_visual_comparison import BASELINE
 
 
 def long_cases(images):
@@ -67,6 +68,9 @@ def build():
             assets[name] = data
             media_names[file.name] = name
     probe = (ROOT / 'tests/react/layout-probe.html').read_text()
+    version = (ROOT / 'VERSION').read_text().strip()
+    names = {'main': f'旧版基线 {BASELINE[:7]}', 'react': 'React'}
+    labels = {**names, 'react': f'React {version}'}
     all_inputs = inputs()
     cases = {**long_cases(images), **{key: all_inputs[key] for key in ('overview', 'deep', 'wide-review', 'image')}}
     count = len(cases)*2
@@ -77,13 +81,15 @@ def build():
         col = Collection(str(Path(directory) / 'source.anki2'))
         try:
             # Neither the production model nor the normal React test model is included.
+            # Keep internal keys and GUIDs stable for repeat imports; display the
+            # pinned legacy version explicitly now that main contains React.
             for kind, mid in (('main', 1792748514), ('react', 1792748524)):
-                name = f'边栏对照 · {kind}'
+                name = f'边栏对照 · {names[kind]}'
                 if kind == 'main':
                     contract = json.loads((original_root / 'cards/note-types.json').read_text())[0]
                     contract.update(id=mid, name=name)
                     model = original.make_model(col, contract, int(time.time()), source_root=original_root / 'cards')
-                    # Change asset aliases, never the pinned main business code.
+                    # Change asset aliases, never the pinned legacy business code.
                     # Generic legacy filenames must not collide with daily media.
                     for before, after in media_names.items():
                         model['css'] = model['css'].replace(before, after)
@@ -92,10 +98,10 @@ def build():
                 else:
                     model = make_model(col, mid, name, templates)
                 for side, field in (('front', 'qfmt'), ('back', 'afmt')):
-                    model['tmpls'][0][field] += probe.replace('__KIND__', kind).replace('__SIDE__', side)
+                    model['tmpls'][0][field] += probe.replace('__KIND__', kind).replace('__SIDE__', side).replace('__LABEL__', labels[kind])
                 col.models.update(model)
                 deck = col.decks.new_deck_legacy(False)
-                deck.update(id=mid+1, name=f'Anki Mindmap · 边栏对照（独立样例）::{kind}')
+                deck.update(id=mid+1, name=f'Anki Mindmap · 边栏对照（独立样例）::{names[kind]}')
                 col.decks.update(deck)
                 long_deck = col.decks.new_deck_legacy(False)
                 long_deck.update(id=mid+21, name=deck['name']+'::长图复现')
@@ -149,8 +155,8 @@ def build():
         for name in ('react', 'react-dom', 'scheduler'):
             z.write(ROOT/'node_modules'/name/'LICENSE', f'licenses/{name}.txt')
     (site/'renders.json').write_text(json.dumps(renders, ensure_ascii=False))
-    result = {'status': 'passed', 'baseline': 'f67c932a02bef79f0feab1121c6783a9a3ff9e17',
-              'reactVersion': (ROOT/'VERSION').read_text().strip(), 'fixtureRevision': 2, 'notes': count, 'cards': count,
+    result = {'status': 'passed', 'baseline': BASELINE,
+              'reactVersion': version, 'fixtureRevision': 3, 'displayLabels': labels, 'notes': count, 'cards': count,
               'longImageCases': list(long_cases(images)), 'longImagePixels': [720, 8400],
               'modelIds': [1792748514, 1792748524], 'productionUnchanged': True,
               'existingLegacyMediaUnchanged': True, 'contentAddressedLegacyMedia': True,

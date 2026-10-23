@@ -540,12 +540,16 @@
     "intentionalLayoutChange": "10px outer-tree gutter; compact heading and split edge controls. Fonts, colours and nested spacing retained."
   },
   "layoutComparison": {
-    "scope": "Pinned pre-React f67c932 versus current React; main labels in diagnostic decks refer to the pinned legacy implementation.",
+    "scope": "Pinned pre-React f67c932 versus current React; diagnostic display names identify the pinned legacy baseline and actual React version.",
     "package": {
       "status": "passed",
       "baseline": "f67c932a02bef79f0feab1121c6783a9a3ff9e17",
       "reactVersion": "0.2.0-alpha.14",
-      "fixtureRevision": 2,
+      "fixtureRevision": 3,
+      "displayLabels": {
+        "main": "旧版基线 f67c932",
+        "react": "React 0.2.0-alpha.14"
+      },
       "notes": 14,
       "cards": 14,
       "longImageCases": [
@@ -565,7 +569,7 @@
       "existingLegacyMediaUnchanged": true,
       "contentAddressedLegacyMedia": true,
       "repeatImportNoDuplicates": true,
-      "sha256": "de0a98554f1653037d3a0ad0c13849b18814a7d6e193ef1ddfde36007037c65b",
+      "sha256": "724e411860fbf9f5f92b36dd071adcc8bc39ef1a165380b2bae949d7630e0860",
       "physicalIOS": "See verification.json for scoped user device feedback; browser checks are not device certification"
     },
     "nativeBackends": [
@@ -576,7 +580,8 @@
         "cards": 14,
         "productionUnchanged": true,
         "existingLegacyMediaUnchanged": true,
-        "repeatImportNoDuplicates": true
+        "repeatImportNoDuplicates": true,
+        "fixtureRevision": 3
       },
       {
         "anki": "26.9.3",
@@ -585,7 +590,8 @@
         "cards": 14,
         "productionUnchanged": true,
         "existingLegacyMediaUnchanged": true,
-        "repeatImportNoDuplicates": true
+        "repeatImportNoDuplicates": true,
+        "fixtureRevision": 3
       }
     ],
     "browser": {
@@ -746,6 +752,27 @@
       ],
       "externalRequests": [],
       "limitation": "Browser host only. See verification.json for scoped user device feedback; these checks are not device certification."
+    },
+    "labelUpgrade": {
+      "status": "passed",
+      "scenarios": [
+        {
+          "renameBeforeImport": false,
+          "notes": 14,
+          "cards": 14,
+          "identitiesFieldsSchedulingUnchanged": true,
+          "bothTemplateLabelsUpdated": true,
+          "deckNames": "Anki preserves old deck names; new names create empty decks"
+        },
+        {
+          "renameBeforeImport": true,
+          "notes": 14,
+          "cards": 14,
+          "identitiesFieldsSchedulingUnchanged": true,
+          "bothTemplateLabelsUpdated": true,
+          "deckNames": "updated manually; import adds no extra decks"
+        }
+      ]
     }
   },
   "packaging": {
