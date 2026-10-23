@@ -1,10 +1,10 @@
 {
-  "startingDevelopmentCommit": "66a18d8ea3832946efdcbdd85bc9aaf6f5b87c48",
-  "version": "0.2.0-alpha.7",
+  "startingDevelopmentCommit": "8be41538086a074bc4a0b7818fa040940632fdc4",
+  "version": "0.2.0-alpha.8",
   "coreTests": 9,
   "native": {
     "status": "passed",
-    "version": "0.2.0-alpha.7",
+    "version": "0.2.0-alpha.8",
     "testModel": {
       "id": 1792748414,
       "kind": 1,
@@ -44,10 +44,10 @@
     ],
     "assets": {
       "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
-      "_mm_react_df31754c9dc8.js": "df31754c9dc8f7f4de3588e409535a592083439b2a1005683018666bdede19b5",
+      "_mm_react_69c6a8de9268.js": "69c6a8de92687c38180eaae932c08e3d0674b9eab272923b767c61d3f2e8024d",
       "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
     },
-    "apkgSha256": "63ccfa0a201e128a2a848559177ca170785e2764728bc6bf9a2665ac3c8893ca"
+    "apkgSha256": "3702153ca76458439a0ca0f13a9213a71be275afa9734a443b5a632f6845223d"
   },
   "browser": {
     "status": "passed",
@@ -110,6 +110,7 @@
         "androidNavigation": {
           "navigations": 10,
           "firstPaintPositionAndFont": "passed",
+          "readyWithoutExtraFrame": "passed",
           "pendingDisposal": "passed",
           "edgeTouch": {
             "rows": [
@@ -123,13 +124,13 @@
                 "selector": ".custom2-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.10000000894069672
+                "releaseHandlerMs": 0.19999998807907104
               },
               {
                 "selector": ".custom-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.5999999940395355
+                "releaseHandlerMs": 0.6000000089406967
               },
               {
                 "selector": "#left-floating-widget",
@@ -149,7 +150,7 @@
             },
             {
               "navigation": 1,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 0
             },
             {
@@ -174,7 +175,7 @@
             },
             {
               "navigation": 6,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 1
             },
             {
@@ -189,7 +190,7 @@
             },
             {
               "navigation": 9,
-              "paintedFrames": 3,
+              "paintedFrames": 2,
               "scrolls": 0
             }
           ]
@@ -253,6 +254,7 @@
         "androidNavigation": {
           "navigations": 10,
           "firstPaintPositionAndFont": "passed",
+          "readyWithoutExtraFrame": "passed",
           "pendingDisposal": "passed",
           "edgeTouch": {
             "rows": [
@@ -266,7 +268,7 @@
                 "selector": ".custom2-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0
+                "releaseHandlerMs": 1
               },
               {
                 "selector": ".custom-button",
@@ -287,52 +289,52 @@
           "rows": [
             {
               "navigation": 0,
-              "paintedFrames": 2,
-              "scrolls": 1
-            },
-            {
-              "navigation": 1,
-              "paintedFrames": 2,
-              "scrolls": 0
-            },
-            {
-              "navigation": 2,
-              "paintedFrames": 2,
-              "scrolls": 1
-            },
-            {
-              "navigation": 3,
-              "paintedFrames": 2,
-              "scrolls": 0
-            },
-            {
-              "navigation": 4,
               "paintedFrames": 3,
               "scrolls": 1
             },
             {
+              "navigation": 1,
+              "paintedFrames": 3,
+              "scrolls": 0
+            },
+            {
+              "navigation": 2,
+              "paintedFrames": 3,
+              "scrolls": 1
+            },
+            {
+              "navigation": 3,
+              "paintedFrames": 3,
+              "scrolls": 0
+            },
+            {
+              "navigation": 4,
+              "paintedFrames": 5,
+              "scrolls": 1
+            },
+            {
               "navigation": 5,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 0
             },
             {
               "navigation": 6,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 1
             },
             {
               "navigation": 7,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 0
             },
             {
               "navigation": 8,
-              "paintedFrames": 2,
+              "paintedFrames": 5,
               "scrolls": 1
             },
             {
               "navigation": 9,
-              "paintedFrames": 2,
+              "paintedFrames": 3,
               "scrolls": 0
             }
           ]
@@ -373,7 +375,9 @@
       "two controls on each edge",
       "keep reading position across front-to-back",
       "wide knowledge content scrolls inside its own surface"
-    ]
+    ],
+    "lastVerifiedCommit": "8be41538086a074bc4a0b7818fa040940632fdc4",
+    "unchangedCssInAlpha8": true
   },
   "edgeLabels": {
     "status": "passed",
@@ -381,14 +385,15 @@
     "contentGuttersUnchanged": true
   },
   "physicalDevices": {
-    "AnkiDroid": "user confirmed alpha.6 reading position stable, reported edge movement and plain flash; alpha.7 requires retest",
-    "AnkiMobile": "alpha.7 not device tested"
+    "AnkiDroid": "user reports very light flash still present in alpha.7; alpha.8 same-task presentation requires device retest",
+    "AnkiMobile": "alpha.8 not device tested; non-Android presentation unchanged"
   },
   "limitations": [
     "No universal card ID in standard template: one-use layout handoff matches source digest, deck, native ordinal and topology; a new front always resets it.",
     "Dual WebViews, missing metadata, expired or unavailable session storage fall back to normal first presentation.",
     "Long content still expands naturally below the reading anchor; scroll boundaries can limit compensation.",
-    "Matched startup background does not prove native Android document-replacement blank frames are eliminated."
+    "Matched startup background does not prove native Android document-replacement blank frames are eliminated.",
+    "Alpha.8 removes one template-owned animation-frame wait after readiness; remaining native Android document-replacement flashes are unverified."
   ],
   "mainUnchanged": true
 }

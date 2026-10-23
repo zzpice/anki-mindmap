@@ -12,7 +12,7 @@ export function presentCard(
 
   // AnkiDroid loads a new document on each side and its window.onload resets
   // scroll position. A same-document code cache cannot fix that navigation.
-  let autoLocate = true, presented = false, queued = false;
+  let autoLocate = true, presented = false;
   let cancelDeadline = () => {};
   const show = () => {
     if (presented) return;
@@ -29,12 +29,10 @@ export function presentCard(
       !doc.querySelector(".card.mathjax-needs-to-render");
   };
   const check = () => {
-    if (presented || queued || !ready()) return;
-    queued = true;
-    scope.frame(() => {
-      queued = false;
-      if (ready()) show();
-    });
+    // The native load reset has already run before this listener. Once every
+    // readiness condition passes, locate and reveal in this same task; waiting
+    // for another frame only prolongs the blank interval on Android.
+    if (!presented && ready()) show();
   };
   scope.listen(doc.defaultView!, "load", check);
   scope.listen(doc.fonts, "loadingdone", check);

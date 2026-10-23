@@ -56,6 +56,32 @@ module.exports = async function navigation(browser, base, renders) {
     rows.push({ navigation: i, paintedFrames: result.paints.length, scrolls: result.scrolls });
   }
   const edgeTouch = await require("./edge-touch.cjs")(page);
+  // Hold load until the runtime/font are ready, then observe after its native
+  // load listener. A ready card must already be positioned and visible in that
+  // event, without adding another requestAnimationFrame of blank content.
+  let releaseReadyImage;
+  imageGate = new Promise(resolve => { releaseReadyImage = resolve; });
+  await page.goto(`${base}/android-card?side=front`, { waitUntil: "domcontentloaded" });
+  await page.waitForSelector('#mm-react[data-ready="true"]', { state: "attached" });
+  // FontFaceSet.ready can wait for document load, which this image gate holds.
+  // Check the used face directly instead of creating a circular test wait.
+  await page.waitForFunction(() => document.fonts.check("14px lxgw"));
+  await page.evaluate(() => {
+    window.addEventListener("load", () => {
+      const host = document.querySelector("#mm-react");
+      const rect = host.querySelector(".cloze").getBoundingClientRect();
+      window.mmReadyInLoad = { presented: host.dataset.mmPresented === "true",
+        hostLoaded: !!window.mmHostLoaded, font: document.fonts.status,
+        top: rect.top, bottom: rect.bottom };
+    }, { once: true });
+  });
+  releaseReadyImage(); imageGate = undefined;
+  await page.waitForLoadState("load");
+  const readyInLoad = await page.evaluate(() => window.mmReadyInLoad);
+  assert.ok(readyInLoad.presented, "ready Android content must not wait an extra frame");
+  assert.ok(readyInLoad.hostLoaded && readyInLoad.font === "loaded");
+  assert.ok(readyInLoad.top >= 0 && readyInLoad.bottom <= 780,
+    "same-task presentation must still follow the native scroll reset");
   let releaseImage;
   imageGate = new Promise((resolve) => { releaseImage = resolve; });
   await page.goto(`${base}/android-card?side=front`, { waitUntil: "domcontentloaded" });
@@ -71,5 +97,6 @@ module.exports = async function navigation(browser, base, renders) {
   releaseImage();
   await page.waitForLoadState("load");
   await context.close();
-  return { navigations: rows.length, firstPaintPositionAndFont: "passed", pendingDisposal: "passed", edgeTouch, rows };
+  return { navigations: rows.length, firstPaintPositionAndFont: "passed", readyWithoutExtraFrame: "passed",
+    pendingDisposal: "passed", edgeTouch, rows };
 };
