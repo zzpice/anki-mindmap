@@ -47,3 +47,7 @@ there is no second template image viewer. Four edge controls now share a stable
 viewport frame, including review zoom. Both engines pass scroll/flip/resize tests;
 AnkiMobile rubber-band scrolling and native image zoom need physical retest.
 [Changes and limits](../docs/motion-and-images.md).
+
+Alpha.10 corrects edge proportions and label centring using fixed insets and a
+centred text container, rather than viewport-unit/transform estimates. Mobile
+regressions check actual text centres during scroll, flip, review zoom and rotation.

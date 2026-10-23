@@ -101,13 +101,14 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
    inside that half without widening the tab or covering more of the text. */
 #mm-react .mm-edge-label {
   position: absolute;
-  top: 50%;
+  top: 0;
+  bottom: 0;
   left: 0;
   width: 50%;
-  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   writing-mode: horizontal-tb;
-  white-space: normal;
-  word-break: break-all;
   font-size: 12px;
   line-height: 1.1;
   text-align: center;
@@ -121,6 +122,14 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
 #mm-react .floating-button .mm-edge-label {
   left: auto;
   right: 0;
+}
+#mm-react .mm-edge-label > span {
+  /* Explicit upright characters, rather than wrapping horizontal text in a
+     narrow column. Flex centres this text box inside the visible tab half. */
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  white-space: nowrap;
+  line-height: 1;
 }
 /* Compact context heading; keep the field and title text intact. */
 #mm-react [data-mm-content] > .title {
@@ -279,24 +288,27 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
   line-height: 18px;
 }
 
-/* One viewport frame owns all four edge hit areas. Independently fixed 50%
-   controls can be recomposited/resized separately during WKWebView scrolling.
-   Small viewport units keep toolbar changes from stretching the rail. Absolute
-   children share one reference; no transform/animation is applied to the frame. */
+/* One viewport frame owns all four edge hit areas. Opposing fixed insets
+   resolve in the client's actual containing viewport, including CSS zoom.
+   Do not substitute vh/svh: native WebViews can expose a different viewport
+   unit height from the area available to these fixed controls. */
 #mm-react .mm-edge-controls {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  /* Viewport lengths also scale under CSS zoom; compensate only the frame
-     height, keeping the familiar zoomed tab width and text. */
-  height: calc(100vh / var(--mm-review-zoom, 1));
-  height: calc(100svh / var(--mm-review-zoom, 1));
+  inset: 0;
+  display: block;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  writing-mode: horizontal-tb;
   pointer-events: none;
   z-index: 1000;
 }
 #mm-react .mm-edge-controls > button {
   position: absolute;
+  height: 50%;
+  box-sizing: border-box;
+  writing-mode: horizontal-tb;
   pointer-events: auto;
 }
 

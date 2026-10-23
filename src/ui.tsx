@@ -69,7 +69,7 @@ export function Interface({
           disabled={!model.active.length}
           onClick={() => dispatch({ type: "locate" })}
         >
-          <span className="mm-edge-label">定位</span>
+          <span className="mm-edge-label"><span>定位</span></span>
         </button>
         {diagram.trim() && (
           <button
@@ -86,7 +86,7 @@ export function Interface({
               })
             }
           >
-            <span className="mm-edge-label">导图</span>
+            <span className="mm-edge-label"><span>导图</span></span>
           </button>
         )}
         <button
@@ -95,7 +95,7 @@ export function Interface({
           title={expanded ? "收起全部分支 · K" : "展开全部分支 · K"}
           onClick={() => dispatch({ type: "toggleTree" })}
         >
-          <span className="mm-edge-label">{expanded ? "收起" : "展开"}</span>
+          <span className="mm-edge-label"><span>{expanded ? "收起" : "展开"}</span></span>
         </button>
         <button
           className="custom-button"
@@ -104,7 +104,7 @@ export function Interface({
           disabled={!model.groups.length}
           onClick={() => dispatch({ type: "toggleOther" })}
         >
-          <span className="mm-edge-label">答案</span>
+          <span className="mm-edge-label"><span>答案</span></span>
         </button>
       </nav>
       <div className="search-box" role="search" hidden={!state.searchOpen}>

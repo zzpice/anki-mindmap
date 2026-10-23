@@ -70,6 +70,11 @@ SNAPSHOT = r'''(() => {
  font:{family:getComputedStyle(document.body).fontFamily,ready:document.fonts.check("16px lxgw")},
  ua:navigator.userAgent, images:[...c.querySelectorAll('img')].map(x=>({src:x.getAttribute('src'),loaded:x.complete&&x.naturalWidth>0})),
  mathML:c.querySelectorAll('math').length, typeset:c.querySelectorAll('mjx-container').length,
+ edgeFrame:(() => {
+ const frame=document.querySelector('nav').getBoundingClientRect();
+ return {height:frame.height, bars:[...document.querySelectorAll('nav button')].map(b=>{
+ const r=b.getBoundingClientRect(),t=b.querySelector('.mm-edge-label > span').getBoundingClientRect();
+ return {height:r.height, centerError:Math.abs(t.y+t.height/2-r.y-r.height/2)};})};})(),
  activeTypeset:[...c.querySelectorAll('.cloze')].map(x=>x.querySelectorAll('mjx-container').length),
  mathItems:window.MathJax?.startup?.document?.getMathItemsWithin(c)?.length,
  text:c.textContent, hooks:{shown:typeof onShownHook==='undefined'?null:onShownHook.length, update:typeof onUpdateHook==='undefined'?null:onUpdateHook.length}};
@@ -100,6 +105,9 @@ def poll_preview(cid, side, attempt=0):
                 if attempt > 100: raise AssertionError(('preview timeout', cid, side, value))
                 QTimer.singleShot(60, lambda:poll_preview(cid, side, attempt+1)); return
             assert value['alive'] and value['resources']['reactRoots']==1
+            for bar in value['edgeFrame']['bars']:
+                assert abs(bar['height']-value['edgeFrame']['height']/2)<1,value['edgeFrame']
+                assert bar['centerError']<1,value['edgeFrame']
             assert value['font']['family'].startswith('lxgw')
             assert all(v==(side=='answer') for v in value['state']['revealed'].values()), value
             result['preview'].append(value)

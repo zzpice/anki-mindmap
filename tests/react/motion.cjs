@@ -20,26 +20,38 @@ module.exports = async function motion(browser, base, renders) {
     await page.evaluate(() => document.fonts.ready);
     await page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
   };
+  const checkLabels = () => page.evaluate(() => [...document.querySelectorAll('nav button')].every(b => {
+    const rect = b.getBoundingClientRect();
+    const text = b.querySelector('.mm-edge-label > span').getBoundingClientRect();
+    const left = Math.max(0, rect.left), right = Math.min(innerWidth, rect.right);
+    return Math.abs(text.y + text.height / 2 - (rect.y + rect.height / 2)) < .6 &&
+      Math.abs(text.x + text.width / 2 - (left + right) / 2) < .6;
+  }));
   const geometry = () => page.evaluate(() => [...document.querySelectorAll('nav button')].map(b => {
     const r = b.getBoundingClientRect();
     return [r.x, r.y, r.width, r.height];
   }));
   await show('front');
   const before = await geometry();
+  assert.ok(await checkLabels(), 'text centred in the visible half of every tab');
   for (const y of [0, 700, 150, 1200, 0]) {
     await page.evaluate(y => window.scrollTo(0, y), y);
     await page.evaluate(() => new Promise(r => requestAnimationFrame(r)));
     assert.deepEqual(await geometry(), before, 'edge frame remains fixed throughout scrolling');
+    assert.ok(await checkLabels(), 'labels remain centred during scrolling');
   }
   await page.evaluate(() => AnkiMindmap.current().dispatch({ type: 'toggleAnswer', id: 'a0' }));
   assert.deepEqual(await geometry(), before, 'wide answer cannot stretch the shared frame');
   await page.evaluate(() => AnkiMindmap.current().dispatch({ type: 'zoom', value: 1.1 }));
   const zoomed = await geometry();
+  assert.ok(await checkLabels(), 'labels centred after review zoom');
   assert.ok(zoomed.every(r => Math.abs(r[3] - 390) < 1), 'zoom does not stretch viewport frame');
   await show('back');
   assert.deepEqual(await geometry(), zoomed, 'native back shares front edge geometry and restored zoom');
+  assert.ok(await checkLabels(), 'labels centred on native back');
   await page.setViewportSize({ width: 780, height: 390 });
   assert.ok((await geometry()).every(r => Math.abs(r[3] - 195) < 1), 'frame adapts to genuine resize');
+  assert.ok(await checkLabels(), 'landscape labels remain centred');
   await page.setViewportSize({ width: 390, height: 780 });
   assert.deepEqual(await geometry(), zoomed);
 
@@ -123,7 +135,7 @@ module.exports = async function motion(browser, base, renders) {
   assert.ok(Object.values(disposed.resources).every(x => x === 0));
   assert.equal(disposed.animations, 0, 'no navigation cue survives disposal');
   await context.close();
-  return { edgeFrameScrollFlipResize: 'passed', nativeImageGestures: 'passed',
+  return { labelCentres: 'passed: front/back, scroll, zoom, landscape', edgeFrameScrollFlipResize: 'passed', nativeImageGestures: 'passed',
     localPanelEntry: entry, navigationCue: '560ms; no geometry change',
     reducedMotion: 'passed including in-flight change', disposedAnimations: 0,
     limitation: 'native iOS scrolling compositor and client image zoom require physical retest' };

@@ -131,10 +131,7 @@ export function mount(host: HTMLElement): Runtime {
     // Fixed-pixel node typography is part of the original design. Scale the
     // whole card so controller zoom still includes its floating controls.
     const zoom = String(store.getSnapshot().zoom);
-    if (host.style.zoom !== zoom) {
-      host.style.zoom = zoom;
-      host.style.setProperty("--mm-review-zoom", zoom);
-    }
+    if (host.style.zoom !== zoom) host.style.zoom = zoom;
   };
   const unsubscribe = store.subscribe(project);
   let cancelAuto: (() => void) | undefined;
@@ -515,7 +512,6 @@ export function mount(host: HTMLElement): Runtime {
       renderer.restore();
       if (usedFallback && intact) content.innerHTML = originalContent;
       host.style.removeProperty("zoom");
-      host.style.removeProperty("--mm-review-zoom");
       if (!hadBodyClass) body.classList.remove("mm-review");
       if (!hadHtmlClass) html.classList.remove("mm-review-document");
       if (previousTheme === null) delete body.dataset.mmTheme;

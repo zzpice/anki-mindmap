@@ -1,10 +1,10 @@
 {
-  "startingDevelopmentCommit": "6da8e89fe16d275962d57a0c393a9bbf8e795c40",
-  "version": "0.2.0-alpha.9",
+  "startingDevelopmentCommit": "30bcec4032ffe8d356bb38de7bbc06c4402dac57",
+  "version": "0.2.0-alpha.10",
   "coreTests": 9,
   "native": {
     "status": "passed",
-    "version": "0.2.0-alpha.9",
+    "version": "0.2.0-alpha.10",
     "testModel": {
       "id": 1792748414,
       "kind": 1,
@@ -44,14 +44,14 @@
     ],
     "assets": {
       "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
-      "_mm_react_dabe9aad8b82.js": "dabe9aad8b8205632bd57f4025844e7a287faf7a7133f52c51fd4a15dd2e8bcd",
+      "_mm_react_cca20cd939ef.js": "cca20cd939ef4f3c115d849dd35e10e19d5ef4fb599da0e8768673aec3e66433",
       "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
     },
-    "apkgSha256": "99217ae33f1701be7c96b94d072a98e659f12fd36300d337cf4ef12bd62dc57b"
+    "apkgSha256": "12889385cf18998201ef6d9e1d7fefb4cc5c5118b07c80f363ce655cac01ba2b"
   },
   "nativeBackend25": {
     "status": "passed",
-    "version": "0.2.0-alpha.9",
+    "version": "0.2.0-alpha.10",
     "testModel": {
       "id": 1792748414,
       "kind": 1,
@@ -91,11 +91,15 @@
     ],
     "assets": {
       "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
-      "_mm_react_dabe9aad8b82.js": "dabe9aad8b8205632bd57f4025844e7a287faf7a7133f52c51fd4a15dd2e8bcd",
+      "_mm_react_cca20cd939ef.js": "cca20cd939ef4f3c115d849dd35e10e19d5ef4fb599da0e8768673aec3e66433",
       "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
     },
-    "apkgSha256": "5bb1026265dda3cd3306e746c94110fe3377cd011bc7e169c89eebad7030edae"
+    "apkgSha256": "202f468a44aea2ed8bca77dafde3424d6b4ea9ce31c1c8ce1f28e4dcf7c2ddcb"
   },
+  "nativeBackends": [
+    "25.9.2",
+    "26.9.3"
+  ],
   "browser": {
     "status": "passed",
     "engines": [
@@ -122,6 +126,7 @@
         ],
         "errors": [],
         "motion": {
+          "labelCentres": "passed: front/back, scroll, zoom, landscape",
           "edgeFrameScrollFlipResize": "passed",
           "nativeImageGestures": "passed",
           "localPanelEntry": "mm-panel-enter",
@@ -190,25 +195,25 @@
                 "selector": ".floating-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.5999999940395355
+                "releaseHandlerMs": 0.5
               },
               {
                 "selector": ".custom2-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.10000000894069672
+                "releaseHandlerMs": 0.09999999403953552
               },
               {
                 "selector": ".custom-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.7999999970197678
+                "releaseHandlerMs": 0.9000000059604645
               },
               {
                 "selector": "#left-floating-widget",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0
+                "releaseHandlerMs": 0.09999999403953552
               }
             ],
             "dragCommands": 0,
@@ -217,7 +222,7 @@
           "rows": [
             {
               "navigation": 0,
-              "paintedFrames": 3,
+              "paintedFrames": 4,
               "scrolls": 1
             },
             {
@@ -227,27 +232,27 @@
             },
             {
               "navigation": 2,
-              "paintedFrames": 3,
+              "paintedFrames": 2,
               "scrolls": 1
             },
             {
               "navigation": 3,
-              "paintedFrames": 3,
-              "scrolls": 0
-            },
-            {
-              "navigation": 4,
-              "paintedFrames": 3,
-              "scrolls": 1
-            },
-            {
-              "navigation": 5,
               "paintedFrames": 2,
               "scrolls": 0
             },
             {
-              "navigation": 6,
+              "navigation": 4,
+              "paintedFrames": 2,
+              "scrolls": 1
+            },
+            {
+              "navigation": 5,
               "paintedFrames": 3,
+              "scrolls": 0
+            },
+            {
+              "navigation": 6,
+              "paintedFrames": 2,
               "scrolls": 1
             },
             {
@@ -257,7 +262,7 @@
             },
             {
               "navigation": 8,
-              "paintedFrames": 3,
+              "paintedFrames": 2,
               "scrolls": 1
             },
             {
@@ -292,6 +297,7 @@
         ],
         "errors": [],
         "motion": {
+          "labelCentres": "passed: front/back, scroll, zoom, landscape",
           "edgeFrameScrollFlipResize": "passed",
           "nativeImageGestures": "passed",
           "localPanelEntry": "mm-panel-enter",
@@ -360,7 +366,7 @@
                 "selector": ".floating-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 1
+                "releaseHandlerMs": 2
               },
               {
                 "selector": ".custom2-button",
@@ -378,7 +384,7 @@
                 "selector": "#left-floating-widget",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0
+                "releaseHandlerMs": 1
               }
             ],
             "dragCommands": 0,
@@ -422,12 +428,12 @@
             },
             {
               "navigation": 7,
-              "paintedFrames": 3,
+              "paintedFrames": 4,
               "scrolls": 0
             },
             {
               "navigation": 8,
-              "paintedFrames": 5,
+              "paintedFrames": 4,
               "scrolls": 1
             },
             {
@@ -461,11 +467,28 @@
       "alive": true,
       "commands": 0,
       "diagnostics": [],
+      "edgeFrame": {
+        "bars": [
+          {
+            "centerError": 0,
+            "height": 402
+          },
+          {
+            "centerError": 0,
+            "height": 402
+          },
+          {
+            "centerError": 0,
+            "height": 402
+          }
+        ],
+        "height": 804
+      },
       "font": {
         "family": "lxgw, \"霞鹜文楷 GB 屏幕阅读版\"",
         "ready": true
       },
-      "frame": "1792768903012:answer",
+      "frame": "1792769660539:answer",
       "hooks": {
         "shown": 1,
         "update": 1
@@ -574,21 +597,14 @@
     "qtEventLoopExitCode": 0,
     "processTeardownCompleted": true,
     "previewFaces": 54,
-    "reviewSteps": 5
+    "reviewSteps": 5,
+    "maxLabelCenterError": 0
   },
-  "physicalMobile": "not tested in this iteration; native image zoom, iOS rubber-band scrolling and Android host flash require retest",
-  "nativeBackends": [
-    "25.9.2",
-    "26.9.3"
-  ],
+  "physicalMobile": "native iOS/Android retest required; no device certification claimed",
   "visual": {
     "status": "passed",
     "baseline": "f67c932",
     "pairs": 108,
-    "interactionScenes": 60,
-    "engines": [
-      "chromium",
-      "webkit"
-    ]
+    "interactionScenes": 60
   }
 }

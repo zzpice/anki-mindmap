@@ -64,6 +64,8 @@ Buttons respond immediately with a 90ms release, panels fade in over 140ms, and 
 location/search navigation briefly outlines the destination. Reduced motion is respected.
 The four edge controls share one stable viewport frame, including restored review zoom.
 [Motion, image and iOS edge details](docs/motion-and-images.md).
+Alpha.10 uses opposing fixed insets for the shared frame and explicit centred upright
+labels, correcting the mobile proportions/alignment reported after alpha.9.
 
 ## How the code fits together
 
