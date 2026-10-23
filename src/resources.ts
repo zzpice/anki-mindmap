@@ -4,7 +4,7 @@ export function resources(valid: () => boolean) {
   const listeners = new Set<() => void>(),
     timers = new Set<number>(),
     frames = new Set<number>(),
-    observers = new Set<MutationObserver>();
+    observers = new Set<MutationObserver | ResizeObserver>();
   return {
     listen(
       target: EventTarget,
@@ -55,6 +55,15 @@ export function resources(valid: () => boolean) {
       });
       observer.observe(target, options);
       observers.add(observer);
+    },
+    resize(target: Element, callback: () => void) {
+      if (!alive || typeof ResizeObserver === "undefined") return () => {};
+      const observer = new ResizeObserver(() => {
+        if (alive && valid()) callback();
+      });
+      observer.observe(target);
+      observers.add(observer);
+      return () => { observer.disconnect(); observers.delete(observer); };
     },
     inspect: () => ({
       listeners: listeners.size,

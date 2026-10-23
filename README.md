@@ -51,6 +51,10 @@ The alpha.2 package restores the original WenKai typography, ivory/bamboo palett
 round bullets, dotted tree connectors, Cloze frosting and fixed edge controls.
 See [same-card visual comparisons](test-packages/visual-comparison/README.md).
 
+Alpha.6 compacts the knowledge heading, places two controls on each edge, and
+keeps reading position and manual expansion across a front-to-back flip.
+New cards still reset; answer state stays native. See [behavior and fallback limits](docs/reading-layout.md).
+
 ## How the code fits together
 
 - `src/core.ts`: one pure state/command implementation for tree, answers, search, overlays
@@ -62,6 +66,8 @@ See [same-card visual comparisons](test-packages/visual-comparison/README.md).
   input and disposal. Front and back share this entry.
 - `src/resources.ts`, `math.ts`, `platform.ts`: cancellable resource ownership and narrow
   client capability boundaries. No pile of window-global patches.
+- `src/reading.ts` handles cancellable viewport anchoring; `continuity.ts` hands only
+  layout geometry from front to back, without persisting answers or note content.
 - `scripts/build_react_package.py`: native backend packaging and collision-safety checks.
 - `tests/react/`: business invariants, browser behavior, 100-cycle lifecycle stress and
   actual Desktop preview/reviewer checks. `tests/legacy/` is historical evidence only.

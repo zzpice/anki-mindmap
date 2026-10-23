@@ -1,11 +1,10 @@
 {
-  "startingDevelopmentCommit": "59a23ca15753f22b8ede5a8d6903e28206581596",
-  "version": "0.2.0-alpha.5",
-  "coreTests": 8,
-  "businessCoreUnchanged": true,
+  "startingDevelopmentCommit": "5cbb26239051c1dea41c444fc40d620113f4c139",
+  "version": "0.2.0-alpha.6",
+  "coreTests": 9,
   "native": {
     "status": "passed",
-    "version": "0.2.0-alpha.5",
+    "version": "0.2.0-alpha.6",
     "testModel": {
       "id": 1792748414,
       "kind": 1,
@@ -45,13 +44,14 @@
     ],
     "assets": {
       "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
-      "_mm_react_e9f0b2e57b88.js": "e9f0b2e57b88814882dd020d186357d9b8c7392c23fe5849df15ca0af90ee5da",
+      "_mm_react_df31754c9dc8.js": "df31754c9dc8f7f4de3588e409535a592083439b2a1005683018666bdede19b5",
       "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
     },
-    "apkgSha256": "fa8c88be63d819de23195ff4c67dd022d4aa0d66a689fcd9192351b7889fabd6"
+    "apkgSha256": "cf5834830e1aa73c1b7cabfa050aac462b800d5cbeaff6ab850e480e3db0d666"
   },
   "browser": {
     "status": "passed",
+    "externalRequests": [],
     "engines": [
       {
         "name": "chromium",
@@ -74,23 +74,15 @@
           "manual wheel cancels automatic navigation",
           "offline emulation + detached file assets"
         ],
-        "errors": [],
-        "transitions": [
-          {
-            "width": 360,
-            "flips": 40,
-            "bundleLoadsDuringFlips": 0,
-            "hiddenImageFrames": "passed",
-            "pendingLoadHostReplacement": "passed"
-          },
-          {
-            "width": 390,
-            "flips": 40,
-            "bundleLoadsDuringFlips": 0,
-            "hiddenImageFrames": "passed",
-            "pendingLoadHostReplacement": "passed"
-          }
-        ],
+        "reading": {
+          "directReveal": "passed",
+          "fullNavigationFlip": "passed",
+          "identicalFrontReset": "passed",
+          "nativeOrdinalIsolation": "passed",
+          "lateLayoutAndManualCancellation": "passed",
+          "disposal": "passed",
+          "expiredAndUnavailableStorage": "passed"
+        },
         "androidNavigation": {
           "navigations": 10,
           "firstPaintPositionAndFont": "passed",
@@ -101,25 +93,25 @@
                 "selector": ".floating-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.30000001192092896
+                "releaseHandlerMs": 0.29999999701976776
               },
               {
                 "selector": ".custom2-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.19999998807907104
+                "releaseHandlerMs": 0.5999999940395355
               },
               {
                 "selector": ".custom-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0
+                "releaseHandlerMs": 0.20000000298023224
               },
               {
                 "selector": "#left-floating-widget",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0.10000000894069672
+                "releaseHandlerMs": 0.09999999403953552
               }
             ],
             "dragCommands": 0,
@@ -134,7 +126,7 @@
             {
               "navigation": 1,
               "paintedFrames": 2,
-              "scrolls": 1
+              "scrolls": 0
             },
             {
               "navigation": 2,
@@ -144,7 +136,7 @@
             {
               "navigation": 3,
               "paintedFrames": 2,
-              "scrolls": 1
+              "scrolls": 0
             },
             {
               "navigation": 4,
@@ -154,17 +146,17 @@
             {
               "navigation": 5,
               "paintedFrames": 2,
-              "scrolls": 1
+              "scrolls": 0
             },
             {
               "navigation": 6,
-              "paintedFrames": 3,
+              "paintedFrames": 2,
               "scrolls": 1
             },
             {
               "navigation": 7,
               "paintedFrames": 2,
-              "scrolls": 1
+              "scrolls": 0
             },
             {
               "navigation": 8,
@@ -174,7 +166,7 @@
             {
               "navigation": 9,
               "paintedFrames": 2,
-              "scrolls": 1
+              "scrolls": 0
             }
           ]
         },
@@ -201,23 +193,15 @@
           "manual wheel cancels automatic navigation",
           "detached file assets with all HTTP(S) blocked; WebKit offline emulator limitation retained"
         ],
-        "errors": [],
-        "transitions": [
-          {
-            "width": 360,
-            "flips": 40,
-            "bundleLoadsDuringFlips": 0,
-            "hiddenImageFrames": "passed",
-            "pendingLoadHostReplacement": "passed"
-          },
-          {
-            "width": 390,
-            "flips": 40,
-            "bundleLoadsDuringFlips": 0,
-            "hiddenImageFrames": "passed",
-            "pendingLoadHostReplacement": "passed"
-          }
-        ],
+        "reading": {
+          "directReveal": "passed",
+          "fullNavigationFlip": "passed",
+          "identicalFrontReset": "passed",
+          "nativeOrdinalIsolation": "passed",
+          "lateLayoutAndManualCancellation": "passed",
+          "disposal": "passed",
+          "expiredAndUnavailableStorage": "passed"
+        },
         "androidNavigation": {
           "navigations": 10,
           "firstPaintPositionAndFont": "passed",
@@ -228,19 +212,19 @@
                 "selector": ".floating-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0
+                "releaseHandlerMs": 1
               },
               {
                 "selector": ".custom2-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0
+                "releaseHandlerMs": 1
               },
               {
                 "selector": ".custom-button",
                 "onRelease": 1,
                 "afterClick": 0,
-                "releaseHandlerMs": 0
+                "releaseHandlerMs": 1
               },
               {
                 "selector": "#left-floating-widget",
@@ -261,7 +245,7 @@
             {
               "navigation": 1,
               "paintedFrames": 2,
-              "scrolls": 1
+              "scrolls": 0
             },
             {
               "navigation": 2,
@@ -271,7 +255,7 @@
             {
               "navigation": 3,
               "paintedFrames": 2,
-              "scrolls": 1
+              "scrolls": 0
             },
             {
               "navigation": 4,
@@ -281,7 +265,7 @@
             {
               "navigation": 5,
               "paintedFrames": 2,
-              "scrolls": 1
+              "scrolls": 0
             },
             {
               "navigation": 6,
@@ -290,8 +274,8 @@
             },
             {
               "navigation": 7,
-              "paintedFrames": 3,
-              "scrolls": 1
+              "paintedFrames": 2,
+              "scrolls": 0
             },
             {
               "navigation": 8,
@@ -301,297 +285,11 @@
             {
               "navigation": 9,
               "paintedFrames": 2,
-              "scrolls": 1
+              "scrolls": 0
             }
           ]
         },
         "lifecycleCycles": 100
-      }
-    ],
-    "externalRequests": []
-  },
-  "edgeLayout": {
-    "status": "passed",
-    "results": [
-      {
-        "name": "chromium",
-        "width": 320,
-        "night": false,
-        "content": {
-          "x": 21,
-          "right": 299
-        },
-        "labels": [
-          {
-            "text": "定位",
-            "x": 1,
-            "right": 13,
-            "color": "rgb(33, 33, 33)"
-          },
-          {
-            "text": "导图",
-            "x": 307,
-            "right": 319,
-            "color": "rgb(33, 33, 33)"
-          },
-          {
-            "text": "展开",
-            "x": 307,
-            "right": 319,
-            "color": "rgb(33, 33, 33)"
-          },
-          {
-            "text": "答案",
-            "x": 307,
-            "right": 319,
-            "color": "rgb(33, 33, 33)"
-          }
-        ]
-      },
-      {
-        "name": "chromium",
-        "width": 320,
-        "night": true,
-        "content": {
-          "x": 21,
-          "right": 299
-        },
-        "labels": [
-          {
-            "text": "定位",
-            "x": 1,
-            "right": 13,
-            "color": "rgb(224, 224, 224)"
-          },
-          {
-            "text": "导图",
-            "x": 307,
-            "right": 319,
-            "color": "rgb(224, 224, 224)"
-          },
-          {
-            "text": "展开",
-            "x": 307,
-            "right": 319,
-            "color": "rgb(224, 224, 224)"
-          },
-          {
-            "text": "答案",
-            "x": 307,
-            "right": 319,
-            "color": "rgb(224, 224, 224)"
-          }
-        ]
-      },
-      {
-        "name": "chromium",
-        "width": 390,
-        "night": false,
-        "content": {
-          "x": 21,
-          "right": 369
-        },
-        "labels": [
-          {
-            "text": "定位",
-            "x": 1,
-            "right": 13,
-            "color": "rgb(33, 33, 33)"
-          },
-          {
-            "text": "导图",
-            "x": 377,
-            "right": 389,
-            "color": "rgb(33, 33, 33)"
-          },
-          {
-            "text": "展开",
-            "x": 377,
-            "right": 389,
-            "color": "rgb(33, 33, 33)"
-          },
-          {
-            "text": "答案",
-            "x": 377,
-            "right": 389,
-            "color": "rgb(33, 33, 33)"
-          }
-        ]
-      },
-      {
-        "name": "chromium",
-        "width": 390,
-        "night": true,
-        "content": {
-          "x": 21,
-          "right": 369
-        },
-        "labels": [
-          {
-            "text": "定位",
-            "x": 1,
-            "right": 13,
-            "color": "rgb(224, 224, 224)"
-          },
-          {
-            "text": "导图",
-            "x": 377,
-            "right": 389,
-            "color": "rgb(224, 224, 224)"
-          },
-          {
-            "text": "展开",
-            "x": 377,
-            "right": 389,
-            "color": "rgb(224, 224, 224)"
-          },
-          {
-            "text": "答案",
-            "x": 377,
-            "right": 389,
-            "color": "rgb(224, 224, 224)"
-          }
-        ]
-      },
-      {
-        "name": "webkit",
-        "width": 320,
-        "night": false,
-        "content": {
-          "x": 21,
-          "right": 299
-        },
-        "labels": [
-          {
-            "text": "定位",
-            "x": 1,
-            "right": 13,
-            "color": "rgb(33, 33, 33)"
-          },
-          {
-            "text": "导图",
-            "x": 307,
-            "right": 319,
-            "color": "rgb(33, 33, 33)"
-          },
-          {
-            "text": "展开",
-            "x": 307,
-            "right": 319,
-            "color": "rgb(33, 33, 33)"
-          },
-          {
-            "text": "答案",
-            "x": 307,
-            "right": 319,
-            "color": "rgb(33, 33, 33)"
-          }
-        ]
-      },
-      {
-        "name": "webkit",
-        "width": 320,
-        "night": true,
-        "content": {
-          "x": 21,
-          "right": 299
-        },
-        "labels": [
-          {
-            "text": "定位",
-            "x": 1,
-            "right": 13,
-            "color": "rgb(224, 224, 224)"
-          },
-          {
-            "text": "导图",
-            "x": 307,
-            "right": 319,
-            "color": "rgb(224, 224, 224)"
-          },
-          {
-            "text": "展开",
-            "x": 307,
-            "right": 319,
-            "color": "rgb(224, 224, 224)"
-          },
-          {
-            "text": "答案",
-            "x": 307,
-            "right": 319,
-            "color": "rgb(224, 224, 224)"
-          }
-        ]
-      },
-      {
-        "name": "webkit",
-        "width": 390,
-        "night": false,
-        "content": {
-          "x": 21,
-          "right": 369
-        },
-        "labels": [
-          {
-            "text": "定位",
-            "x": 1,
-            "right": 13,
-            "color": "rgb(33, 33, 33)"
-          },
-          {
-            "text": "导图",
-            "x": 377,
-            "right": 389,
-            "color": "rgb(33, 33, 33)"
-          },
-          {
-            "text": "展开",
-            "x": 377,
-            "right": 389,
-            "color": "rgb(33, 33, 33)"
-          },
-          {
-            "text": "答案",
-            "x": 377,
-            "right": 389,
-            "color": "rgb(33, 33, 33)"
-          }
-        ]
-      },
-      {
-        "name": "webkit",
-        "width": 390,
-        "night": true,
-        "content": {
-          "x": 21,
-          "right": 369
-        },
-        "labels": [
-          {
-            "text": "定位",
-            "x": 1,
-            "right": 13,
-            "color": "rgb(224, 224, 224)"
-          },
-          {
-            "text": "导图",
-            "x": 377,
-            "right": 389,
-            "color": "rgb(224, 224, 224)"
-          },
-          {
-            "text": "展开",
-            "x": 377,
-            "right": 389,
-            "color": "rgb(224, 224, 224)"
-          },
-          {
-            "text": "答案",
-            "x": 377,
-            "right": 389,
-            "color": "rgb(224, 224, 224)"
-          }
-        ]
       }
     ]
   },
@@ -601,26 +299,46 @@
     "aqt": "26.9.3",
     "qt": "6.11.0",
     "pyqt": "6.11.0",
-    "qtEventLoopExitCode": 0,
-    "processTeardownCompleted": true,
-    "previewSides": 52,
-    "reviewStages": 5,
-    "unmountResources": {
-      "effects": 0,
-      "frames": 0,
-      "listeners": 0,
-      "observers": 0,
-      "reactRoots": 0,
-      "subscribers": 0,
-      "timers": 0
-    }
+    "autoSync": false,
+    "limitations": [
+      "no physical mobile devices or gamepad",
+      "Desktop test is software-driven in isolated profile; no human touchscreen/keyboard usability certification"
+    ],
+    "nativePreviews": 52,
+    "reviewerStages": 5
   },
-  "scope": {
-    "edgeWidthUnchanged": true,
-    "contentMarginsUnchanged": true,
-    "knowledgeTitlesUnchanged": true,
-    "themePaletteAndAnimationsUnchanged": true
+  "visual": {
+    "status": "passed",
+    "nativeDefaultPairs": 108,
+    "interactionPairs": 60,
+    "widths": [
+      1280,
+      390,
+      320
+    ],
+    "engines": [
+      "Chromium",
+      "WebKit"
+    ],
+    "intentionalDifferences": [
+      "compact knowledge heading",
+      "two controls on each edge",
+      "keep reading position across front-to-back"
+    ]
   },
-  "physicalClients": "Android touch responsiveness after this patch awaits device retest",
-  "mainModified": false
+  "edgeLabels": {
+    "status": "passed",
+    "views": 8,
+    "contentGuttersUnchanged": true
+  },
+  "physicalDevices": {
+    "AnkiDroid": "not retested for alpha.6",
+    "AnkiMobile": "not retested for alpha.6"
+  },
+  "limitations": [
+    "No universal card ID in standard template: one-use layout handoff matches source digest, deck, native ordinal and topology; a new front always resets it.",
+    "Dual WebViews, missing metadata, expired or unavailable session storage fall back to normal first presentation.",
+    "Long content still expands naturally below the reading anchor; scroll boundaries can limit compensation."
+  ],
+  "mainUnchanged": true
 }

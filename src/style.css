@@ -107,6 +107,32 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
   left: auto;
   right: 0;
 }
+/* Compact context heading; keep the field and title text intact. */
+#mm-react [data-mm-content] > .title {
+  min-height: 0;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  line-height: 28px;
+  font-size: 20px;
+}
+/* Navigation on the left, content display controls on the right. */
+#mm-react #left-floating-widget {
+  left: -1em;
+  right: auto;
+  height: 50%;
+}
+#mm-react #left-floating-widget .mm-edge-label {
+  left: auto;
+  right: 0;
+}
+#mm-react .custom2-button {
+  top: 0;
+  height: 50%;
+}
+#mm-react .custom-button {
+  top: 50%;
+  height: 50%;
+}
 #mm-react .search-box:not([hidden]) {
   visibility: visible;
   height: auto;

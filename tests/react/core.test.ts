@@ -16,6 +16,19 @@ const model: ContentModel = {
   ],
 };
 
+test("restoring layout validates branches and never restores answers or temporary UI", () => {
+  const state = initialState(model, "back", "paper");
+  const next = reduce(state, { type: "restoreLayout", expanded: { n0: false, unknown: true }, zoom: 8 }, model);
+  assert.equal(next.expanded.n0, false);
+  assert.equal(next.expanded.n1, state.expanded.n1);
+  assert.equal(next.expanded.unknown, undefined);
+  assert.equal(next.zoom, 2);
+  assert.strictEqual(next.revealed, state.revealed);
+  assert.strictEqual(next.groups, state.groups);
+  assert.equal(next.searchOpen, false);
+  assert.equal(next.overlay, null);
+});
+
 test("folding cannot change any answer; reveal cannot change branch preferences", () => {
   const start = initialState(model, "front", "paper");
   const revealed = reduce(start, { type: "toggleAnswer", id: "a0" }, model);

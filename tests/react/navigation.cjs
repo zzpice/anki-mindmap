@@ -51,8 +51,8 @@ module.exports = async function navigation(browser, base, renders) {
       "raw tree or fallback font was visible before host load completed");
     assert.ok(result.paints.every((p) => p.y >= 0 && p.y + p.height <= 780),
       "tree was painted at the pre-location/reset position");
-    assert.equal(result.scrolls, 1);
-    assert.equal(result.resources.timers, 0);
+    assert.equal(result.scrolls, i % 2 ? 0 : 1, "back resumes reading; new front locates once");
+    assert.equal(result.resources.timers, i % 2 ? 1 : 0, "only a restored back owns a bounded reading hold");
     rows.push({ navigation: i, paintedFrames: result.paints.length, scrolls: result.scrolls });
   }
   const edgeTouch = await require("./edge-touch.cjs")(page);

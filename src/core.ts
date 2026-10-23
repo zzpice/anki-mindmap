@@ -52,7 +52,8 @@ export type Command =
   | { type: "searchMove"; direction: number }
   | { type: "theme"; value: Theme }
   | { type: "overlay"; value: Overlay }
-  | { type: "zoom"; value: number };
+  | { type: "zoom"; value: number }
+  | { type: "restoreLayout"; expanded: State["expanded"]; zoom: number };
 
 export function initialState(
   model: ContentModel,
@@ -111,6 +112,14 @@ export function reduce(
     intent: state.intent + (command.type === "setMatches" ? 0 : 1),
   };
   switch (command.type) {
+    case "restoreLayout":
+      return {
+        ...state,
+        expanded: Object.fromEntries(model.branches.map(id => [id,
+          typeof command.expanded?.[id] === "boolean" ? command.expanded[id] : state.expanded[id],
+        ])),
+        zoom: Number.isFinite(command.zoom) ? Math.max(0.5, Math.min(2, command.zoom)) : state.zoom,
+      };
     case "toggleNode": {
       if (!model.branches.includes(command.id)) return state;
       const searchExpanded = { ...state.searchExpanded };

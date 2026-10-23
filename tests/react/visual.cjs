@@ -236,7 +236,8 @@ async function captureInteractions(page, base, engine, out) {
           for (let i = 0; i < pair.main.tree.length; i++)
             for (const field of ["x", "y", "width", "height"])
               assert.ok(
-                Math.abs(pair.main.tree[i][field] - pair.react.tree[i][field]) <
+                Math.abs((pair.main.tree[i][field] - (field === "y" ? pair.main.tree[0].y : 0)) -
+                  (pair.react.tree[i][field] - (field === "y" ? pair.react.tree[0].y : 0))) <
                   1,
                 `${device} ${side} ${stage} node ${i} ${field}`,
               );
@@ -330,16 +331,21 @@ async function captureInteractions(page, base, engine, out) {
                   "padding",
                   "margin",
                 ]) {
-                  assert.equal(
-                    pair.react.title?.[field],
-                    pair.main.title?.[field],
-                    `${engineName} ${device} ${key} ${side} title ${field}`,
-                  );
+                  // Alpha.6 intentionally compacts only the context heading.
+                  if (!["size", "line", "padding", "margin"].includes(field))
+                    assert.equal(pair.react.title?.[field], pair.main.title?.[field],
+                      `${engineName} ${device} ${key} ${side} title ${field}`);
                   assert.equal(
                     pair.react.body[field],
                     pair.main.body[field],
                     `${engineName} ${device} ${key} ${side} body ${field}`,
                   );
+                }
+                if (pair.react.title) {
+                  assert.equal(pair.react.title.size, "20px");
+                  assert.equal(pair.react.title.line, "28px");
+                  assert.equal(pair.react.title.padding, "0px 0px 6px 10px");
+                  assert.equal(pair.react.title.margin, "0px 0px 10px");
                 }
                 for (const field of [
                   "x",
@@ -369,11 +375,15 @@ async function captureInteractions(page, base, engine, out) {
                     "margin",
                     "shadow",
                   ])
-                    assert.equal(
-                      pair.react[control][field],
-                      pair.main[control][field],
+                    if (control !== "treeButton" || !["y", "height"].includes(field)) assert.equal(
+                      control === "bullet" && field === "y"
+                        ? pair.react[control][field] - pair.react.nodes[0].y : pair.react[control][field],
+                      control === "bullet" && field === "y"
+                        ? pair.main[control][field] - pair.main.nodes[0].y : pair.main[control][field],
                       `${engineName} ${device} ${theme} ${mode} ${key} ${side} ${control} ${field}`,
                     );
+                assert.equal(pair.react.treeButton.y, 0);
+                assert.equal(pair.react.treeButton.height, viewport.height / 2);
                 assert.equal(
                   pair.react.frosted?.blur,
                   pair.main.frosted?.blur,
@@ -402,8 +412,8 @@ async function captureInteractions(page, base, engine, out) {
                     assert.ok(
                       typeof pair.main.nodes[i][field] === "number"
                         ? Math.abs(
-                            pair.react.nodes[i][field] -
-                              pair.main.nodes[i][field],
+                            (pair.react.nodes[i][field] - (field === "y" ? pair.react.nodes[0].y : 0)) -
+                              (pair.main.nodes[i][field] - (field === "y" ? pair.main.nodes[0].y : 0)),
                           ) < 1
                         : pair.react.nodes[i][field] ===
                             pair.main.nodes[i][field],

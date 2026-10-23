@@ -9,6 +9,8 @@ import { platform } from "./platform";
 import { resources } from "./resources";
 import { presentCard } from "./presentation";
 import { bindTap } from "./tap";
+import { reviewContinuity } from "./continuity";
+import { readingPosition } from "./reading";
 
 const SLOT = Symbol.for("anki-mindmap.react.runtime.v1");
 const PREF = "anki_mindmap.preferences.v1";
@@ -82,6 +84,10 @@ export function mount(host: HTMLElement): Runtime {
     /* review remains usable */
   }
   const store = createStore(renderer.model, side, theme);
+  const continuity = reviewContinuity(host, side, renderer.model);
+  if (continuity.restored) store.dispatch({
+    type: "restoreLayout", expanded: continuity.restored.expanded, zoom: continuity.restored.zoom,
+  });
   // The skin owns these host decorations only during this card's lifetime.
   // In particular, unrelated Anki note types must never inherit our page margins.
   const body = doc.body,
@@ -104,6 +110,16 @@ export function mount(host: HTMLElement): Runtime {
     host.contains(ui) &&
     renderer.isIntact();
   const scope = resources(valid);
+  const reading = readingPosition(content, scope);
+  const remember = () => {
+    if (side === "front") continuity.save(store.getSnapshot(), reading.capture());
+  };
+  let rememberQueued = false;
+  const queueRemember = () => {
+    if (side !== "front" || rememberQueued) return;
+    rememberQueued = true;
+    scope.frame(() => { rememberQueued = false; remember(); });
+  };
   const project = () => {
     if (!valid()) return;
     renderer.project(store.getSnapshot());
@@ -133,6 +149,10 @@ export function mount(host: HTMLElement): Runtime {
     if (!valid()) return;
     cancelAuto?.();
     cancelAuto = undefined;
+    if (command.type !== "interrupt") reading.cancel();
+    const keepReading = ["toggleAnswer", "toggleGroup", "toggleOther", "revealNext", "hideLast"].includes(command.type);
+    const point = keepReading ? reading.capture(command.type === "toggleAnswer"
+      ? renderer.activeElement(command.id) : undefined) : undefined;
     const before = store.getSnapshot();
     if (!store.dispatch(command)) return;
     commands++;
@@ -148,12 +168,20 @@ export function mount(host: HTMLElement): Runtime {
       store.getSnapshot().query
     )
       updateSearch(false);
+    if (keepReading) reading.hold(point);
     if (command.type === "locate") scroll(renderer.firstActive());
     if (command.type === "revealNext" || command.type === "hideLast") {
       const changed = renderer.model.active.find(
         (o) => before.revealed[o.id] !== store.getSnapshot().revealed[o.id],
       );
-      if (changed) scroll(renderer.activeElement(changed.id));
+      const target = changed && renderer.activeElement(changed.id);
+      if (target) {
+        const top = target.getBoundingClientRect().top;
+        if (top < 16 || top > innerHeight - 48) {
+          reading.cancel();
+          scroll(target);
+        }
+      }
     }
     if (command.type === "searchMove") {
       renderer.highlight(store.getSnapshot().selected);
@@ -170,6 +198,9 @@ export function mount(host: HTMLElement): Runtime {
         /* state still updates */
       }
     }
+    // Scroll/pointer bursts need at most one geometry snapshot per frame.
+    if (command.type === "interrupt") queueRemember();
+    else remember();
   };
   const activateContent = (target: Element, event: Event): boolean => {
     const annotation = target.closest<HTMLAnchorElement>(
@@ -243,6 +274,9 @@ export function mount(host: HTMLElement): Runtime {
   );
   scope.listen(doc, "keydown", (event) => {
     const e = event as KeyboardEvent;
+    reading.cancel();
+    cancelAuto?.();
+    cancelAuto = undefined;
     if (e.isComposing || e.repeat) return;
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "f") {
       e.preventDefault();
@@ -309,6 +343,7 @@ export function mount(host: HTMLElement): Runtime {
       // Wheel/touch/pointer input still cancels our pending initial location.
       if (name === "scroll" && html.classList.contains("android") &&
           !host.dataset.mmPresented) return;
+      if (name !== "scroll") reading.cancel();
       dispatch({ type: "interrupt" });
     }, {
       passive: true,
@@ -382,6 +417,7 @@ export function mount(host: HTMLElement): Runtime {
       }
       held.set(key, pressed);
       if (!waitingForHost && Math.abs(gp.axes[1] ?? 0) > 0.25) {
+        reading.cancel();
         dispatch({ type: "interrupt" });
         window.scrollBy(0, gp.axes[1] * dt * 0.6);
       }
@@ -428,7 +464,10 @@ export function mount(host: HTMLElement): Runtime {
   project();
   // Position before the next paint rather than showing the top of the tree
   // for 100 ms on every flip. Manual input still cancels this card-owned frame.
-  cancelAuto = presentCard(host, scope, () => scroll(renderer.firstActive()));
+  cancelAuto = presentCard(host, scope, () => {
+    if (!reading.hold(continuity.restored?.point)) scroll(renderer.firstActive());
+    remember();
+  });
   scope.observe(doc.documentElement, () => {
     if (!valid()) runtime.dispose();
   });
@@ -466,6 +505,8 @@ export function mount(host: HTMLElement): Runtime {
     }),
     dispose() {
       if (!alive) return;
+      remember();
+      reading.cancel();
       alive = false;
       scope.dispose();
       unsubscribe();

@@ -11,6 +11,7 @@ const renders = JSON.parse(
   fs.readFileSync(path.join(ROOT, "build/react-renders.json")),
 );
 const result = { status: "running", engines: [], externalRequests: [] };
+const activeBrowsers = [];
 const server = http.createServer((req, res) => {
   const p = path.join(site, new URL(req.url, "http://local").pathname);
   if (!fs.existsSync(p) || fs.statSync(p).isDirectory()) {
@@ -43,6 +44,7 @@ async function run() {
     ["webkit", webkit],
   ]) {
     const browser = await engine.launch({ headless: true });
+    activeBrowsers.push(browser);
     const context = await browser.newContext();
     const page = await context.newPage();
     const record = {
@@ -145,6 +147,7 @@ async function run() {
     record.checks.push(
       "native reviewer body-class reset preserves skin and host night mode without changing business state",
     );
+    record.reading = await require("./reading.cjs")(browser, base, renders);
     record.transitions = await require("./transitions.cjs")(browser, base, renders);
     record.androidNavigation = await require("./navigation.cjs")(browser, base, renders);
     record.checks.push("mobile-size flip first-paint image guards, inert diagrams, cached runtime and pending-load replacement");
@@ -527,7 +530,8 @@ run()
     console.error(e);
     process.exitCode = 1;
   })
-  .finally(() => {
+  .finally(async () => {
+    await Promise.allSettled(activeBrowsers.map(browser => browser.close()));
     fs.writeFileSync(
       path.join(ROOT, "build/browser-results.json"),
       JSON.stringify(result, null, 2),
