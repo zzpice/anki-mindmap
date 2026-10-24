@@ -5,8 +5,16 @@ export function resources(valid: () => boolean) {
     timers = new Set<number>(),
     frames = new Set<number>(),
     observers = new Set<MutationObserver | ResizeObserver>(),
-    animations = new Set<Animation>();
+    animations = new Set<Animation>(),
+    cleanups: (() => void)[] = [];
+  const safely = (run: () => void) => {
+    try { run(); } catch (error) { console.warn("Mindmap cleanup:", error); }
+  };
   return {
+    defer(cleanup: () => void) {
+      if (alive) cleanups.push(cleanup);
+      else safely(cleanup);
+    },
     listen(
       target: EventTarget,
       type: string,
@@ -88,19 +96,20 @@ export function resources(valid: () => boolean) {
     dispose() {
       if (!alive) return;
       alive = false;
-      for (const remove of listeners) remove();
+      for (const remove of listeners) safely(remove);
       listeners.clear();
       for (const id of timers) clearTimeout(id);
       timers.clear();
       for (const id of frames) cancelAnimationFrame(id);
       frames.clear();
-      for (const observer of observers) observer.disconnect();
+      for (const observer of observers) safely(() => observer.disconnect());
       observers.clear();
       for (const animation of animations) {
         animation.onfinish = animation.oncancel = null;
-        animation.cancel();
+        safely(() => animation.cancel());
       }
       animations.clear();
+      while (cleanups.length) safely(cleanups.pop()!);
     },
   };
 }

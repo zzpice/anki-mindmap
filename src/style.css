@@ -13,27 +13,16 @@
      which also resizes every fixed edge control. Keep all columns reachable. */
   overflow-x: auto;
 }
-/* Match the card's background while its local runtime is loading. This paint
-   hint has no business state and cannot affect another note type after removal. */
-body:has(#mm-react:not([data-ready])) {
-  background-color: rgba(254, 251, 240, 0.7);
-}
-body:has(#mm-react[data-mm-paint-theme="bamboo"]:not([data-ready])) {
-  background-color: #f0f4e8;
-}
-body.nightMode:has(#mm-react:not([data-ready])) {
-  background-color: #242424;
-}
 /* Android navigates the whole document on each flip. Show the projected tree
    only after the host's load-time scroll reset and local font/media layout.
    iOS/Desktop retain their existing immediate presentation path. */
-html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
+html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed]):not([data-mm-disposed])) {
   visibility: hidden;
 }
 /* The host can paint inserted HTML before running template scripts. Suppress
    transient custom-answer images until core.ts has projected their state.
    Unknown wrappers become readable again as soon as mounting completes. */
-#mm-react:where(:not([data-ready]):not([data-mm-failed])) cloze2 {
+#mm-react:where(:not([data-ready]):not([data-mm-failed]):not([data-mm-disposed])) cloze2 {
   display: none;
 }
 #mm-react .cloze cloze2 {
@@ -201,7 +190,7 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
   cursor: pointer;
 }
 #mm-react .mm-dialog-annotation {
-  position: absolute;
+  position: fixed;
   transform: none;
   min-height: 0;
   min-width: 20vw;
@@ -298,4 +287,23 @@ html.android #mm-react:where(:not([data-mm-presented]):not([data-mm-failed])) {
     transition: none !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Content zoom must not squeeze navigation controls out of a narrow viewport.
+   Edge geometry keeps its existing authority; these panels cancel only the
+   card's zoom, retaining their normal font and touch size at 0.5x through 2x. */
+#mm-react .search-box,
+#mm-react .mm-dialog,
+#mm-react button.floating {
+  zoom: calc(1 / var(--mm-view-zoom, 1));
+}
+#mm-react .search-box .sb-row {
+  flex-wrap: wrap;
+}
+#mm-react .search-box input[type="text"] {
+  font-size: 16px;
+  flex-basis: 80px;
+}
+#mm-react .mm-dialog[open] {
+  display: block;
 }

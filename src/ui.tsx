@@ -1,3 +1,4 @@
+import { prepareNoteLinks } from "./links";
 import {
   useEffect,
   useLayoutEffect,
@@ -217,6 +218,7 @@ export function Interface({
           diagram={diagram}
           annotation={annotation}
           annotationAnchor={annotationAnchor}
+          zoom={state.zoom}
           close={() => dispatch({ type: "overlay", value: null })}
         />
       )}
@@ -233,23 +235,31 @@ function OverlayView({
   diagram,
   annotation,
   annotationAnchor,
+  zoom,
   close,
 }: {
   overlay: NonNullable<Overlay>;
   diagram: string;
   annotation: (id: string) => string | undefined;
   annotationAnchor: (id: string) => DOMRect | undefined;
+  zoom: number;
   close: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const rich = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (rich.current) prepareNoteLinks(rich.current);
+  }, [overlay, diagram, annotation]);
   useLayoutEffect(() => {
     const dialog = ref.current!,
       previous = document.activeElement as HTMLElement | null;
     if (!dialog.open) {
-      dialog.show();
+      if (typeof dialog.show === "function") dialog.show();
+      else dialog.setAttribute("open", "");
     }
     return () => {
-      dialog.close();
+      if (typeof dialog.close === "function") dialog.close();
+      else dialog.removeAttribute("open");
       if (previous?.isConnected) previous.focus();
     };
   }, []);
@@ -260,9 +270,14 @@ function OverlayView({
     if (!anchor) return;
     // Geometry is presentation only. core.ts remains the authority for the
     // open annotation; the native-content module only supplies its anchor.
-    dialog.style.top = `${anchor.bottom + window.scrollY}px`;
-    dialog.style.left = `${Math.max(0, Math.min(anchor.left, document.documentElement.clientWidth - dialog.getBoundingClientRect().width))}px`;
-  }, [overlay, annotationAnchor]);
+    const bounds = dialog.getBoundingClientRect();
+    const width = document.documentElement.clientWidth;
+    const height = document.documentElement.clientHeight;
+    const below = anchor.bottom + 6;
+    dialog.style.top = `${Math.max(12, Math.min(below + bounds.height <= height - 12
+      ? below : anchor.top - bounds.height - 6, height - bounds.height - 12))}px`;
+    dialog.style.left = `${Math.max(16, Math.min(anchor.left, width - bounds.width - 16))}px`;
+  }, [overlay, annotationAnchor, zoom]);
   return (
     <dialog
       className={`mm-dialog mm-dialog-${overlay.kind}`}
@@ -277,14 +292,17 @@ function OverlayView({
           ×
         </button>
       </div>
-      <div
-        className="mm-rich-overlay"
-        dangerouslySetInnerHTML={{
-          __html: overlay.kind === "diagram"
-            ? diagram
+      {overlay.kind === "note" ? (
+        <div className="mm-rich-overlay" role="status">
+          当前客户端暂不支持直接打开这条互链。请在 Anki 浏览中搜索：
+          <p><code>nid:{overlay.nid}</code></p>
+        </div>
+      ) : (
+        <div ref={rich} className="mm-rich-overlay" dangerouslySetInnerHTML={{
+          __html: overlay.kind === "diagram" ? diagram
             : (annotation(overlay.id) ?? "批注来源暂不可用，原文仍保留。"),
-        }}
-      />
+        }} />
+      )}
     </dialog>
   );
 }

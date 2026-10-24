@@ -85,6 +85,8 @@ def build():
         try:
             # A pre-existing real-identity model and synthetic scheduled note must remain untouched.
             production=make_model(target,PRODUCTION_MODEL_ID,'思维导图',templates)
+            production['css']='/* synthetic existing legacy skin */ body { margin: 88px; }'
+            target.models.update(production)
             note=target.new_note(production);note.guid='synthetic-existing-production';note.fields=['私人笔记保持不动','<p>原导图</p>','{{c1::已有答案}}'];target.add_note(note,1)
             card=note.cards()[0];card.reps=9;card.ivl=15;target.update_card(card)
             before_note=target.db.all('select * from notes where mid=?',PRODUCTION_MODEL_ID)
@@ -100,7 +102,8 @@ def build():
                 assert [c.ord for c in target.get_note(nid).cards()]==[c['ord'] for c in renders[key]]
             for name,data in assets.items():assert (Path(target.media.dir())/name).read_bytes()==data
             # Production compatibility: template-only update does not regenerate identity or scheduling.
-            production['tmpls'][0].update(qfmt=templates['front'],afmt=templates['back']);target.models.update(production)
+            production['tmpls'][0].update(qfmt=templates['front'],afmt=templates['back']);production['css']='';target.models.update(production)
+            assert target.models.get(PRODUCTION_MODEL_ID)['css']==''
             assert target.db.all('select * from notes where mid=?',PRODUCTION_MODEL_ID)==before_note
             assert target.db.all('select * from cards where nid=?',note.id)==before_card
             target.import_anki_package(ImportAnkiPackageRequest(package_path=str(package)))
@@ -118,7 +121,7 @@ def build():
     links=''.join(f'<li><a href="{key}-{i}-front.html">{key} c{card["ord"]+1}</a></li>' for key,cards in renders.items() for i,card in enumerate(cards))
     (SITE/'index.html').write_text('<!doctype html><meta charset="utf-8"><h1>React 本地调试</h1><ul>'+links+'</ul>')
     (BUILD/'react-renders.json').write_text(json.dumps(renders,ensure_ascii=False))
-    manifest={'version':(ROOT/'VERSION').read_text().strip(),'testModel':test_identity,'productionModelId':PRODUCTION_MODEL_ID,'notes':len(cases),'cards':sum(map(len,renders.values())),'checks':['native same/multiple/gapped/nested Cloze ordinals','full fields/media/identity round trip','existing production model/note/scheduling untouched by test import','repeat import does not duplicate test notes','template update preserves original note/card rows'],'assets':{name:sha(data) for name,data in assets.items()},'apkgSha256':sha(package.read_bytes())}
+    manifest={'sourceFingerprint':json.loads((BUILD/'runtime/source-fingerprint.json').read_text())['sourceFingerprint'],'version':(ROOT/'VERSION').read_text().strip(),'testModel':test_identity,'productionModelId':PRODUCTION_MODEL_ID,'notes':len(cases),'cards':sum(map(len,renders.values())),'checks':['native same/multiple/gapped/nested Cloze ordinals','full fields/media/identity round trip','existing production model/note/scheduling untouched by test import','repeat import does not duplicate test notes','template update preserves original note/card rows'],'assets':{name:sha(data) for name,data in assets.items()},'apkgSha256':sha(package.read_bytes())}
     (OUT/'react-test-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2))
     (BUILD/'native-results.json').write_text(json.dumps({'status':'passed',**manifest},ensure_ascii=False,indent=2))
     (OUT/'SHA256SUMS').write_text(sha(package.read_bytes())+'  '+package.name+'\n')

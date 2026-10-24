@@ -2,6 +2,7 @@
 
 | 脚本 | 用途 |
 | --- | --- |
+| `test_build.mjs` | Vite 与浏览器测试共用的源码摘要，拒绝陈旧测试产物 |
 | `check_react.py` | 原生身份、字段、源码范围和离线约束；由 npm run check 调用 |
 | `build_react_package.py` | 唯一正常构包入口；生成独立测试 APKG、摘要及本地调试面 |
 | `prepare_visual_comparison.py` | 从固定旧版 f67c932 准备官方原生渲染和 reviewer 资源 |

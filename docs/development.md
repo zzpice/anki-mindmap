@@ -27,7 +27,7 @@ git fetch --no-tags --depth=1 origin f67c932a02bef79f0feab1121c6783a9a3ff9e17
 .venv/bin/python tests/react/desktop.py
 ```
 
-它只创建独立临时资料，禁用自动同步；不读取个人集合。检查覆盖 54 个预览面和实际 reviewer 的揭示、翻面、评分、下一张卡及卸载。不要把浏览器手机视口当作 AnkiMobile / AnkiDroid 实机。
+它只创建独立临时资料，禁用自动同步；不读取个人集合。检查覆盖 56 个预览面和实际 reviewer 的揭示、翻面、评分、下一张卡及卸载。不要把浏览器手机视口当作 AnkiMobile / AnkiDroid 实机。
 
 ## 代码如何协作
 
@@ -40,6 +40,8 @@ git fetch --no-tags --depth=1 origin f67c932a02bef79f0feab1121c6783a9a3ff9e17
 | `src/resources.ts` | 跟踪事件、计时器、帧、动画、观察器和订阅，随卡片同步释放 |
 | `src/reading.ts` / `continuity.ts` | 可取消的阅读锚定与一次性正反面布局交接，不携带答案 |
 | `src/viewport.ts` | 将当前根布局高度投影为卡片自己的 CSS 变量，CSS 统一控制边栏几何 |
+| `src/presentation.ts` / `motion.ts` | 有上限的呈现等待与可取消定位反馈 |
+| `src/links.ts` | 在调用者拥有的富文本区域转换互链，正文和弹窗共用 |
 | `src/tap.ts` / `platform.ts` / `math.ts` | 手势识别、有限客户端能力和宿主公式接口 |
 | `src/visual/original.css` / `style.css` | 富文本与主题皮肤／当前控件；每类规则只在所属文件定义 |
 
@@ -49,7 +51,7 @@ React 界面和原生正文是相邻的两个根，不能互相随意改写。�
 
 每次挂载有自己的 store 和资源作用域。宿主替换、重复挂载和 pagehide 都会清理旧卡；异步回调检查当前渲染是否仍有效。卸载只恢复仍由自己拥有的正文，不能覆盖宿主已经换上的下一张卡。
 
-主题是长期偏好。同一张卡的正面到背面可一次性交接展开路径、缩放和阅读位置；新正面重置，答案、搜索和弹窗不交接。匹配依据及局限见[阅读位置](reading-layout.md)。边栏不缓存正面坐标；根高度变化才更新布局投影，卸载移除 CSS 变量和监听。详见[布局边界](ios-layout-viewport.md)。
+主题是长期偏好。同一张卡的正面到背面可一次性交接其他分支的展开路径、缩放和阅读位置；当前答案必要路径重开，之后仍可手动折叠。新正面重置，答案、搜索和弹窗不交接。匹配依据及局限见[阅读位置](reading-layout.md)。边栏不缓存正面坐标；根高度变化才更新布局投影，卸载移除 CSS 变量和监听。详见[布局边界](ios-layout-viewport.md)。
 
 Anki 在执行模板后可能重置 body 类名。runtime 只恢复自己拥有的两个装饰类，保留 nightMode 等宿主类；观察器仍由同一资源作用域清理。用户滚动或操作只取消自动定位、合并记录阅读位置，不改变业务 store 来触发界面刷新。
 
@@ -63,3 +65,11 @@ Anki 在执行模板后可能重置 body 类名。runtime 只恢复自己拥有�
 - `scripts/sources.py` 仅支持固定旧版编译器的 include 展开；React 构包不依赖旧业务代码。
 - `tests/react/layout-probe.html` 只进入诊断包，记录不含答案的布局数字；不派发命令或改变应用位置。
 - 旧版预览壳、脚本别名、重复旧测试和过期截图不再复制到当前树；原文件可从[历史提交](history/README.md)查看。提取指纹文件不变。
+
+## 失败恢复与测试产物
+
+`resources.defer` 把 UI、正文恢复、装饰类和订阅等收敛到同一个资源作用域，按逆序逐项释放，单项失败不阻断后续清理。挂载未完成时也走这条回滚路径。卸载后的 Android 正文保持可读；文档加载器仅保存代码和宿主引用，以单个 pageshow 监听在缓存页面恢复时新建卡片作用域，不复活旧 store。
+
+Vite 记录源码摘要，官方构包将它写入 native-results。浏览器测试启动前核对摘要；改源码后必须先 build 再构包，不能复用旧夹具。`tests/react/reliability.cjs` 覆盖异常注入、恢复、包装、链接、首屏与缩放布局；这些属于引擎证据，不是手机认证。
+
+更新已有正式模型时，完整替换 qfmt/afmt 并把模型 CSS 字段设为空，因为新样式已内联。不要改字段、模型/模板身份或排程。`cards/templates/mindmap/style.css` 仅为历史契约占位；实际样式入口是 `src/entry.tsx` 导入的两个 CSS。构包测试包含已有非空旧 CSS 的合成升级，仅操作临时集合。

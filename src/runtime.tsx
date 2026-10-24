@@ -59,474 +59,522 @@ export function mount(host: HTMLElement): Runtime {
     ui = host.querySelector<HTMLElement>("[data-mm-ui]");
   if (!content || !ui) throw Error("Anki native content container unavailable");
   const originalContent = content.innerHTML;
-  const fallback = host.querySelector<HTMLElement>("[data-mm-notes-fallback]");
-  const usedFallback =
-    !content.querySelector(".cloze") && !!fallback?.querySelector(".cloze");
-  if (usedFallback) {
-    const section = document.createElement("section");
-    section.className = "mm-field-fallback";
-    const label = document.createElement("p");
-    label.className = "mm-context-label";
-    label.textContent = "补充字段中的当前考查";
-    section.append(
-      label,
-      ...[...fallback!.childNodes].map((n) => n.cloneNode(true)),
-    );
-    content.append(section);
-  }
-  const side: Side = host.dataset.side === "back" ? "back" : "front";
-  const math = nativeMath(),
-    renderer = readContent(content, side, math),
-    bridge = platform();
-  let theme: Theme = "paper";
-  try {
-    const saved = JSON.parse(localStorage.getItem(PREF) ?? "null");
-    if (saved?.version === 1 && saved.theme === "bamboo") theme = "bamboo";
-  } catch {
-    /* review remains usable */
-  }
-  const store = createStore(renderer.model, side, theme);
-  const continuity = reviewContinuity(host, side, renderer.model);
-  if (continuity.restored) store.dispatch({
-    type: "restoreLayout", expanded: continuity.restored.expanded, zoom: continuity.restored.zoom,
-  });
-  // The skin owns these host decorations only during this card's lifetime.
-  // In particular, unrelated Anki note types must never inherit our page margins.
-  const body = doc.body,
-    html = doc.documentElement;
-  const previousTheme = body.getAttribute("data-mm-theme");
-  const hadBodyClass = body.classList.contains("mm-review");
-  const hadHtmlClass = html.classList.contains("mm-review-document");
-  body.classList.add("mm-review");
-  html.classList.add("mm-review-document");
-  let alive = true,
-    effects = 0,
-    scrolls = 0,
-    commands = 0;
-  const valid = () =>
-    alive &&
-    host.isConnected &&
-    content.isConnected &&
-    ui.isConnected &&
-    host.contains(content) &&
-    host.contains(ui) &&
-    renderer.isIntact();
+  let alive = true;
+  let renderer: ReturnType<typeof readContent> | undefined;
+  const valid = () => alive && host.isConnected && content.isConnected && ui.isConnected &&
+    host.contains(content) && host.contains(ui) && !!renderer?.isIntact();
   const scope = resources(valid);
-  const releaseViewport = bindReviewViewport(host, scope);
-  const reading = readingPosition(content, scope);
-  const cue = navigationCue(scope);
-  const remember = () => {
-    if (side === "front") continuity.save(store.getSnapshot(), reading.capture());
-  };
-  let rememberQueued = false;
-  const queueRemember = () => {
-    if (side !== "front" || rememberQueued) return;
-    rememberQueued = true;
-    scope.frame(() => { rememberQueued = false; remember(); });
-  };
-  const project = () => {
-    if (!valid()) return;
-    renderer.project(store.getSnapshot());
-    const theme = store.getSnapshot().theme;
-    if (host.dataset.theme !== theme) host.dataset.theme = theme;
-    if (body.dataset.mmTheme !== theme) body.dataset.mmTheme = theme;
-    // Fixed-pixel node typography is part of the original design. Scale the
-    // whole card so controller zoom still includes its floating controls.
-    const zoom = String(store.getSnapshot().zoom);
-    if (host.style.zoom !== zoom) host.style.zoom = zoom;
-    // Edge lengths are viewport CSS pixels. Cancel only this card's own zoom,
-    // so increasing content size cannot also enlarge the control frame.
-    if (host.style.getPropertyValue("--mm-view-zoom") !== zoom)
-      host.style.setProperty("--mm-view-zoom", zoom);
-  };
-  const unsubscribe = store.subscribe(project);
-  let cancelAuto: (() => void) | undefined;
-  const scroll = (target?: HTMLElement, indicate = false) => {
-    if (valid() && target) {
-      target.scrollIntoView({ block: "center", behavior: "auto" });
-      scrolls++;
-      if (indicate) cue.show(target);
-    }
-  };
-  const updateSearch = (activate: boolean) => {
-    const matches = renderer.search(store.getSnapshot().query);
-    store.dispatch({ type: "setMatches", matches, activate });
-    renderer.highlight(store.getSnapshot().selected);
-    if (activate && matches.length) scroll(renderer.matchElement(0), true);
-  };
-  const dispatch = (command: Command) => {
-    if (!valid()) return;
-    cancelAuto?.();
-    cancelAuto = undefined;
-    if (command.type === "interrupt") {
-      // Manual navigation cancels pending location and saves the reading point;
-      // it does not change answers, tree state or force a React render.
-      commands++;
-      queueRemember();
-      return;
-    }
-    cue.cancel();
-    reading.cancel();
-    const keepReading = ["toggleAnswer", "toggleGroup", "toggleOther", "revealNext", "hideLast"].includes(command.type);
-    const point = keepReading ? reading.capture(command.type === "toggleAnswer"
-      ? renderer.activeElement(command.id) : undefined) : undefined;
-    const before = store.getSnapshot();
-    if (!store.dispatch(command)) return;
-    commands++;
-    if (command.type === "search") updateSearch(true);
-    else if (
-      [
-        "toggleAnswer",
-        "toggleGroup",
-        "toggleOther",
-        "revealNext",
-        "hideLast",
-      ].includes(command.type) &&
-      store.getSnapshot().query
-    )
-      updateSearch(false);
-    if (keepReading) reading.hold(point);
-    if (command.type === "locate") scroll(renderer.firstActive(), true);
-    if (command.type === "revealNext" || command.type === "hideLast") {
-      const changed = renderer.model.active.find(
-        (o) => before.revealed[o.id] !== store.getSnapshot().revealed[o.id],
-      );
-      const target = changed && renderer.activeElement(changed.id);
-      if (target) {
-        const top = target.getBoundingClientRect().top;
-        if (top < 16 || top > innerHeight - 48) {
-          reading.cancel();
-          scroll(target);
-        }
-      }
-    }
-    if (command.type === "searchMove") {
-      renderer.highlight(store.getSnapshot().selected);
-      scroll(renderer.matchElement(store.getSnapshot().selected), true);
-    }
-    if (command.type === "closeSearch") renderer.search("");
-    if (command.type === "theme") {
-      try {
-        localStorage.setItem(
-          PREF,
-          JSON.stringify({ version: 1, theme: command.value }),
-        );
-      } catch {
-        /* state still updates */
-      }
-    }
-    remember();
-  };
-  const activateContent = (target: Element, event: Event): boolean => {
-    const annotation = target.closest<HTMLAnchorElement>(
-      'a[href^="#_msocom_"]',
-    );
-    if (annotation && renderer.annotation(annotation.hash.slice(1))) {
-      event.preventDefault();
-      const overlay = store.getSnapshot().overlay;
-      dispatch({
-        type: "overlay",
-        value:
-          overlay?.kind === "annotation" &&
-          overlay.id === annotation.hash.slice(1)
-            ? null
-            : { kind: "annotation", id: annotation.hash.slice(1) },
-      });
-      return true;
-    }
-    const note = target.closest<HTMLElement>("[data-mm-note]");
-    if (note) {
-      event.preventDefault();
-      bridge.note(note.dataset.mmNote!);
-      return true;
-    }
-    if (target.closest('a,input,textarea,select,[contenteditable="true"]'))
-      return false;
-    // Leave native image gestures alone, including images inside revealed Cloze.
-    // Consuming touchend here would suppress the client's own image viewer/zoom.
-    if (target instanceof HTMLImageElement) return false;
-    const node = renderer.targetNode(target),
-      answer = renderer.targetAnswer(target),
-      group = renderer.targetGroup(target);
-    if (node) dispatch({ type: "toggleNode", id: node });
-    else if (answer) dispatch({ type: "toggleAnswer", id: answer });
-    else if (group) dispatch({ type: "toggleGroup", id: group });
-    return !!(node || answer || group);
-  };
-  bindTap(content, scope, activateContent);
-  if (html.classList.contains("android")) {
-    bindTap(ui, scope, (target, event) => {
-      if (event.type !== "touchend") return false;
-      const button = target.closest<HTMLButtonElement>("nav button");
-      if (!button || !ui.contains(button) || button.disabled) return false;
-      // Reuse React's existing click handler immediately on release instead
-      // of waiting for the WebView's later compatibility click.
-      button.click();
-      return true;
-    });
-  }
-  scope.listen(
-    doc,
-    "click",
-    (event) => {
-      const target = event.target instanceof Element ? event.target : null;
-      if (
-        store.getSnapshot().overlay &&
-        target &&
-        !target.closest('.mm-dialog,#left-floating-widget,a[href^="#_msocom_"]')
-      )
-        dispatch({ type: "overlay", value: null });
-    },
-    { capture: true },
-  );
-  scope.listen(doc, "keydown", (event) => {
-    const e = event as KeyboardEvent;
-    reading.cancel();
-    cancelAuto?.();
-    cancelAuto = undefined;
-    if (e.isComposing || e.repeat) return;
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "f") {
-      e.preventDefault();
-      dispatch({ type: "openSearch" });
-      return;
-    }
-    if (e.key === "Escape") {
-      if (store.getSnapshot().overlay)
-        dispatch({ type: "overlay", value: null });
-      else dispatch({ type: "closeSearch" });
-      return;
-    }
-    const target = e.target instanceof Element ? e.target : null;
-    const node = target && renderer.targetNode(target);
-    if (node && (e.key === "Enter" || e.key === " " || e.code === "Enter" || e.code === "Space") &&
-        !e.ctrlKey && !e.metaKey && !e.altKey) {
-      e.preventDefault();
-      dispatch({ type: "toggleNode", id: node });
-      return;
-    }
-    if (
-      target?.closest(
-        'input,textarea,select,[contenteditable="true"],button,dialog',
-      ) ||
-      e.ctrlKey ||
-      e.metaKey ||
-      e.altKey
-    )
-      return;
-    const mapping: Record<string, Command> = {
-      KeyH: { type: "locate" },
-      KeyK: { type: "toggleTree" },
-      KeyL: { type: "toggleOther" },
-      BracketRight: { type: "revealNext" },
-      BracketLeft: { type: "hideLast" },
-      KeyC: {
-        type: "theme",
-        value: store.getSnapshot().theme === "paper" ? "bamboo" : "paper",
-      },
-      KeyJ: {
-        type: "overlay",
-        value:
-          store.getSnapshot().overlay?.kind === "diagram"
-            ? null
-            : { kind: "diagram" },
-      },
-    };
-    if (mapping[e.code]) {
-      e.preventDefault();
-      dispatch(mapping[e.code]);
-    }
+  // Register every acquisition immediately: exceptions at any later stage use
+  // the same teardown as a normal unmount, even before a Runtime is published.
+  scope.defer(() => {
+    host.style.removeProperty("zoom");
+    host.style.removeProperty("--mm-view-zoom");
+    delete host.dataset.theme;
+    delete host.dataset.ready;
+    delete host.dataset.mmPresented;
+    host.dataset.mmDisposed = "true";
   });
-  for (const name of ["wheel", "touchstart", "pointerdown", "scroll"])
-    scope.listen(doc, name, () => {
-      // The Android host's own load-time reset is not manual navigation.
-      // Wheel/touch/pointer input still cancels our pending initial location.
-      if (name === "scroll" && html.classList.contains("android") &&
-          !host.dataset.mmPresented) return;
-      if (name !== "scroll") reading.cancel();
-      dispatch({ type: "interrupt" });
-    }, {
-      passive: true,
-      capture: true,
+  scope.defer(() => {
+    if (renderer) renderer.restore();
+    else if (host.contains(content)) content.innerHTML = originalContent;
+  });
+  delete host.dataset.mmDisposed;
+  delete host.dataset.mmFailed;
+  try {
+    const fallback = host.querySelector<HTMLElement>("[data-mm-notes-fallback]");
+    const usedFallback =
+      !content.querySelector(".cloze") && !!fallback?.querySelector(".cloze");
+    if (usedFallback) {
+      const section = document.createElement("section");
+      section.className = "mm-field-fallback";
+      const label = document.createElement("p");
+      label.className = "mm-context-label";
+      label.textContent = "补充字段中的当前考查";
+      section.append(
+        label,
+        ...[...fallback!.childNodes].map((n) => n.cloneNode(true)),
+      );
+      content.append(section);
+    }
+    const side: Side = host.dataset.side === "back" ? "back" : "front";
+    const math = nativeMath(),
+      bridge = platform();
+    const view = renderer = readContent(content, side, math);
+    if (usedFallback) scope.defer(() => {
+      if (view.isIntact()) content.innerHTML = originalContent;
     });
-  scope.listen(window, "pagehide", () => runtime.dispose());
-  // Per-device button edges are seeded on every side: held flip cannot become a grade.
-  const gamepads = () => {
+    let theme: Theme = "paper";
     try {
-      return navigator.getGamepads?.() ?? [];
+      const saved = JSON.parse(localStorage.getItem(PREF) ?? "null");
+      if (saved?.version === 1 && saved.theme === "bamboo") theme = "bamboo";
     } catch {
-      return [];
+      /* review remains usable */
     }
-  };
-  const held = new Map<string, boolean[]>();
-  const lastFire = new Map<string, number>();
-  const keyOf = (gp: Gamepad) => `${gp.index}:${gp.id}`;
-  for (const gp of gamepads())
-    if (gp)
-      held.set(
-        keyOf(gp),
-        gp.buttons.map((b) => b.pressed || b.value > 0.5),
-      );
-  let lastTime = performance.now(),
-    waitingForHost = false,
-    controllerPolling = false;
-  const hostAction = (action: "flip" | "again" | "hard" | "good" | "easy") => {
-    waitingForHost = true;
-    if (!bridge.native(action)) waitingForHost = false;
-    else
-      scope.later(() => {
-        waitingForHost = false;
-      }, 400);
-  };
-  const poll = (time: number) => {
-    const dt = Math.min(50, time - lastTime);
-    lastTime = time;
-    const connected = gamepads();
-    if (!Array.from(connected).some(Boolean)) {
-      controllerPolling = false;
-      return;
-    }
-    for (const gp of connected) {
-      if (!gp) continue;
-      const key = keyOf(gp),
-        previous =
-          held.get(key) ?? gp.buttons.map((b) => b.pressed || b.value > 0.5);
-      const pressed = gp.buttons.map((b) => b.pressed || b.value > 0.5);
-      for (let i = 0; i < pressed.length; i++) {
-        if (
-          !pressed[i] ||
-          previous[i] ||
-          waitingForHost ||
-          time - (lastFire.get(`${key}:${i}`) ?? -Infinity) < 300
-        )
-          continue;
-        lastFire.set(`${key}:${i}`, time);
-        if (side === "front" && i === 1) hostAction("flip");
-        else if (side === "back" && i < 4)
-          hostAction((["again", "good", "hard", "easy"] as const)[i]);
-        else if (i === 4) dispatch({ type: "hideLast" });
-        else if (i === 5) dispatch({ type: "revealNext" });
-        else if (i === 6) dispatch({ type: "toggleTree" });
-        else if (i === 7) dispatch({ type: "toggleOther" });
-        else if (i === 10) dispatch({ type: "locate" });
-        else if (i === 11)
-          dispatch({
-            type: "theme",
-            value: store.getSnapshot().theme === "paper" ? "bamboo" : "paper",
-          });
-      }
-      held.set(key, pressed);
-      if (!waitingForHost && Math.abs(gp.axes[1] ?? 0) > 0.25) {
-        reading.cancel();
-        dispatch({ type: "interrupt" });
-        window.scrollBy(0, gp.axes[1] * dt * 0.6);
-      }
-      if (!waitingForHost && Math.abs(gp.axes[3] ?? 0) > 0.25)
-        dispatch({
-          type: "zoom",
-          value: store.getSnapshot().zoom - gp.axes[3] * dt * 0.0003,
-        });
-    }
-    scope.frame(poll);
-  };
-  const startControllers = () => {
-    if (controllerPolling || !Array.from(gamepads()).some(Boolean)) return;
-    controllerPolling = true;
-    lastTime = performance.now();
-    scope.frame(poll);
-  };
-  scope.listen(window, "gamepadconnected", startControllers);
-  scope.listen(window, "gamepaddisconnected", () => {
-    for (const [key] of held)
-      if (!Array.from(gamepads()).some((gp) => gp && keyOf(gp) === key))
-        held.delete(key);
-  });
-  startControllers();
-  const react = createRoot(ui);
-  const lifecycle = (delta: number) => {
-    effects += delta;
-  };
-  flushSync(() => react.render(
-    <StrictMode>
-      <Interface
-        store={store}
-        model={renderer.model}
-        deck={host.querySelector("[data-mm-deck]")?.textContent?.trim() ?? ""}
-        diagram={host.querySelector("[data-mm-diagram]")?.innerHTML ?? ""}
-        annotation={renderer.annotation}
-        annotationAnchor={renderer.annotationAnchor}
-        dispatch={dispatch}
-        lifecycle={lifecycle}
-      />
-    </StrictMode>,
-  ));
-  project();
-  // Position before the next paint rather than showing the top of the tree
-  // for 100 ms on every flip. Manual input still cancels this card-owned frame.
-  cancelAuto = presentCard(host, scope, () => {
-    if (!reading.hold(continuity.restored?.point)) scroll(renderer.firstActive());
-    remember();
-  });
-  scope.observe(doc.documentElement, () => {
-    if (!valid()) runtime.dispose();
-  });
-  // Anki's reviewer assigns body.className in onUpdateHook AFTER executing
-  // template scripts. Restore only our decorations, preserving host classes
-  // such as nightMode. This observer is card-owned and disconnected on disposal.
-  const restoreSkin = () => {
-    if (!valid()) return;
-    if (!body.classList.contains("mm-review")) body.classList.add("mm-review");
-    if (!html.classList.contains("mm-review-document"))
-      html.classList.add("mm-review-document");
-  };
-  scope.observe(body, restoreSkin, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
-  scope.observe(html, restoreSkin, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
-  const runtime: Runtime = {
-    dispatch,
-    inspect: () => ({
-      ...createInspection(
-        store,
-        alive,
-        effects,
-        scope.inspect(),
-        [...renderer.diagnostics, ...math.warnings],
-        scrolls,
-        commands,
-      ),
-      side,
-      math: math.inspect(),
-    }),
-    dispose() {
-      if (!alive) return;
-      remember();
-      reading.cancel();
-      alive = false;
-      scope.dispose();
-      releaseViewport();
-      unsubscribe();
-      react.unmount();
-      store.dispose();
-      const intact = renderer.isIntact();
-      renderer.restore();
-      if (usedFallback && intact) content.innerHTML = originalContent;
-      host.style.removeProperty("zoom");
-      host.style.removeProperty("--mm-view-zoom");
+    const store = createStore(view.model, side, theme);
+    scope.defer(() => store.dispose());
+    const continuity = reviewContinuity(host, side, view.model);
+    if (continuity.restored) store.dispatch({
+      type: "restoreLayout", expanded: continuity.restored.expanded, zoom: continuity.restored.zoom, revealPath: true,
+    });
+    // The skin owns these host decorations only during this card's lifetime.
+    // In particular, unrelated Anki note types must never inherit our page margins.
+    const body = doc.body,
+      html = doc.documentElement;
+    const previousTheme = body.getAttribute("data-mm-theme");
+    const hadBodyClass = body.classList.contains("mm-review");
+    const hadHtmlClass = html.classList.contains("mm-review-document");
+    scope.defer(() => {
       if (!hadBodyClass) body.classList.remove("mm-review");
       if (!hadHtmlClass) html.classList.remove("mm-review-document");
       if (previousTheme === null) delete body.dataset.mmTheme;
       else body.setAttribute("data-mm-theme", previousTheme);
-      delete host.dataset.theme;
-      delete host.dataset.ready;
-      delete host.dataset.mmPresented;
-      if (doc[SLOT] === runtime) delete doc[SLOT];
-    },
-  };
-  doc[SLOT] = runtime;
-  host.dataset.ready = "true";
-  return runtime;
+    });
+    body.classList.add("mm-review");
+    html.classList.add("mm-review-document");
+    let effects = 0,
+      scrolls = 0,
+      commands = 0;
+    scope.defer(bindReviewViewport(host, scope));
+    const reading = readingPosition(content, scope);
+    scope.defer(reading.cancel);
+    const cue = navigationCue(scope);
+    const remember = () => {
+      if (side === "front") continuity.save(store.getSnapshot(), reading.capture());
+    };
+    let rememberQueued = false;
+    const queueRemember = () => {
+      if (side !== "front" || rememberQueued) return;
+      rememberQueued = true;
+      scope.frame(() => { rememberQueued = false; remember(); });
+    };
+    const project = () => {
+      if (!valid()) return;
+      view.project(store.getSnapshot());
+      const theme = store.getSnapshot().theme;
+      if (host.dataset.theme !== theme) host.dataset.theme = theme;
+      if (body.dataset.mmTheme !== theme) body.dataset.mmTheme = theme;
+      // Fixed-pixel node typography is part of the original design. Scale the
+      // whole card so controller zoom still includes its floating controls.
+      const zoom = String(store.getSnapshot().zoom);
+      if (host.style.zoom !== zoom) host.style.zoom = zoom;
+      // Edge lengths are viewport CSS pixels. Cancel only this card's own zoom,
+      // so increasing content size cannot also enlarge the control frame.
+      if (host.style.getPropertyValue("--mm-view-zoom") !== zoom)
+        host.style.setProperty("--mm-view-zoom", zoom);
+    };
+    scope.defer(store.subscribe(project));
+    let cancelAuto: (() => void) | undefined;
+    const scroll = (target?: HTMLElement, indicate = false) => {
+      if (valid() && target) {
+        target.scrollIntoView({ block: "center", behavior: "auto" });
+        scrolls++;
+        if (indicate) cue.show(target);
+      }
+    };
+    const updateSearch = (activate: boolean) => {
+      const matches = view.search(store.getSnapshot().query);
+      store.dispatch({ type: "setMatches", matches, activate });
+      view.highlight(store.getSnapshot().selected);
+      if (activate && matches.length) scroll(view.matchElement(0), true);
+    };
+    const dispatch = (command: Command) => {
+      if (!valid()) return;
+      cancelAuto?.();
+      cancelAuto = undefined;
+      if (command.type === "interrupt") {
+        // Manual navigation cancels pending location and saves the reading point;
+        // it does not change answers, tree state or force a React render.
+        commands++;
+        queueRemember();
+        return;
+      }
+      cue.cancel();
+      reading.cancel();
+      const keepReading = ["toggleAnswer", "toggleGroup", "toggleOther", "revealNext", "hideLast"].includes(command.type);
+      const point = keepReading ? reading.capture(command.type === "toggleAnswer"
+        ? view.activeElement(command.id) : undefined) : undefined;
+      const before = store.getSnapshot();
+      if (!store.dispatch(command)) return;
+      commands++;
+      if (command.type === "search") updateSearch(true);
+      else if (
+        [
+          "toggleAnswer",
+          "toggleGroup",
+          "toggleOther",
+          "revealNext",
+          "hideLast",
+        ].includes(command.type) &&
+        store.getSnapshot().query
+      )
+        updateSearch(false);
+      if (keepReading) reading.hold(point);
+      if (command.type === "locate") scroll(view.firstActive(), true);
+      if (command.type === "revealNext" || command.type === "hideLast") {
+        const changed = view.model.active.find(
+          (o) => before.revealed[o.id] !== store.getSnapshot().revealed[o.id],
+        );
+        const target = changed && view.activeElement(changed.id);
+        if (target) {
+          const top = target.getBoundingClientRect().top;
+          if (top < 16 || top > innerHeight - 48) {
+            reading.cancel();
+            scroll(target);
+          }
+        }
+      }
+      if (command.type === "searchMove") {
+        view.highlight(store.getSnapshot().selected);
+        scroll(view.matchElement(store.getSnapshot().selected), true);
+      }
+      if (command.type === "closeSearch") view.search("");
+      if (command.type === "theme") {
+        try {
+          localStorage.setItem(
+            PREF,
+            JSON.stringify({ version: 1, theme: command.value }),
+          );
+        } catch {
+          /* state still updates */
+        }
+      }
+      remember();
+    };
+    const activateContent = (target: Element, event: Event): boolean => {
+      const annotation = target.closest<HTMLAnchorElement>(
+        'a[href^="#_msocom_"]',
+      );
+      if (annotation && view.annotation(annotation.hash.slice(1))) {
+        event.preventDefault();
+        const overlay = store.getSnapshot().overlay;
+        dispatch({
+          type: "overlay",
+          value:
+            overlay?.kind === "annotation" &&
+            overlay.id === annotation.hash.slice(1)
+              ? null
+              : { kind: "annotation", id: annotation.hash.slice(1) },
+        });
+        return true;
+      }
+      const note = target.closest<HTMLElement>("[data-mm-note]");
+      if (note) {
+        event.preventDefault();
+        const nid = note.dataset.mmNote!;
+        if (!bridge.note(nid)) dispatch({ type: "overlay", value: { kind: "note", nid } });
+        return true;
+      }
+      if (target.closest('a,input,textarea,select,[contenteditable="true"]'))
+        return false;
+      // Leave native image gestures alone, including images inside revealed Cloze.
+      // Consuming touchend here would suppress the client's own image viewer/zoom.
+      if (target instanceof HTMLImageElement) return false;
+      const node = view.targetNode(target),
+        answer = view.targetAnswer(target),
+        group = view.targetGroup(target);
+      if (node) dispatch({ type: "toggleNode", id: node });
+      else if (answer) dispatch({ type: "toggleAnswer", id: answer });
+      else if (group) dispatch({ type: "toggleGroup", id: group });
+      return !!(node || answer || group);
+    };
+    bindTap(content, scope, activateContent);
+    scope.listen(ui, "click", event => {
+      const target = event.target instanceof Element ? event.target : null;
+      if (!target?.closest(".mm-rich-overlay")) return;
+      const back = target.closest<HTMLAnchorElement>('a[href^="#_msoanchor_"]');
+      if (back) {
+        const reference = view.annotationReference(back.hash.slice(1).replace("_msoanchor_", "_msocom_"));
+        if (reference) {
+          event.preventDefault();
+          dispatch({ type: "overlay", value: null });
+          scroll(reference);
+        }
+      } else if (target.closest('a[href^="#_msocom_"],[data-mm-note]')) {
+        activateContent(target, event);
+      }
+    });
+    if (html.classList.contains("android")) {
+      bindTap(ui, scope, (target, event) => {
+        if (event.type !== "touchend") return false;
+        const button = target.closest<HTMLButtonElement>("nav button");
+        if (!button || !ui.contains(button) || button.disabled) return false;
+        // Reuse React's existing click handler immediately on release instead
+        // of waiting for the WebView's later compatibility click.
+        button.click();
+        return true;
+      });
+    }
+    scope.listen(
+      doc,
+      "click",
+      (event) => {
+        const target = event.target instanceof Element ? event.target : null;
+        if (
+          store.getSnapshot().overlay &&
+          target &&
+          !target.closest('.mm-dialog,#left-floating-widget,a[href^="#_msocom_"]')
+        )
+          dispatch({ type: "overlay", value: null });
+      },
+      { capture: true },
+    );
+    scope.listen(doc, "keydown", (event) => {
+      const e = event as KeyboardEvent;
+      reading.cancel();
+      cancelAuto?.();
+      cancelAuto = undefined;
+      if (e.isComposing || e.repeat) return;
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "f") {
+        e.preventDefault();
+        dispatch({ type: "openSearch" });
+        return;
+      }
+      if (e.key === "Escape") {
+        if (store.getSnapshot().overlay)
+          dispatch({ type: "overlay", value: null });
+        else dispatch({ type: "closeSearch" });
+        return;
+      }
+      const target = e.target instanceof Element ? e.target : null;
+      const node = target && view.targetNode(target);
+      if (node && (e.key === "Enter" || e.key === " " || e.code === "Enter" || e.code === "Space") &&
+          !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        e.stopPropagation();
+        dispatch({ type: "toggleNode", id: node });
+        return;
+      }
+      if (
+        target?.closest(
+          'input,textarea,select,[contenteditable="true"],button,dialog',
+        ) ||
+        e.ctrlKey ||
+        e.metaKey ||
+        e.altKey
+      )
+        return;
+      const mapping: Record<string, Command> = {
+        KeyH: { type: "locate" },
+        KeyK: { type: "toggleTree" },
+        KeyL: { type: "toggleOther" },
+        BracketRight: { type: "revealNext" },
+        BracketLeft: { type: "hideLast" },
+        KeyC: {
+          type: "theme",
+          value: store.getSnapshot().theme === "paper" ? "bamboo" : "paper",
+        },
+        KeyJ: {
+          type: "overlay",
+          value:
+            store.getSnapshot().overlay?.kind === "diagram"
+              ? null
+              : { kind: "diagram" },
+        },
+      };
+      if (e.code === "KeyJ" && !host.querySelector("[data-mm-diagram]")?.innerHTML.trim()) return;
+      if (mapping[e.code]) {
+        e.preventDefault();
+        dispatch(mapping[e.code]);
+      }
+    });
+    for (const name of ["wheel", "touchstart", "pointerdown", "scroll"])
+      scope.listen(doc, name, () => {
+        // The Android host's own load-time reset is not manual navigation.
+        // Wheel/touch/pointer input still cancels our pending initial location.
+        if (name === "scroll" && html.classList.contains("android") &&
+            !host.dataset.mmPresented) return;
+        if (name !== "scroll") reading.cancel();
+        dispatch({ type: "interrupt" });
+      }, {
+        passive: true,
+        capture: true,
+      });
+    scope.listen(window, "pagehide", () => runtime.dispose());
+    // Per-device button edges are seeded on every side: held flip cannot become a grade.
+    const gamepads = () => {
+      try {
+        return navigator.getGamepads?.() ?? [];
+      } catch {
+        return [];
+      }
+    };
+    const held = new Map<string, boolean[]>();
+    const lastFire = new Map<string, number>();
+    const keyOf = (gp: Gamepad) => `${gp.index}:${gp.id}`;
+    for (const gp of gamepads())
+      if (gp)
+        held.set(
+          keyOf(gp),
+          gp.buttons.map((b) => b.pressed || b.value > 0.5),
+        );
+    let lastTime = performance.now(),
+      waitingForHost = false,
+      controllerPolling = false;
+    const hostAction = (action: "flip" | "again" | "hard" | "good" | "easy") => {
+      waitingForHost = true;
+      if (!bridge.native(action)) waitingForHost = false;
+      else
+        scope.later(() => {
+          waitingForHost = false;
+        }, 400);
+    };
+    const poll = (time: number) => {
+      const dt = Math.min(50, time - lastTime);
+      lastTime = time;
+      const connected = gamepads();
+      if (!Array.from(connected).some(Boolean)) {
+        controllerPolling = false;
+        return;
+      }
+      for (const gp of connected) {
+        if (!gp) continue;
+        const key = keyOf(gp),
+          previous =
+            held.get(key) ?? gp.buttons.map((b) => b.pressed || b.value > 0.5);
+        const pressed = gp.buttons.map((b) => b.pressed || b.value > 0.5);
+        for (let i = 0; i < pressed.length; i++) {
+          if (
+            !pressed[i] ||
+            previous[i] ||
+            waitingForHost ||
+            time - (lastFire.get(`${key}:${i}`) ?? -Infinity) < 300
+          )
+            continue;
+          lastFire.set(`${key}:${i}`, time);
+          if (side === "front" && i === 1) hostAction("flip");
+          else if (side === "back" && i < 4)
+            hostAction((["again", "good", "hard", "easy"] as const)[i]);
+          else if (i === 4) dispatch({ type: "hideLast" });
+          else if (i === 5) dispatch({ type: "revealNext" });
+          else if (i === 6) dispatch({ type: "toggleTree" });
+          else if (i === 7) dispatch({ type: "toggleOther" });
+          else if (i === 10) dispatch({ type: "locate" });
+          else if (i === 11)
+            dispatch({
+              type: "theme",
+              value: store.getSnapshot().theme === "paper" ? "bamboo" : "paper",
+            });
+        }
+        held.set(key, pressed);
+        if (!waitingForHost && Math.abs(gp.axes[1] ?? 0) > 0.25) {
+          reading.cancel();
+          dispatch({ type: "interrupt" });
+          window.scrollBy(0, gp.axes[1] * dt * 0.6);
+        }
+        if (!waitingForHost && Math.abs(gp.axes[3] ?? 0) > 0.25)
+          dispatch({
+            type: "zoom",
+            value: store.getSnapshot().zoom - gp.axes[3] * dt * 0.0003,
+          });
+      }
+      scope.frame(poll);
+    };
+    const startControllers = () => {
+      if (controllerPolling || !Array.from(gamepads()).some(Boolean)) return;
+      controllerPolling = true;
+      lastTime = performance.now();
+      scope.frame(poll);
+    };
+    scope.listen(window, "gamepadconnected", startControllers);
+    scope.listen(window, "gamepaddisconnected", () => {
+      for (const [key] of held)
+        if (!Array.from(gamepads()).some((gp) => gp && keyOf(gp) === key))
+          held.delete(key);
+    });
+    startControllers();
+    let renderFailure: unknown;
+    let published: Runtime | undefined;
+    const react = createRoot(ui, {
+      onUncaughtError(error) {
+        renderFailure = error;
+        if (published) {
+          published.dispose();
+          host.dataset.mmFailed = "true";
+          console.error("Mindmap UI failed; native content retained", error);
+        }
+      },
+    });
+    scope.defer(() => react.unmount());
+    const lifecycle = (delta: number) => {
+      effects += delta;
+    };
+    flushSync(() => react.render(
+      <StrictMode>
+        <Interface
+          store={store}
+          model={view.model}
+          deck={host.querySelector("[data-mm-deck]")?.textContent?.trim() ?? ""}
+          diagram={host.querySelector("[data-mm-diagram]")?.innerHTML ?? ""}
+          annotation={view.annotation}
+          annotationAnchor={view.annotationAnchor}
+          dispatch={dispatch}
+          lifecycle={lifecycle}
+        />
+      </StrictMode>,
+    ));
+    if (renderFailure) throw renderFailure;
+    project();
+    // Position before the next paint rather than showing the top of the tree
+    // for 100 ms on every flip. Manual input still cancels this card-owned frame.
+    cancelAuto = presentCard(host, scope, () => {
+      if (!reading.hold(continuity.restored?.point)) scroll(view.firstActive());
+      remember();
+    });
+    scope.observe(doc.documentElement, () => {
+      if (!valid()) runtime.dispose();
+    });
+    // Anki's reviewer assigns body.className in onUpdateHook AFTER executing
+    // template scripts. Restore only our decorations, preserving host classes
+    // such as nightMode. This observer is card-owned and disconnected on disposal.
+    const restoreSkin = () => {
+      if (!valid()) return;
+      if (!body.classList.contains("mm-review")) body.classList.add("mm-review");
+      if (!html.classList.contains("mm-review-document"))
+        html.classList.add("mm-review-document");
+    };
+    scope.observe(body, restoreSkin, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    scope.observe(html, restoreSkin, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    const runtime: Runtime = {
+      dispatch,
+      inspect: () => ({
+        ...createInspection(
+          store,
+          alive,
+          effects,
+          scope.inspect(),
+          [...view.diagnostics, ...math.warnings],
+          scrolls,
+          commands,
+        ),
+        side,
+        math: math.inspect(),
+      }),
+      dispose() {
+        if (!alive) return;
+        try { remember(); }
+        finally {
+          alive = false;
+          // Invalidate the slot even if an individual release fails. Each resource
+          // cleanup is isolated so one bad host callback cannot strand the rest.
+          if (doc[SLOT] === runtime) delete doc[SLOT];
+          scope.dispose();
+        }
+      },
+    };
+    published = runtime;
+    doc[SLOT] = runtime;
+    host.dataset.ready = "true";
+    return runtime;
+  } catch (error) {
+    alive = false;
+    scope.dispose();
+    host.dataset.mmFailed = "true";
+    throw error;
+  }
 }

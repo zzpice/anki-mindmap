@@ -98,5 +98,10 @@
     "填写笔记": "",
     "导图": "<p>宽表格测试：保留所有列。</p>",
     "Text": "<div class=\"title\">宽表格与边栏稳定性</div><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">先揭示，再翻面</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">表格的所有列应可横向阅读，边栏不能变长。</div><div class=\"children\"><ul class=\"node-list\"><li class=\"node\"><div class=\"bullet\"><div class=\"bullet-dot\"></div></div><div class=\"content mm-editor\">{{c1::<cloze2_w class=\"cz-1\" data-cloze-id=\"wide-table\"></cloze2_w><cloze2 class=\"cz-1 czi-wide-table\"><table><tr><td style=\"white-space:nowrap;min-width:150px\">连续列数据 1</td><td style=\"white-space:nowrap;min-width:150px\">连续列数据 2</td><td style=\"white-space:nowrap;min-width:150px\">连续列数据 3</td><td style=\"white-space:nowrap;min-width:150px\">连续列数据 4</td><td style=\"white-space:nowrap;min-width:150px\">连续列数据 5</td><td style=\"white-space:nowrap;min-width:150px\">连续列数据 6</td><td style=\"white-space:nowrap;min-width:150px\">连续列数据 7</td><td style=\"white-space:nowrap;min-width:150px\">连续列数据 8</td><td style=\"white-space:nowrap;min-width:150px\">连续列数据 9</td><td style=\"white-space:nowrap;min-width:150px\">连续列数据 10</td><td style=\"white-space:nowrap;min-width:150px\">连续列数据 11</td><td style=\"white-space:nowrap;min-width:150px\">连续列数据 12</td></tr></table></cloze2>}}</div></li></ul></div></li></ul></div></li></ul>"
+  },
+  "outer-custom": {
+    "填写笔记": "",
+    "导图": "",
+    "Text": "<div class=\"title\">原生答案外层包装</div><cloze2_w class=\"cz-1\">其他组提示</cloze2_w><cloze2 class=\"cz-1\">{{c1::当前原生答案}}</cloze2>"
   }
 }

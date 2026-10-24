@@ -1,13 +1,14 @@
 {
   "format": 2,
-  "version": "0.2.0-alpha.14",
+  "version": "0.2.0-alpha.15",
   "verifiedAt": "2026-10-24",
-  "maintenanceStartingCommit": "a2fa9761fe545ce7635effa69da7415e12f4beeb",
-  "scope": "Mainline merge, docs and removal of superseded tools. Runtime/templates/current tests and native model contract unchanged from tested alpha.14; package notices corrected.",
-  "coreTests": 10,
+  "maintenanceStartingCommit": "9d14b4b099f06d5fa63588ebcc27baa32260ec95",
+  "scope": "Integrated reliability, current-answer visibility and targeted readability/layout repairs. Native identity and field contract retained; no personal collection operations.",
+  "coreTests": 11,
   "native": {
     "status": "passed",
-    "version": "0.2.0-alpha.14",
+    "sourceFingerprint": "8fcd7270da4f04115db306b5874266cf2b235e8ea058d743c820c88bdef4136e",
+    "version": "0.2.0-alpha.15",
     "testModel": {
       "id": 1792748414,
       "kind": 1,
@@ -36,8 +37,8 @@
       ]
     },
     "productionModelId": 1303378414,
-    "notes": 21,
-    "cards": 27,
+    "notes": 22,
+    "cards": 28,
     "checks": [
       "native same/multiple/gapped/nested Cloze ordinals",
       "full fields/media/identity round trip",
@@ -47,15 +48,17 @@
     ],
     "assets": {
       "_mm_react_lxgw_0eb9b77e02a6.ttf": "0eb9b77e02a6b43f7aa8910b8c2b85bde1eb4dcded85cb0a331fb6a397bea387",
-      "_mm_react_6e63bf6e2cad.js": "6e63bf6e2cadac4b893ea697e22f1de93d673302c619148d2034a7d33a145bcd",
+      "_mm_react_8635d5f4612d.js": "8635d5f4612d6ff96ef4da4a8770a68c4f236a5076b894f71ec2c4cedf7de483",
       "_mm_react_sample.svg": "4b4d53d6666de1594a8db28e21493b72cd2dfddfa083e11ae9ae72cd0e93737b"
     },
-    "apkgSha256": "205595b0472d88c54f5a0867b68887bd4542a453ce83801884c233cdc308a479"
+    "apkgSha256": "81f6b0ee824f55b928a1cb242c89a4833ff84699ad6b045d5197f32c05532f6c"
   },
   "nativeBackend25": {
     "status": "passed",
-    "notes": 21,
-    "cards": 27
+    "version": "0.2.0-alpha.15",
+    "notes": 22,
+    "cards": 28,
+    "sourceFingerprint": "8fcd7270da4f04115db306b5874266cf2b235e8ea058d743c820c88bdef4136e"
   },
   "nativeBackends": [
     "25.9.2",
@@ -67,7 +70,7 @@
       {
         "name": "chromium",
         "version": "151.0.7922.34",
-        "nativeFaces": 54,
+        "fixtures": 56,
         "checks": [
           "all native fixture sides, rich semantic fidelity, gapped/nested/custom cloze, field-only current fallback",
           "native reviewer body-class reset preserves skin and host night mode without changing business state",
@@ -85,83 +88,39 @@
           "manual wheel cancels automatic navigation",
           "offline emulation + detached file assets"
         ],
-        "errors": [],
+        "reliability": {
+          "failureRollback": "listener and React commit",
+          "throwingCleanup": "passed",
+          "emptyScriptRetry": "passed",
+          "overlappingHosts": "passed",
+          "androidReadableDisposeAndPersistedResume": "passed",
+          "backActivePath": "passed",
+          "outerNativeWrapper": "passed",
+          "zoomPanels": "320/390px at 0.5/1/2x",
+          "linksAndAnnotations": "passed incl. unsupported bridge feedback and return",
+          "emptyDiagram": "passed",
+          "pendingShell": "passed",
+          "nightContrast": [
+            {
+              "theme": "paper",
+              "title": 11.9051056045934,
+              "minimumHighlightContrast": 7.988626845566482
+            },
+            {
+              "theme": "bamboo",
+              "title": 11.9051056045934,
+              "minimumHighlightContrast": 7.988626845566482
+            }
+          ]
+        },
         "edges": {
-          "viewportAndTeardownOrder": [
-            {
-              "platform": "iphone",
-              "order": "resize-before-dispose",
-              "seam": 422,
-              "centred": true
-            },
-            {
-              "platform": "iphone",
-              "order": "resize-after-dispose",
-              "seam": 422,
-              "centred": true
-            },
-            {
-              "platform": "android",
-              "order": "resize-before-dispose",
-              "seam": 422,
-              "centred": true
-            },
-            {
-              "platform": "android",
-              "order": "resize-after-dispose",
-              "seam": 422,
-              "centred": true
-            }
-          ],
-          "splitHostMetrics": [
-            {
-              "rootHeight": 606,
-              "visualHeight": 681,
-              "seam": 303
-            },
-            {
-              "rootHeight": 606,
-              "visualHeight": 684,
-              "seam": 303
-            },
-            {
-              "rootHeight": 606,
-              "visualHeight": 606,
-              "seam": 303
-            },
-            {
-              "rootHeight": 606,
-              "visualHeight": 684,
-              "seam": 303
-            }
-          ],
           "constantViewportRevealFlipAndScroll": "passed",
           "zoomAndOrientation": "passed",
           "inlineCompensation": "absent",
           "disposal": "passed",
           "limitation": "Mocked host-metric divergence follows user iOS readings. This adapter contract does not certify a physical iOS fix.",
-          "foldedMarkers": {
-            "status": "passed",
-            "scenarios": 16,
-            "widths": [
-              320,
-              390
-            ],
-            "sides": [
-              "back",
-              "front"
-            ],
-            "zoom": [
-              0.5,
-              1,
-              1.1,
-              2
-            ],
-            "tapExpansion": "passed"
-          }
+          "foldedMarkerScenarios": 16
         },
-        "lifecycleCycles": 100,
-        "disposedResourcesAllZero": true,
         "motion": {
           "labelCentres": "passed: front/back, scroll, zoom, landscape",
           "edgeFrameScrollFlipResize": "passed",
@@ -178,23 +137,7 @@
           "edgeGeometry": "passed",
           "wideColumnsReachable": 12,
           "nativeBack": "passed",
-          "pendingBackgrounds": [
-            {
-              "theme": "paper",
-              "night": false,
-              "background": "rgba(254, 251, 240, 0.7)"
-            },
-            {
-              "theme": "bamboo",
-              "night": false,
-              "background": "rgb(240, 244, 232)"
-            },
-            {
-              "theme": "paper",
-              "night": true,
-              "background": "rgb(36, 36, 36)"
-            }
-          ]
+          "pendingBackgroundCases": 3
         },
         "reading": {
           "directReveal": "passed",
@@ -204,12 +147,69 @@
           "lateLayoutAndManualCancellation": "passed",
           "disposal": "passed",
           "expiredAndUnavailableStorage": "passed"
+        },
+        "transitions": [
+          {
+            "width": 360,
+            "flips": 40,
+            "bundleLoadsDuringFlips": 0,
+            "hiddenImageFrames": "passed",
+            "pendingLoadHostReplacement": "passed"
+          },
+          {
+            "width": 390,
+            "flips": 40,
+            "bundleLoadsDuringFlips": 0,
+            "hiddenImageFrames": "passed",
+            "pendingLoadHostReplacement": "passed"
+          }
+        ],
+        "androidNavigation": {
+          "navigations": 10,
+          "firstPaintPositionAndFont": "passed",
+          "readyWithoutExtraFrame": "passed",
+          "pendingDisposal": "passed",
+          "edgeTouch": {
+            "rows": [
+              {
+                "selector": ".floating-button",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 0.7999999821186066
+              },
+              {
+                "selector": ".custom2-button",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 0.09999999403953552
+              },
+              {
+                "selector": ".custom-button",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 1.0999999940395355
+              },
+              {
+                "selector": "#left-floating-widget",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 0.09999999403953552
+              }
+            ],
+            "dragCommands": 0,
+            "redundantMutations": 0,
+            "sameState": true
+          }
+        },
+        "lifecycle": {
+          "cycles": 100,
+          "disposedResourcesZero": true
         }
       },
       {
         "name": "webkit",
         "version": "26.5",
-        "nativeFaces": 54,
+        "fixtures": 56,
         "checks": [
           "all native fixture sides, rich semantic fidelity, gapped/nested/custom cloze, field-only current fallback",
           "native reviewer body-class reset preserves skin and host night mode without changing business state",
@@ -227,83 +227,39 @@
           "manual wheel cancels automatic navigation",
           "detached file assets with all HTTP(S) blocked; WebKit offline emulator limitation retained"
         ],
-        "errors": [],
+        "reliability": {
+          "failureRollback": "listener and React commit",
+          "throwingCleanup": "passed",
+          "emptyScriptRetry": "passed",
+          "overlappingHosts": "passed",
+          "androidReadableDisposeAndPersistedResume": "passed",
+          "backActivePath": "passed",
+          "outerNativeWrapper": "passed",
+          "zoomPanels": "320/390px at 0.5/1/2x",
+          "linksAndAnnotations": "passed incl. unsupported bridge feedback and return",
+          "emptyDiagram": "passed",
+          "pendingShell": "passed",
+          "nightContrast": [
+            {
+              "theme": "paper",
+              "title": 11.9051056045934,
+              "minimumHighlightContrast": 7.988626845566482
+            },
+            {
+              "theme": "bamboo",
+              "title": 11.9051056045934,
+              "minimumHighlightContrast": 7.988626845566482
+            }
+          ]
+        },
         "edges": {
-          "viewportAndTeardownOrder": [
-            {
-              "platform": "iphone",
-              "order": "resize-before-dispose",
-              "seam": 422,
-              "centred": true
-            },
-            {
-              "platform": "iphone",
-              "order": "resize-after-dispose",
-              "seam": 422,
-              "centred": true
-            },
-            {
-              "platform": "android",
-              "order": "resize-before-dispose",
-              "seam": 422,
-              "centred": true
-            },
-            {
-              "platform": "android",
-              "order": "resize-after-dispose",
-              "seam": 422,
-              "centred": true
-            }
-          ],
-          "splitHostMetrics": [
-            {
-              "rootHeight": 606,
-              "visualHeight": 681,
-              "seam": 303
-            },
-            {
-              "rootHeight": 606,
-              "visualHeight": 684,
-              "seam": 303
-            },
-            {
-              "rootHeight": 606,
-              "visualHeight": 606,
-              "seam": 303
-            },
-            {
-              "rootHeight": 606,
-              "visualHeight": 684,
-              "seam": 303
-            }
-          ],
           "constantViewportRevealFlipAndScroll": "passed",
           "zoomAndOrientation": "passed",
           "inlineCompensation": "absent",
           "disposal": "passed",
           "limitation": "Mocked host-metric divergence follows user iOS readings. This adapter contract does not certify a physical iOS fix.",
-          "foldedMarkers": {
-            "status": "passed",
-            "scenarios": 16,
-            "widths": [
-              320,
-              390
-            ],
-            "sides": [
-              "back",
-              "front"
-            ],
-            "zoom": [
-              0.5,
-              1,
-              1.1,
-              2
-            ],
-            "tapExpansion": "passed"
-          }
+          "foldedMarkerScenarios": 16
         },
-        "lifecycleCycles": 100,
-        "disposedResourcesAllZero": true,
         "motion": {
           "labelCentres": "passed: front/back, scroll, zoom, landscape",
           "edgeFrameScrollFlipResize": "passed",
@@ -320,23 +276,7 @@
           "edgeGeometry": "passed",
           "wideColumnsReachable": 12,
           "nativeBack": "passed",
-          "pendingBackgrounds": [
-            {
-              "theme": "paper",
-              "night": false,
-              "background": "rgba(254, 251, 240, 0.7)"
-            },
-            {
-              "theme": "bamboo",
-              "night": false,
-              "background": "rgb(240, 244, 232)"
-            },
-            {
-              "theme": "paper",
-              "night": true,
-              "background": "rgb(36, 36, 36)"
-            }
-          ]
+          "pendingBackgroundCases": 3
         },
         "reading": {
           "directReveal": "passed",
@@ -346,10 +286,66 @@
           "lateLayoutAndManualCancellation": "passed",
           "disposal": "passed",
           "expiredAndUnavailableStorage": "passed"
+        },
+        "transitions": [
+          {
+            "width": 360,
+            "flips": 40,
+            "bundleLoadsDuringFlips": 0,
+            "hiddenImageFrames": "passed",
+            "pendingLoadHostReplacement": "passed"
+          },
+          {
+            "width": 390,
+            "flips": 40,
+            "bundleLoadsDuringFlips": 0,
+            "hiddenImageFrames": "passed",
+            "pendingLoadHostReplacement": "passed"
+          }
+        ],
+        "androidNavigation": {
+          "navigations": 10,
+          "firstPaintPositionAndFont": "passed",
+          "readyWithoutExtraFrame": "passed",
+          "pendingDisposal": "passed",
+          "edgeTouch": {
+            "rows": [
+              {
+                "selector": ".floating-button",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 1
+              },
+              {
+                "selector": ".custom2-button",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 0
+              },
+              {
+                "selector": ".custom-button",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 2
+              },
+              {
+                "selector": "#left-floating-widget",
+                "onRelease": 1,
+                "afterClick": 0,
+                "releaseHandlerMs": 0
+              }
+            ],
+            "dragCommands": 0,
+            "redundantMutations": 0,
+            "sameState": true
+          }
+        },
+        "lifecycle": {
+          "cycles": 100,
+          "disposedResourcesZero": true
         }
       }
-    ],
-    "externalRequests": []
+    ]
   },
   "desktop": {
     "status": "passed",
@@ -363,142 +359,28 @@
       "no physical mobile devices or gamepad",
       "Desktop test is software-driven in isolated profile; no human touchscreen/keyboard usability certification"
     ],
-    "directBack": {
-      "activeTypeset": [
-        1
-      ],
-      "alive": true,
-      "commands": 0,
-      "diagnostics": [],
-      "edgeFrame": {
-        "bars": [
-          {
-            "centerError": 0,
-            "height": 402
-          },
-          {
-            "centerError": 0,
-            "height": 402
-          },
-          {
-            "centerError": 0,
-            "height": 402
-          }
-        ],
-        "height": 804
-      },
-      "font": {
-        "family": "lxgw, \"霞鹜文楷 GB 屏幕阅读版\"",
-        "ready": true
-      },
-      "frame": "1792797453116:answer",
-      "hooks": {
-        "shown": 1,
-        "update": 1
-      },
-      "images": [
-        {
-          "loaded": true,
-          "src": "_mm_react_sample.svg"
-        }
-      ],
-      "math": {
-        "calls": 0,
-        "warnings": []
-      },
-      "mathItems": 2,
-      "mathML": 4,
-      "resources": {
-        "animations": 0,
-        "effects": 1,
-        "frames": 0,
-        "listeners": 17,
-        "observers": 4,
-        "reactRoots": 1,
-        "subscribers": 2,
-        "timers": 0
-      },
-      "scrolls": 1,
-      "side": "back",
-      "state": {
-        "expanded": {
-          "n0": true,
-          "n1": true
-        },
-        "groups": {},
-        "matches": [],
-        "overlay": null,
-        "query": "",
-        "revealed": {
-          "a0": true
-        },
-        "searchExpanded": {},
-        "searchOpen": false,
-        "selected": 0,
-        "theme": "paper",
-        "zoom": 1
-      },
-      "text": "复杂正文第一层第二层富文本答案x z2表格标题合并表头甲乙丙正常后续文字未知内容保留ab x2+y2",
-      "typeset": 2,
-      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/6.11.2 Chrome/140.0.0.0 Safari/537.36"
-    },
-    "dynamicTexTypeset": [
-      1
+    "networkPolicy": "WebEngine HTTP(S) restricted to localhost; local Anki media server allowed",
+    "localMediaRequests": [
+      "http://127.0.0.1:56320/_mm_react_lxgw_0eb9b77e02a6.ttf",
+      "http://127.0.0.1:56320/_mm_react_sample.svg",
+      "http://127.0.0.1:56320/_mm_react_8635d5f4612d.js",
+      "http://127.0.0.1:56320/_mm_react_lxgw_0eb9b77e02a6.ttf",
+      "http://127.0.0.1:56320/_mm_react_sample.svg",
+      "http://127.0.0.1:56320/_mm_react_8635d5f4612d.js",
+      "http://127.0.0.1:56320/_mm_react_lxgw_0eb9b77e02a6.ttf",
+      "http://127.0.0.1:56320/_mm_react_8635d5f4612d.js",
+      "http://127.0.0.1:56320/_mm_react_sample.svg"
     ],
-    "repeatedDynamicMath": {
-      "cycles": 10,
-      "activeTypeset": [
-        1
-      ],
-      "mathItems": 2,
-      "math": {
-        "calls": 11,
-        "warnings": []
-      }
-    },
+    "revlogBefore": 0,
     "nativeBackTexTypeset": [
       1
     ],
-    "reviewHostRemoval": {
-      "alive": false,
-      "commands": 0,
-      "diagnostics": [],
-      "math": {
-        "calls": 0,
-        "warnings": []
-      },
-      "resources": {
-        "animations": 0,
-        "effects": 0,
-        "frames": 0,
-        "listeners": 0,
-        "observers": 0,
-        "reactRoots": 0,
-        "subscribers": 0,
-        "timers": 0
-      },
-      "scrolls": 1,
-      "side": "front",
-      "state": {
-        "expanded": {},
-        "groups": {},
-        "matches": [],
-        "overlay": null,
-        "query": "",
-        "revealed": {
-          "a0": false
-        },
-        "searchExpanded": {},
-        "searchOpen": false,
-        "selected": 0,
-        "theme": "paper",
-        "zoom": 1
-      }
-    },
+    "revlogAfter": 1,
     "qtEventLoopExitCode": 0,
     "processTeardownCompleted": true,
-    "previewFaces": 54,
-    "reviewSteps": 5
+    "previewFaces": 56,
+    "reviewSteps": 5,
+    "hostRemovalResourcesZero": true
   },
   "physicalMobile": {
     "status": "limited user-reported iOS pass; broader mobile validation open",
@@ -530,25 +412,26 @@
       "previousOuterIndentPixels": 28,
       "nestedIndentPixels": 28
     },
-    "android": "alpha.14 not physically verified; prior mild flash remains unconfirmed",
-    "scope": "User device feedback only; public fixture validation does not include personal template installation or sync."
+    "android": "alpha.15 not physically verified; prior mild native-host flip flash remains open",
+    "scope": "User device feedback only; public fixture validation does not include personal template installation or sync.",
+    "currentVersion": "alpha.15 has no new physical device certification; prior feedback stays scoped to the versions above."
   },
   "visual": {
     "status": "passed",
     "pairs": 108,
     "interactionScenes": 60,
-    "intentionalLayoutChange": "10px outer-tree gutter; compact heading and split edge controls. Fonts, colours and nested spacing retained."
+    "intentionalLayoutChange": "Retained compact heading, split edges and outer marker gutter; alpha.15 adds readable night tokens, 1px connector dots, content-only zoom for panels and non-overlapping bullet hit areas. No overall redesign."
   },
   "layoutComparison": {
     "scope": "Pinned pre-React f67c932 versus current React; diagnostic display names identify the pinned legacy baseline and actual React version.",
     "package": {
       "status": "passed",
       "baseline": "f67c932a02bef79f0feab1121c6783a9a3ff9e17",
-      "reactVersion": "0.2.0-alpha.14",
+      "reactVersion": "0.2.0-alpha.15",
       "fixtureRevision": 3,
       "displayLabels": {
         "main": "旧版基线 f67c932",
-        "react": "React 0.2.0-alpha.14"
+        "react": "React 0.2.0-alpha.15"
       },
       "notes": 14,
       "cards": 14,
@@ -569,7 +452,7 @@
       "existingLegacyMediaUnchanged": true,
       "contentAddressedLegacyMedia": true,
       "repeatImportNoDuplicates": true,
-      "sha256": "724e411860fbf9f5f92b36dd071adcc8bc39ef1a165380b2bae949d7630e0860",
+      "sha256": "9158a351b0fe3abfc351db72bd9ef103b0d1f3432015da171b1fca37138facd4",
       "physicalIOS": "See verification.json for scoped user device feedback; browser checks are not device certification"
     },
     "nativeBackends": [
@@ -625,15 +508,7 @@
             }
           ],
           "probeFrontBack": "passed",
-          "cases": [
-            "long-image-visible",
-            "long-image-answer",
-            "long-image-pair",
-            "overview",
-            "deep",
-            "wide-review",
-            "image"
-          ]
+          "caseCount": 7
         },
         {
           "engine": "chromium",
@@ -663,15 +538,7 @@
             }
           ],
           "probeFrontBack": "passed",
-          "cases": [
-            "long-image-visible",
-            "long-image-answer",
-            "long-image-pair",
-            "overview",
-            "deep",
-            "wide-review",
-            "image"
-          ]
+          "caseCount": 7
         },
         {
           "engine": "webkit",
@@ -701,15 +568,7 @@
             }
           ],
           "probeFrontBack": "passed",
-          "cases": [
-            "long-image-visible",
-            "long-image-answer",
-            "long-image-pair",
-            "overview",
-            "deep",
-            "wide-review",
-            "image"
-          ]
+          "caseCount": 7
         },
         {
           "engine": "webkit",
@@ -739,15 +598,7 @@
             }
           ],
           "probeFrontBack": "passed",
-          "cases": [
-            "long-image-visible",
-            "long-image-answer",
-            "long-image-pair",
-            "overview",
-            "deep",
-            "wide-review",
-            "image"
-          ]
+          "caseCount": 7
         }
       ],
       "externalRequests": [],
@@ -772,7 +623,8 @@
           "bothTemplateLabelsUpdated": true,
           "deckNames": "updated manually; import adds no extra decks"
         }
-      ]
+      ],
+      "testedVersion": "0.2.0-alpha.14; historical label rename only"
     }
   },
   "packaging": {

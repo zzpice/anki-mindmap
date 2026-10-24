@@ -16,6 +16,7 @@ export interface Match {
 export type Overlay =
   | { kind: "diagram" }
   | { kind: "annotation"; id: string }
+  | { kind: "note"; nid: string }
   | null;
 export interface State {
   expanded: Readonly<Record<string, boolean>>;
@@ -51,7 +52,7 @@ export type Command =
   | { type: "theme"; value: Theme }
   | { type: "overlay"; value: Overlay }
   | { type: "zoom"; value: number }
-  | { type: "restoreLayout"; expanded: State["expanded"]; zoom: number };
+  | { type: "restoreLayout"; expanded: State["expanded"]; zoom: number; revealPath?: boolean };
 
 export function initialState(
   model: ContentModel,
@@ -106,14 +107,16 @@ export function reduce(
 ): State {
   const next = { ...state };
   switch (command.type) {
-    case "restoreLayout":
-      return {
+    case "restoreLayout": {
+      const restored = {
         ...state,
         expanded: Object.fromEntries(model.branches.map(id => [id,
           typeof command.expanded?.[id] === "boolean" ? command.expanded[id] : state.expanded[id],
         ])),
         zoom: Number.isFinite(command.zoom) ? Math.max(0.5, Math.min(2, command.zoom)) : state.zoom,
       };
+      return command.revealPath ? model.active.reduce((s, a) => openPath(s, a.ancestors), restored) : restored;
+    }
     case "toggleNode": {
       if (!model.branches.includes(command.id)) return state;
       const searchExpanded = { ...state.searchExpanded };
@@ -182,7 +185,8 @@ export function reduce(
     case "overlay":
       return { ...next, overlay: command.value };
     case "zoom":
-      return { ...next, zoom: Math.max(0.5, Math.min(2, command.value)) };
+      return Number.isFinite(command.value)
+        ? { ...next, zoom: Math.max(0.5, Math.min(2, command.value)) } : state;
     case "openSearch":
       return { ...next, searchOpen: true };
     case "closeSearch":

@@ -25,7 +25,7 @@ export function presentCard(
     if (doc.readyState !== "complete") return false;
     // Resolve current font usage before reading FontFaceSet.status.
     host.getBoundingClientRect();
-    return doc.fonts.status === "loaded" &&
+    return (!doc.fonts || doc.fonts.status === "loaded") &&
       !doc.querySelector(".card.mathjax-needs-to-render");
   };
   const check = () => {
@@ -35,8 +35,10 @@ export function presentCard(
     if (!presented && ready()) show();
   };
   scope.listen(doc.defaultView!, "load", check);
-  scope.listen(doc.fonts, "loadingdone", check);
-  scope.listen(doc.fonts, "loadingerror", check);
+  if (doc.fonts) {
+    scope.listen(doc.fonts, "loadingdone", check);
+    scope.listen(doc.fonts, "loadingerror", check);
+  }
   scope.observe(doc.body, check, { attributes: true, attributeFilter: ["class"] });
   // A broken media/font/host callback must not leave the source hidden forever.
   cancelDeadline = scope.later(show, 2000);

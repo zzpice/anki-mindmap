@@ -153,3 +153,13 @@ test("search expansion never overrides later manual layout on close", () => {
   assert.equal(s.expanded.n2, false);
   assert.equal(s.expanded.n0, false);
 });
+
+
+test("back handoff opens only current paths and still permits subsequent manual folding", () => {
+  const back = initialState(model, "back", "paper");
+  const restored = reduce(back, { type: "restoreLayout", expanded: {n0:false,n1:false,n2:false}, zoom:1, revealPath:true }, model);
+  assert.deepEqual(restored.expanded, {n0:true,n1:true,n2:false});
+  assert.strictEqual(restored.revealed, back.revealed);
+  assert.equal(reduce(restored, {type:"toggleNode",id:"n0"}, model).expanded.n0, false);
+  assert.strictEqual(reduce(back, {type:"zoom",value:NaN}, model), back);
+});

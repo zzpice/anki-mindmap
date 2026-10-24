@@ -4,13 +4,13 @@
 
 保留熟悉的文楷字体、纸色主题、知识树与挖空体验，用 React + TypeScript 整理内部状态和交互。完全离线运行，由 Anki 负责原生 Cloze 分卡、翻面、评分和排程。
 
-`main` 已采用 React 实现，当前版本为 **0.2.0-alpha.14**。合并源码不等于发布稳定版；手机客户端的已知限制见[验证结果](docs/validation.md)。原版固定保留在 [f67c932](https://github.com/zzpice/anki-mindmap/tree/f67c932a02bef79f0feab1121c6783a9a3ff9e17)，便于对照和回退。
+`main` 已采用 React 实现，当前版本为 **0.2.0-alpha.15**。合并源码不等于发布稳定版；手机客户端的已知限制见[验证结果](docs/validation.md)。原版固定保留在 [f67c932](https://github.com/zzpice/anki-mindmap/tree/f67c932a02bef79f0feab1121c6783a9a3ff9e17)，便于对照和回退。
 
 ## 下载体验
 
 **[下载可直接导入 Anki 的测试包](https://raw.githubusercontent.com/zzpice/anki-mindmap/main/test-packages/anki-mindmap-react-test.apkg)** · [包说明与 SHA-256](test-packages/README.md) · [视觉对照](test-packages/visual-comparison/README.md)
 
-测试包包含 21 条匿名笔记、27 张原生 Cloze 卡，无需网页、开发服务器或网络资源。建议在单独的 Anki 资料中导入；手机上只复习新增的测试牌组。**不要把真实笔记转换为测试模型。**
+测试包包含 22 条匿名笔记、28 张原生 Cloze 卡，无需网页、开发服务器或网络资源。建议在单独的 Anki 资料中导入；手机上只复习新增的测试牌组。**不要把真实笔记转换为测试模型。**
 
 测试模型 **1792748414**、GUID、牌组和媒体命名与正式模型 **1303378414** 分开。导入这个包不会升级既有正式模板；已有笔记的模板维护应另外备份并精准更新，不能靠导入样例替代。
 

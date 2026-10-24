@@ -1,57 +1,72 @@
 <script>
 (function () {
-  // Cache executable code, never card state. Both sides still call the same
-  // mount/dispose path; no network/parse delay is needed for a cached bundle.
+  // One document-owned code loader. Card state stays inside each runtime.
   var key = Symbol.for("anki-mindmap.react.loader.v1");
   var src = "__MM_SCRIPT__";
-  var host = document.getElementById("mm-react");
-  // Cosmetic first-paint hint only. The mounted store still owns theme state;
-  // no host/body decorations or stored preferences are changed here.
-  if (host) {
-    try {
-      var preference = JSON.parse(localStorage.getItem("anki_mindmap.preferences.v1") || "null");
-      if (preference && preference.version === 1)
-        host.dataset.mmPaintTheme = preference.theme;
-    } catch (_) { /* unavailable storage must not block native review */ }
-  }
+  // Resolve relative to this template, including hosts inserted before an old
+  // host is removed. Duplicate IDs must not cause the old card to be remounted.
+  var host = document.currentScript && document.currentScript.previousElementSibling;
+  while (host && host.id !== "mm-react") host = host.previousElementSibling;
+  if (!host) host = Array.from(document.querySelectorAll("#mm-react")).pop();
+  if (!host) return;
+  try {
+    var preference = JSON.parse(localStorage.getItem("anki_mindmap.preferences.v1") || "null");
+    if (preference && preference.version === 1 && /^(paper|bamboo)$/.test(preference.theme))
+      host.dataset.mmPaintTheme = preference.theme;
+  } catch (_) { /* optional preference */ }
   var loader = document[key];
-  function start(api, target) {
-    if (!target || !target.isConnected || document.getElementById("mm-react") !== target) return;
-    try { api.mount(target); }
-    catch (error) {
-      target.dataset.mmFailed = "true";
-      console.error("Mindmap: native content retained after startup failure", error);
-    }
+  function fail(error) {
+    if (loader.host && loader.host.isConnected) loader.host.dataset.mmFailed = "true";
+    if (document[key] === loader) delete document[key];
+    if (loader.resume) window.removeEventListener("pageshow", loader.resume);
+    console.error("Mindmap: local runtime failed; native content retained", error);
   }
-  if (loader && loader.src === src) {
-    if (loader.api) start(loader.api, host);
-    else loader.host = host;
+  function start(api, target) {
+    if (!target || !target.isConnected) return;
+    try { api.mount(target); }
+    catch (error) { target.dataset.mmFailed = "true";
+      console.error("Mindmap: native content retained after startup failure", error); }
+  }
+  if (loader && loader.src === src && loader.state === "ready") {
+    loader.host = host;
+    start(loader.api, host);
     return;
   }
-  loader = { src: src, host: host };
+  if (loader && loader.src === src && loader.state === "loading") {
+    loader.host = host;
+    return;
+  }
+  if (loader && loader.resume) window.removeEventListener("pageshow", loader.resume);
+  loader = { src: src, host: host, state: "loading" };
   document[key] = loader;
+  var previousApi = window.AnkiMindmap;
   var script = document.createElement("script");
   script.src = src;
   script.onload = function () {
-    var api = window.AnkiMindmap;
     script.remove();
     script.onload = script.onerror = null;
     if (document[key] !== loader) return;
+    var api = window.AnkiMindmap;
+    if (!api || api === previousApi || typeof api.mount !== "function" || typeof api.dispose !== "function") {
+      fail("Loaded script did not provide the runtime API");
+      return;
+    }
     loader.api = api;
-    var target = loader.host;
-    delete loader.host;
-    start(api, target);
+    loader.state = "ready";
+    // The document owns this one listener while its code cache exists. A page
+    // restored from bfcache gets a fresh card scope; no disposed scope resumes.
+    loader.resume = function (event) {
+      if (event.persisted && document[key] === loader) start(api, loader.host);
+    };
+    window.addEventListener("pageshow", loader.resume);
+    start(api, loader.host);
   };
   script.onerror = function () {
     script.remove();
     script.onload = script.onerror = null;
-    if (document[key] === loader) {
-      if (loader.host && loader.host.isConnected) loader.host.dataset.mmFailed = "true";
-      delete loader.host;
-      delete document[key];
-    }
-    console.error("Mindmap: local runtime unavailable; native content retained");
+    if (document[key] === loader) fail("Local script unavailable");
   };
-  document.head.appendChild(script);
+  try { document.head.appendChild(script); }
+  catch (error) { fail(error); }
 })();
 </script>

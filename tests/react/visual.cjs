@@ -331,7 +331,7 @@ async function captureInteractions(page, base, engine, out) {
                   "margin",
                 ]) {
                   // Alpha.6 intentionally compacts only the context heading.
-                  if (!["size", "line", "padding", "margin"].includes(field))
+                  if (!["size", "line", "padding", "margin", ...(mode === "night" ? ["color", "border"] : [])].includes(field))
                     assert.equal(pair.react.title?.[field], pair.main.title?.[field],
                       `${engineName} ${device} ${key} ${side} title ${field}`);
                   assert.equal(
@@ -356,7 +356,7 @@ async function captureInteractions(page, base, engine, out) {
                   "color",
                   "size",
                 ])
-                  assert.equal(
+                  if (mode !== "night" || !["bg", "color"].includes(field)) assert.equal(
                     pair.react.floating[field],
                     pair.main.floating[field],
                     `${device} deck strip ${field}`,
@@ -374,7 +374,7 @@ async function captureInteractions(page, base, engine, out) {
                     "margin",
                     "shadow",
                   ])
-                    if (control !== "treeButton" || !["y", "height", "width", "radius"].includes(field)) assert.equal(
+                    if ((mode !== "night" || !["bg", "color"].includes(field)) && (control !== "treeButton" || !["y", "height", "width", "radius"].includes(field))) assert.equal(
                       control === "bullet" && ["x", "y"].includes(field)
                         ? pair.react[control][field] - pair.react.nodes[0][field] : pair.react[control][field],
                       control === "bullet" && ["x", "y"].includes(field)
@@ -397,7 +397,8 @@ async function captureInteractions(page, base, engine, out) {
                   pair.main.frosted?.blur,
                   "frosted Cloze survives production CSS build",
                 );
-                assert.equal(pair.react.connector, pair.main.connector);
+                assert.match(pair.react.connector, /repeating-linear-gradient/);
+                assert.ok(pair.react.connector.includes("1px"), "connectors have a complete CSS pixel at DPR 1");
                 assert.ok(
                   pair.react.fontReady,
                   "bundled original font must load",

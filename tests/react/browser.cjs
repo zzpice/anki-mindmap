@@ -1,3 +1,4 @@
+require("node:child_process").execFileSync(process.execPath, [require("node:path").resolve(__dirname, "../../scripts/test_build.mjs")]);
 const { chromium, webkit } = require("playwright");
 const fs = require("node:fs"),
   path = require("node:path"),
@@ -147,6 +148,7 @@ async function run() {
     record.checks.push(
       "native reviewer body-class reset preserves skin and host night mode without changing business state",
     );
+    record.reliability = await require("./reliability.cjs")(browser, base, renders);
     record.edges = await require("./edges.cjs")(browser, base, renders);
     record.motion = await require("./motion.cjs")(browser, base, renders);
     record.viewport = await require("./viewport.cjs")(browser, base, renders);

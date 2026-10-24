@@ -1,3 +1,4 @@
+import { prepareNoteLinks } from "./links";
 import {
   isExpanded,
   type ContentModel,
@@ -103,11 +104,18 @@ export function readContent(root: HTMLElement, side: Side, math: MathBridge) {
       );
   });
   const groupParts: GroupPart[] = [];
-  root.querySelectorAll<HTMLElement>("cloze2,cloze2_w").forEach((element) => {
+  const parts = [...root.querySelectorAll<HTMLElement>("cloze2,cloze2_w")];
+  const groupId = (element: HTMLElement) =>
+    [...element.classList].find(c => /^cz-\d+$/.test(c)) ?? element.dataset.clozeId;
+  const nativeGroups = new Set(parts.filter(e => e.querySelector(".cloze")).map(groupId));
+  parts.forEach((element) => {
     if (element.closest(".cloze")) return;
-    const id =
-      [...element.classList].find((c) => /^cz-\d+$/.test(c)) ??
-      element.dataset.clozeId;
+    const id = groupId(element);
+    if (id && nativeGroups.has(id)) {
+      // A native current answer must never become an "other answer" group.
+      if (element.localName === "cloze2_w") element.hidden = true;
+      return;
+    }
     if (!id) {
       diagnostics.push("无法识别的自定义挖空保留可读，不猜测分组。");
       return;
@@ -152,6 +160,7 @@ export function readContent(root: HTMLElement, side: Side, math: MathBridge) {
         paragraph.hidden = true;
       });
   }
+  prepareNoteLinks(root);
   prepareAnnotations();
   let matches: LocatedMatch[] = [];
   let outline: HTMLElement | undefined;
@@ -164,37 +173,6 @@ export function readContent(root: HTMLElement, side: Side, math: MathBridge) {
     outline?.removeAttribute("data-mm-hit");
     outline = undefined;
   };
-  function prepareLinks(area: HTMLElement) {
-    const walker = document.createTreeWalker(area, NodeFilter.SHOW_TEXT),
-      nodes: Text[] = [];
-    while (walker.nextNode()) {
-      const text = walker.currentNode as Text;
-      if (!text.parentElement?.closest("a,script,style,mjx-container"))
-        nodes.push(text);
-    }
-    for (const text of nodes) {
-      const source = text.data,
-        pattern = /\[([^\[\]]+)\|nid(\d{13})\]/g;
-      let match: RegExpExecArray | null,
-        offset = 0;
-      const fragment = document.createDocumentFragment();
-      while ((match = pattern.exec(source))) {
-        fragment.append(source.slice(offset, match.index));
-        const link = document.createElement("a");
-        link.textContent = match[1];
-        link.href = "#";
-        link.dataset.mmNote = match[2];
-        link.className = "mm-note-link";
-        fragment.append(link);
-        offset = pattern.lastIndex;
-      }
-      if (offset) {
-        fragment.append(source.slice(offset));
-        text.replaceWith(fragment);
-      }
-    }
-  }
-  prepareLinks(root);
   // Memoize only what has already been projected. The store remains the sole
   // authority; scroll/touch interruption must not rewrite every branch/group.
   let projected: State | undefined;
@@ -213,6 +191,9 @@ export function readContent(root: HTMLElement, side: Side, math: MathBridge) {
     activeElement: (id: string) =>
       occurrences.find((o) => o.id === id)?.element,
     annotation: (id: string) => annotations.get(id),
+    annotationReference: (id: string) =>
+      [...root.querySelectorAll<HTMLAnchorElement>('a[href^="#_msocom_"]')]
+        .find(link => link.hash.slice(1) === id),
     annotationAnchor: (id: string) =>
       [...root.querySelectorAll<HTMLAnchorElement>('a[href^="#_msocom_"]')]
         .find((link) => link.hash.slice(1) === id)
@@ -240,7 +221,7 @@ export function readContent(root: HTMLElement, side: Side, math: MathBridge) {
           o.element.dataset.mmRevealed = String(shown);
           o.shown = shown;
           if (shown) {
-            prepareLinks(o.element);
+            prepareNoteLinks(o.element);
             prepareAnnotations();
             if (!initial) math.reveal(o.element);
           }
